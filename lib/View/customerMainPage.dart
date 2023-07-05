@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'User Pages/item_Card.dart';
 import '../ViewModel/providerclass.dart';
+import 'User Pages/jewlery_details.dart';
 
 class CustomerMainPage extends StatefulWidget {
   const CustomerMainPage({Key? key}) : super(key: key);
@@ -253,68 +254,68 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
               ),
             ),
 
-            StreamBuilder<QuerySnapshot>(
-              stream: usersStream,
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasError) {
-                  return const Text('Something went wrong');
-                }
-
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                          Theme.of(context).primaryColor),
-                    ),
-                  );
-                }
-
-                return SizedBox(
-                  height: size.height * 0.21,
-                  child: ListView.separated(
-                    separatorBuilder: (context, index) => const SizedBox(
-                      width: 15,
-                    ),
-                    physics: const ClampingScrollPhysics(),
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: snapshot.data!.docs.length,
-                    itemBuilder: (context, index) {
-                      var data = snapshot.data?.docs[index];
-                      return ItemCard(
-                        context: context,
-                        image: data!['venueImages'][0],
-                        title: data['venueName'],
-                        price: data['venuePrice'],
-                        totalRating: data['venueRating'],
-                        totalFeedbacks: data['venueFeedback'],
-                        press: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DetailsScreen(
-                                imageUrlList: data['venueImages'],
-                                title: data['venueName'],
-                                address: data['venueAddress'],
-                                description: data['venueDescription'],
-                                price: data['venuePrice'],
-                                isFav: false,
-                                contact: data['vendorNumber'],
-                                inactiveDates: data['inActiveDates'],
-                                vendorUID: data['vendorUID'],
-                                venueId: data['venueId'],
-                                menuMap: data['menus'],
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                );
-              },
-            ),
+            // StreamBuilder<QuerySnapshot>(
+            //   stream: usersStream,
+            //   builder: (BuildContext context,
+            //       AsyncSnapshot<QuerySnapshot> snapshot) {
+            //     if (snapshot.hasError) {
+            //       return const Text('Something went wrong');
+            //     }
+            //
+            //     if (snapshot.connectionState == ConnectionState.waiting) {
+            //       return Center(
+            //         child: CircularProgressIndicator(
+            //           valueColor: AlwaysStoppedAnimation<Color>(
+            //               Theme.of(context).primaryColor),
+            //         ),
+            //       );
+            //     }
+            //
+            //     return SizedBox(
+            //       height: size.height * 0.21,
+            //       child: ListView.separated(
+            //         separatorBuilder: (context, index) => const SizedBox(
+            //           width: 15,
+            //         ),
+            //         physics: const ClampingScrollPhysics(),
+            //         shrinkWrap: true,
+            //         scrollDirection: Axis.horizontal,
+            //         itemCount: snapshot.data!.docs.length,
+            //         itemBuilder: (context, index) {
+            //           var data = snapshot.data?.docs[index];
+            //           return ItemCard(
+            //             context: context,
+            //             image: data!['venueImages'][0],
+            //             title: data['venueName'],
+            //             price: data['venuePrice'],
+            //             totalRating: data['venueRating'],
+            //             totalFeedbacks: data['venueFeedback'],
+            //             press: () {
+            //               Navigator.push(
+            //                 context,
+            //                 MaterialPageRoute(
+            //                   builder: (context) => DetailsScreen(
+            //                     imageUrlList: data['venueImages'],
+            //                     title: data['venueName'],
+            //                     address: data['venueAddress'],
+            //                     description: data['venueDescription'],
+            //                     price: data['venuePrice'],
+            //                     isFav: false,
+            //                     contact: data['vendorNumber'],
+            //                     inactiveDates: data['inActiveDates'],
+            //                     vendorUID: data['vendorUID'],
+            //                     venueId: data['venueId'],
+            //                     menuMap: data['menus'],
+            //                   ),
+            //                 ),
+            //               );
+            //             },
+            //           );
+            //         },
+            //       ),
+            //     );
+            //   },
+            // ),
 
             // not live data
 
@@ -344,78 +345,68 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                 ],
               ),
             ),
-            SizedBox(
-              height: size.height * 0.21,
-              child: ListView.separated(
-                separatorBuilder: (context, index) => const SizedBox(
-                  width: 15,
-                ),
-                physics: const ClampingScrollPhysics(),
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: 6,
-                itemBuilder: (context, index) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: AspectRatio(
-                          aspectRatio: 4 / 3,
-                          child: ClipRRect(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                            child: Image.network(
-                              'https://media.4rgos.it/i/Argos/sb-2722-M027-gold-7363506_C2?maxW=768&qlt=75&fmt.jpeg.interlaced=true',
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: "Jewelry Palace\n".toUpperCase(),
-                                  style: const TextStyle(
-                                      fontFamily: 'SourceSansPro-SemiBold',
-                                      fontSize: 15,
-                                      color: Colors.black),
-                                ),
-                                const TextSpan(
-                                  text: "Rs. 40,000",
-                                  style: TextStyle(
-                                    color: kPurple,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      RatingBar.builder(
-                        itemSize: 20,
-                        ignoreGestures: true,
-                        itemBuilder: (context, index) => const Icon(
-                          Icons.star,
-                          size: 20,
-                          color: Colors.amber,
-                        ),
-                        itemCount: 5,
-                        initialRating: (totalRating / (5 * totalFeedbacks)) * 5,
-                        unratedColor: Colors.grey,
-                        maxRating: 5,
-                        allowHalfRating: true,
-                        onRatingUpdate: (value) {
-                          value = (totalRating / (5 * totalFeedbacks)) * 5;
-                        },
-                      ),
-                    ],
+
+            StreamBuilder<QuerySnapshot>(
+              stream: usersStream,
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Something went wrong');
+                }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).primaryColor),
+                    ),
                   );
-                },
-              ),
+                }
+
+                return SizedBox(
+                  height: size.height * 0.21,
+                  child: ListView.separated(
+                    separatorBuilder: (context, index) => const SizedBox(
+                      width: 15,
+                    ),
+                    physics: ClampingScrollPhysics(),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      var data = snapshot.data?.docs[index];
+                      return ItemCard(
+                        context: context,
+                        image: data!['venueImages'][0],
+                        title: data['venueName'],
+                        price: data['venuePrice'],
+                        totalRating: data['venueRating'],
+                        totalFeedbacks: data['venueFeedback'],
+                        press: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => JeweleryDetailsScreen(
+                                imageUrlList: data['venueImages'],
+                                title: data['venueName'],
+                                address: data['venueAddress'],
+                                description: data['venueDescription'],
+                                price: data['venuePrice'],
+                                contact: data['vendorNumber'],
+                                vendorUID: data['vendorUID'],
+                                venueId: data['venueId'],
+                                Carrots: '24k',
+                                tola: '1 tola',
+                                deliveryCharges: 300,
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                );
+              },
             ),
 
             Padding(
