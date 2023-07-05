@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "483108328130",
+    "project_id": "easyshaadi-1311a",
+    "storage_bucket": "easyshaadi-1311a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:483108328130:android:de5bae08308ed0ed99e15b",
+        "android_client_info": {
+          "package_name": "com.example.easy_shaadi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "483108328130-v8rk53oqclk77pele03c1k1jgh7idkdh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.easy_shaadi",
+            "certificate_hash": "072d54b51e974e676ed93b0ae021460db8777386"
+          }
+        },
+        {
+          "client_id": "483108328130-0pm5qf2mqg2c52eee565e83hol9g23kg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBV7wQh-S66ZHMVfZTrOKcY-85QPaVgums"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "483108328130-0pm5qf2mqg2c52eee565e83hol9g23kg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
