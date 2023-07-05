@@ -17,7 +17,6 @@ class ProductProvider with ChangeNotifier {
   List<ProductOrder> cartList=[];
   List<ProductOrder> cartHistoryList=[];
   late ProductOrder cartHistory;
-
   void addToCart(String pname, int pprice, String pimage, int pquantity, int deliveryCost,String seller,String buyer,String size){
     var cart=ProductOrder(
         ProductName: pname,
