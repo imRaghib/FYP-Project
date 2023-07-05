@@ -767,32 +767,55 @@ class _BookingPageState extends State<BookingPage> {
       child: Padding(
         padding: const EdgeInsets.all(kDefaultPadding),
         child: Row(
+          crossAxisAlignment:
+              CrossAxisAlignment.start, // Adjust the alignment as needed
           children: [
             AspectRatio(
               aspectRatio: 4 / 3,
               child: ClipRRect(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(10),
+                ),
+                child: Container(
+                  color: const Color(0xFFdce2f7),
+                  child: Image.network(
+                    widget.imageUrlList,
+                    fit: BoxFit.cover,
                   ),
-                  child: Container(
-                    color: Color(0xFFdce2f7),
-                    child: Image.network(
-                      widget.imageUrlList,
-                      fit: BoxFit.cover,
-                    ),
-                  )),
+                ),
+              ),
             ),
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
+            const SizedBox(
+                width:
+                    kDefaultPadding), // Add spacing between the image and text
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
                     widget.title,
-                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontFamily: 'SourceSansPro-SemiBold',
+                      fontSize: 18,
+                    ),
+                    textAlign:
+                        TextAlign.left, // Adjust the text alignment as needed
                   ),
-                )
-              ],
-            )
+                  const SizedBox(
+                      height: kDefaultPadding /
+                          4), // Add spacing between the text elements
+                  Text(
+                    widget.address,
+                    style: const TextStyle(
+                      fontFamily: 'SourceSansPro-SemiBold',
+                    ),
+                    textAlign:
+                        TextAlign.left, // Adjust the text alignment as needed
+                  ),
+                  const SizedBox(height: kDefaultPadding / 4),
+                ],
+              ),
+            ),
           ],
         ),
       ),
