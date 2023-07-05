@@ -53,68 +53,89 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
         padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
         child: ListView(
           children: [
-            // Padding(
-            //   padding: EdgeInsets.symmetric(vertical: kDefaultPadding / 2),
-            //   child: Row(
-            //     children: const [
-            //       Text(
-            //         'Wedding Planning tools',
-            //         style: TextStyle(
-            //           fontFamily: 'SourceSansPro-SemiBold',
-            //           fontSize: 20,
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            // SizedBox(
-            //   height: size.height * 0.12,
-            //   child: ListView(
-            //     physics: ClampingScrollPhysics(),
-            //     shrinkWrap: true,
-            //     scrollDirection: Axis.horizontal,
-            //     children: [
-            //       ToolCard(
-            //         // image: prov.hallsList[0].image,
-            //         // title: prov.hallsList[0].name,
-            //         color: Color(0xFFdcefe9),
-            //         press: () {},
-            //       ),
-            //       SizedBox(
-            //         width: 20,
-            //       ),
-            //       ToolCard(
-            //         // image: prov.hallsList[0].image,
-            //         // title: prov.hallsList[0].name,
-            //         color: Color(0xFFdce2f7),
-            //         press: () {},
-            //       ),
-            //       SizedBox(
-            //         width: 20,
-            //       ),
-            //       ToolCard(
-            //         // image: prov.hallsList[0].image,
-            //         // title: prov.hallsList[0].name,
-            //         color: Color(0xFFfddde8),
-            //         press: () {},
-            //       ),
-            //       SizedBox(
-            //         width: 20,
-            //       ),
-            //       ToolCard(
-            //         // image: prov.hallsList[0].image,
-            //         // title: prov.hallsList[0].name,
-            //         color: Color(0xFFdcefe9),
-            //         press: () {},
-            //       ),
-            //       SizedBox(
-            //         width: 20,
-            //       ),
-            //     ],
-            //   ),
-            // ),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: kDefaultPadding / 2),
+              padding:
+                  const EdgeInsets.symmetric(vertical: kDefaultPadding / 2),
+              child: Row(
+                children: const [
+                  Text(
+                    'Wedding Planning tools',
+                    style: TextStyle(
+                      fontFamily: 'SourceSansPro-SemiBold',
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: size.height * 0.12,
+              child: ListView(
+                physics: const ClampingScrollPhysics(),
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                children: [
+                  ToolCard(
+                    icon: Icons.checklist,
+                    title: "CheckList",
+                    color: kPurple,
+                    press: () {},
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  ToolCard(
+                    icon: Icons.assignment_ind,
+                    title: "GuestList",
+                    color: kPurple,
+                    press: () {},
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  ToolCard(
+                    icon: Icons.timer,
+                    title: "Coming Soon",
+                    color: kPurple,
+                    press: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Coming Soon',
+                                style: TextStyle(
+                                  fontFamily: 'SourceSansPro-SemiBold',
+                                )),
+                            content: const Text('This feature is coming soon.',
+                                style: TextStyle(
+                                  fontFamily: 'SourceSansPro-SemiBold',
+                                )),
+                            actions: [
+                              TextButton(
+                                child: const Text('OK',
+                                    style: TextStyle(
+                                      fontFamily: 'SourceSansPro-SemiBold',
+                                      fontSize: 18,
+                                    )),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: kDefaultPadding / 2),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -141,8 +162,6 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                 ],
               ),
             ),
-
-            /// here-------------------------------------------------------------------
             StreamBuilder<QuerySnapshot>(
               stream:
                   FirebaseFirestore.instance.collection('Venues').snapshots(),
@@ -167,7 +186,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                     separatorBuilder: (context, index) => const SizedBox(
                       width: 15,
                     ),
-                    physics: ClampingScrollPhysics(),
+                    physics: const ClampingScrollPhysics(),
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
                     itemCount: snapshot.data!.docs.length,
@@ -208,11 +227,12 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
             ),
 
             Padding(
-              padding: EdgeInsets.symmetric(vertical: kDefaultPadding / 2),
+              padding:
+                  const EdgeInsets.symmetric(vertical: kDefaultPadding / 2),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  const Text(
                     'Venues for you',
                     style: TextStyle(
                       fontFamily: 'SourceSansPro-SemiBold',
@@ -221,7 +241,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                   ),
                   TextButton(
                     onPressed: () {},
-                    child: Text(
+                    child: const Text(
                       'View All',
                       style: TextStyle(
                         fontFamily: 'SourceSansPro-SemiBold',
@@ -238,7 +258,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
-                  return Text('Something went wrong');
+                  return const Text('Something went wrong');
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -256,7 +276,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                     separatorBuilder: (context, index) => const SizedBox(
                       width: 15,
                     ),
-                    physics: ClampingScrollPhysics(),
+                    physics: const ClampingScrollPhysics(),
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
                     itemCount: snapshot.data!.docs.length,
@@ -299,11 +319,12 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
             // not live data
 
             Padding(
-              padding: EdgeInsets.symmetric(vertical: kDefaultPadding / 2),
+              padding:
+                  const EdgeInsets.symmetric(vertical: kDefaultPadding / 2),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  const Text(
                     'Jewelery for you',
                     style: TextStyle(
                       fontFamily: 'SourceSansPro-SemiBold',
@@ -312,7 +333,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                   ),
                   TextButton(
                     onPressed: () {},
-                    child: Text(
+                    child: const Text(
                       'View All',
                       style: TextStyle(
                         fontFamily: 'SourceSansPro-SemiBold',
@@ -329,7 +350,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                 separatorBuilder: (context, index) => const SizedBox(
                   width: 15,
                 ),
-                physics: ClampingScrollPhysics(),
+                physics: const ClampingScrollPhysics(),
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
                 itemCount: 6,
@@ -377,7 +398,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                       RatingBar.builder(
                         itemSize: 20,
                         ignoreGestures: true,
-                        itemBuilder: (context, index) => Icon(
+                        itemBuilder: (context, index) => const Icon(
                           Icons.star,
                           size: 20,
                           color: Colors.amber,
@@ -398,11 +419,12 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
             ),
 
             Padding(
-              padding: EdgeInsets.symmetric(vertical: kDefaultPadding / 2),
+              padding:
+                  const EdgeInsets.symmetric(vertical: kDefaultPadding / 2),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  const Text(
                     'Bridal Salon for you',
                     style: TextStyle(
                       fontFamily: 'SourceSansPro-SemiBold',
@@ -411,7 +433,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                   ),
                   TextButton(
                     onPressed: () {},
-                    child: Text(
+                    child: const Text(
                       'View All',
                       style: TextStyle(
                         fontFamily: 'SourceSansPro-SemiBold',
@@ -430,7 +452,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
-                  return Text('Something went wrong');
+                  return const Text('Something went wrong');
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -448,7 +470,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                     separatorBuilder: (context, index) => const SizedBox(
                       width: 15,
                     ),
-                    physics: ClampingScrollPhysics(),
+                    physics: const ClampingScrollPhysics(),
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
                     itemCount: snapshot.data!.docs.length,
@@ -489,11 +511,12 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
             ),
 
             Padding(
-              padding: EdgeInsets.symmetric(vertical: kDefaultPadding / 2),
+              padding:
+                  const EdgeInsets.symmetric(vertical: kDefaultPadding / 2),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  const Text(
                     'Groom Salon for you',
                     style: TextStyle(
                       fontFamily: 'SourceSansPro-SemiBold',
@@ -502,7 +525,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                   ),
                   TextButton(
                     onPressed: () {},
-                    child: Text(
+                    child: const Text(
                       'View All',
                       style: TextStyle(
                         fontFamily: 'SourceSansPro-SemiBold',
@@ -521,7 +544,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
-                  return Text('Something went wrong');
+                  return const Text('Something went wrong');
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -539,7 +562,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                     separatorBuilder: (context, index) => const SizedBox(
                       width: 15,
                     ),
-                    physics: ClampingScrollPhysics(),
+                    physics: const ClampingScrollPhysics(),
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
                     itemCount: snapshot.data!.docs.length,
@@ -610,7 +633,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                 separatorBuilder: (context, index) => const SizedBox(
                   width: 15,
                 ),
-                physics: ClampingScrollPhysics(),
+                physics: const ClampingScrollPhysics(),
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
                 itemCount: 6,
@@ -622,7 +645,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                         child: AspectRatio(
                           aspectRatio: 4 / 3,
                           child: ClipRRect(
-                            borderRadius: BorderRadius.all(
+                            borderRadius: const BorderRadius.all(
                               Radius.circular(10),
                             ),
                             child: Image.network(
@@ -684,42 +707,74 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
   }
 }
 
-// class ToolCard extends StatelessWidget {
-//   const ToolCard({
-//     // required this.image,
-//     // required this.title,
-//     required this.color,
-//     required this.press,
-//   });
-//
-//   // final String image, title;
-//   final Color color;
-//   final VoidCallback press;
-//   @override
-//   Widget build(BuildContext context) {
-//     Size size = MediaQuery.of(context).size;
-//     return InkWell(
-//       onTap: press,
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           Expanded(
-//             child: AspectRatio(
-//               aspectRatio: 4 / 3,
-//               child: ClipRRect(
-//                   borderRadius: BorderRadius.all(
-//                     Radius.circular(10),
-//                   ),
-//                   child: Container(
-//                     color: color,
-//                   )),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
+class ToolCard extends StatelessWidget {
+  const ToolCard({
+    // required this.image,
+    required this.title,
+    required this.color,
+    required this.press,
+    required this.icon,
+  });
+
+  // final String image, title;
+  final IconData icon;
+  final String title;
+  final Color color;
+  final VoidCallback press;
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    return InkWell(
+      onTap: press,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: AspectRatio(
+              aspectRatio: 4 / 3,
+              child: ClipRRect(
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                  child: Container(
+                    color: color,
+                    padding: const EdgeInsets.all(
+                      kDefaultPadding / 2,
+                    ),
+                    child: Stack(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Text(
+                              title,
+                              style: TextStyle(
+                                fontFamily: 'SourceSansPro-SemiBold',
+                                fontSize: 18,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Icon(
+                            icon,
+                            size: 40,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 // ListView(
 //   shrinkWrap: true,
