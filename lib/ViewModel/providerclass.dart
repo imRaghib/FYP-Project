@@ -33,6 +33,52 @@ class ProductProvider with ChangeNotifier {
 
   }
 
+  Future setcartdata()async{
+    for(int i=0;i<cartList.length;i++){
+      var basedata = await FirebaseFirestore.instance.collection("mycart").doc(FirebaseAuth.instance.currentUser!.uid).collection('reviewcart').doc();
+      basedata.set({
+        "imageAddress":cartList[i].ProductImages,
+        "name":cartList[i].ProductName,
+        "price":cartList[i].totalPrice(),
+        "quantity":cartList[i].ProductQuantity,
+      });
+    }
+  }
+  int getTotalDelivery(){
+    int cost=0;
+    for(int i=0;i<cartList.length;i++)
+    {
+      cost=cost+cartList[i].deliveryCharges;
+    }
+    return cost;
+  }
+
+  int getTotalAmount() {
+    int cost = 0;
+    for (int i = 0; i < cartList.length; i++) {
+      cost = cost + cartList[i].ProductPrice;
+    }
+    //cost = cost + getTotalAmount();
+    return cost;
+  }
+  Future getCartData()async{
+    List<ProductOrder> newlist=[];
+    var basedata = await FirebaseFirestore.instance.collection("mycart").doc(FirebaseAuth.instance.currentUser!.uid).collection('reviewcart').get();
+    basedata.docs.forEach((element){
+      cartHistory=ProductOrder(
+          ProductImages: element.get('imageAddress'),
+          ProductName: element.get('name'),
+          ProductPrice: element.get('price'),
+          ProductQuantity: element.get('quantity')
+      );
+      newlist.add(cartHistory);
+    }
+    );
+    cartHistoryList=newlist;
+    notifyListeners();
+  }
+
+
   Future fetchHallsData() async {
     var document = await FirebaseFirestore.instance.collection("Venues").get();
 

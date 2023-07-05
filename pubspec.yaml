@@ -59,6 +59,7 @@ dependencies:
   emoji_picker_flutter:
   expandable_text: ^2.3.0
   pay: ^1.1.1
+  fluttertoast:
 
 
 dev_dependencies:

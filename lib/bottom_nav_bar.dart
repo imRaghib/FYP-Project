@@ -3,6 +3,7 @@ import 'package:easy_shaadi/View/customerMainPage.dart';
 import 'package:easy_shaadi/ViewModel/providerclass.dart';
 import 'package:easy_shaadi/checklist/pages/home_page.dart';
 import 'package:easy_shaadi/guest_list_content/guest_list_main.dart';
+import 'package:easy_shaadi/newchanges/cart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +19,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   List Screens=[
     CustomerMainPage(),
     HomeScreen(),
+    ReviewCart(),
     CheckList(),
     GuestList()
   ];
@@ -25,7 +27,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   void initState() {
     Provider.of<ProductProvider>(context, listen: false).fetchHallsData();
     currentindex=widget.val;
-   // Provider.of<ProductProvider>(context, listen: false).fetchHallsData1();
+    // Provider.of<ProductProvider>(context, listen: false).fetchHallsData1();
     super.initState();
   }
 
@@ -52,6 +54,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 label: 'Home'),
             BottomNavigationBarItem(
                 icon: Icon(Icons.mail_outlined), label: 'Messages'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.shopping_cart_outlined), label: 'Cart'),
             BottomNavigationBarItem(
                 icon: Icon(Icons.inventory_outlined), label: 'Checklist'),
             BottomNavigationBarItem(
