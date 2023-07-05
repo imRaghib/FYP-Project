@@ -9,7 +9,6 @@ class ProductOrder {
   String buyerId;
   String sellerId;
 
-
   ProductOrder({
     this.ProductImages='',
     this.ProductName='',

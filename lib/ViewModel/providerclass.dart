@@ -31,6 +31,7 @@ class ProductProvider with ChangeNotifier {
 
     );
     cartList.add(cart);
+
   }
 
   Future fetchHallsData() async {
