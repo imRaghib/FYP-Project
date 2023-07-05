@@ -1,9 +1,9 @@
 import 'package:easy_shaadi/Model/customer.dart';
-import 'package:easy_shaadi/View/Vendor%20Pages/vendor_orders_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../Model/Order.dart';
 import '../Model/VendorRequest.dart';
 import '../Model/bookings.dart';
 import 'Messenger Class/apis.dart';
@@ -14,6 +14,24 @@ class ProductProvider with ChangeNotifier {
   late Booking halls;
   List<Requests> requestList = [];
   late Requests request;
+  List<ProductOrder> cartList=[];
+  List<ProductOrder> cartHistoryList=[];
+  late ProductOrder cartHistory;
+
+  void addToCart(String pname, int pprice, String pimage, int pquantity, int deliveryCost,String seller,String buyer,String size){
+    var cart=ProductOrder(
+        ProductName: pname,
+        ProductQuantity: pquantity,
+        ProductPrice: pprice,
+        ProductImages: pimage,
+        deliveryCharges: deliveryCost,
+        sellerId: seller,
+        buyerId: buyer,
+        size: size
+
+    );
+    cartList.add(cart);
+  }
 
   Future fetchHallsData() async {
     var document = await FirebaseFirestore.instance.collection("Venues").get();
