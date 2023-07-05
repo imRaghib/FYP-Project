@@ -1,16 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:easy_shaadi/Model/bookings.dart';
 import 'package:easy_shaadi/View/User%20Pages/salon_details_screen.dart';
-import 'package:easy_shaadi/View/User%20Pages/test.dart';
 import 'package:easy_shaadi/View/details/details_screen.dart';
 import 'package:easy_shaadi/View/viewAll.dart';
 import 'package:easy_shaadi/ViewModel/Drawer/custom_drawer.dart';
-import 'package:easy_shaadi/ViewModel/signout.dart';
 import 'package:easy_shaadi/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:intl/intl.dart';
 import 'User Pages/item_Card.dart';
 import '../ViewModel/providerclass.dart';
 
@@ -345,7 +341,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                         child: AspectRatio(
                           aspectRatio: 4 / 3,
                           child: ClipRRect(
-                            borderRadius: BorderRadius.all(
+                            borderRadius: const BorderRadius.all(
                               Radius.circular(10),
                             ),
                             child: Image.network(
@@ -362,12 +358,12 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                               children: [
                                 TextSpan(
                                   text: "Jewelry Palace\n".toUpperCase(),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontFamily: 'SourceSansPro-SemiBold',
                                       fontSize: 15,
                                       color: Colors.black),
                                 ),
-                                TextSpan(
+                                const TextSpan(
                                   text: "Rs. 40,000",
                                   style: TextStyle(
                                     color: kPurple,
@@ -429,6 +425,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
             StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('Bridal Salon')
+                  .where('category', isEqualTo: 'Bridal')
                   .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -490,79 +487,6 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                 );
               },
             ),
-            // SizedBox(
-            //   height: size.height * 0.21,
-            //   child: ListView.separated(
-            //     separatorBuilder: (context, index) => const SizedBox(
-            //       width: 15,
-            //     ),
-            //     physics: ClampingScrollPhysics(),
-            //     shrinkWrap: true,
-            //     scrollDirection: Axis.horizontal,
-            //     itemCount: 6,
-            //     itemBuilder: (context, index) {
-            //       return Column(
-            //         crossAxisAlignment: CrossAxisAlignment.start,
-            //         children: [
-            //           Expanded(
-            //             child: AspectRatio(
-            //               aspectRatio: 4 / 3,
-            //               child: ClipRRect(
-            //                 borderRadius: BorderRadius.all(
-            //                   Radius.circular(10),
-            //                 ),
-            //                 child: Image.network(
-            //                   'https://t3.ftcdn.net/jpg/03/43/45/44/360_F_343454483_PHewpSYdNMVWCHN2NHL4o4qOvwh00jnG.jpg',
-            //                   fit: BoxFit.cover,
-            //                 ),
-            //               ),
-            //             ),
-            //           ),
-            //           Row(
-            //             children: [
-            //               RichText(
-            //                 text: TextSpan(
-            //                   children: [
-            //                     TextSpan(
-            //                       text: "Glamour Emporium\n".toUpperCase(),
-            //                       style: TextStyle(
-            //                           fontFamily: 'SourceSansPro-SemiBold',
-            //                           fontSize: 15,
-            //                           color: Colors.black),
-            //                     ),
-            //                     TextSpan(
-            //                       text: "Rs. 10,000",
-            //                       style: TextStyle(
-            //                         color: kPurple,
-            //                       ),
-            //                     ),
-            //                   ],
-            //                 ),
-            //               ),
-            //             ],
-            //           ),
-            //           RatingBar.builder(
-            //             itemSize: 20,
-            //             ignoreGestures: true,
-            //             itemBuilder: (context, index) => Icon(
-            //               Icons.star,
-            //               size: 20,
-            //               color: Colors.amber,
-            //             ),
-            //             itemCount: 5,
-            //             initialRating: (totalRating / (5 * totalFeedbacks)) * 5,
-            //             unratedColor: Colors.grey,
-            //             maxRating: 5,
-            //             allowHalfRating: true,
-            //             onRatingUpdate: (value) {
-            //               value = (totalRating / (5 * totalFeedbacks)) * 5;
-            //             },
-            //           ),
-            //         ],
-            //       );
-            //     },
-            //   ),
-            // ),
 
             Padding(
               padding: EdgeInsets.symmetric(vertical: kDefaultPadding / 2),
@@ -589,78 +513,70 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                 ],
               ),
             ),
-            SizedBox(
-              height: size.height * 0.21,
-              child: ListView.separated(
-                separatorBuilder: (context, index) => const SizedBox(
-                  width: 15,
-                ),
-                physics: ClampingScrollPhysics(),
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: 6,
-                itemBuilder: (context, index) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: AspectRatio(
-                          aspectRatio: 4 / 3,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                            child: Image.network(
-                              'https://media.istockphoto.com/id/872361244/photo/man-getting-his-beard-trimmed-with-electric-razor.jpg?s=612x612&w=0&k=20&c=_IjZcrY0Gp-2z6AWTQederZCA9BLdl-iqWkH0hGMTgg=',
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: "Glamour Emporium\n".toUpperCase(),
-                                  style: TextStyle(
-                                      fontFamily: 'SourceSansPro-SemiBold',
-                                      fontSize: 15,
-                                      color: Colors.black),
-                                ),
-                                TextSpan(
-                                  text: "Rs. 10,000",
-                                  style: TextStyle(
-                                    color: kPurple,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      RatingBar.builder(
-                        itemSize: 20,
-                        ignoreGestures: true,
-                        itemBuilder: (context, index) => Icon(
-                          Icons.star,
-                          size: 20,
-                          color: Colors.amber,
-                        ),
-                        itemCount: 5,
-                        initialRating: (totalRating / (5 * totalFeedbacks)) * 5,
-                        unratedColor: Colors.grey,
-                        maxRating: 5,
-                        allowHalfRating: true,
-                        onRatingUpdate: (value) {
-                          value = (totalRating / (5 * totalFeedbacks)) * 5;
-                        },
-                      ),
-                    ],
+            StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('Bridal Salon')
+                  .where('category', isEqualTo: 'Groom')
+                  .snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Something went wrong');
+                }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).primaryColor),
+                    ),
                   );
-                },
-              ),
+                }
+
+                return SizedBox(
+                  height: size.height * 0.21,
+                  child: ListView.separated(
+                    separatorBuilder: (context, index) => const SizedBox(
+                      width: 15,
+                    ),
+                    physics: ClampingScrollPhysics(),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      var data = snapshot.data?.docs[index];
+                      return ItemCard(
+                        context: context,
+                        image: data!['salonImages'][0],
+                        title: data['salonName'],
+                        price: data['startingPrice'],
+                        totalRating: data['salonRating'],
+                        totalFeedbacks: data['salonFeedback'],
+                        press: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SalonDetailsScreen(
+                                imageUrlList: data['salonImages'],
+                                title: data['salonName'],
+                                address: data['salonAddress'],
+                                description: data['salonDescription'],
+                                price: data['startingPrice'],
+                                isFav: false,
+                                contact: data['vendorNumber'],
+                                inactiveDates: data['inActiveDates'],
+                                vendorUID: data['vendorUID'],
+                                venueId: data['salonId'],
+                                menuMap: data['salonPackages'],
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                );
+              },
             ),
 
             Padding(

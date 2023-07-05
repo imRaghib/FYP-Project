@@ -45,6 +45,10 @@ class _AddSalonPageState extends State<AddSalonPage> {
   double parking = 0;
   List<String> cityList = ['Lahore', 'Islamabad', 'Jhelum', 'Sheikhupura'];
   String venueLocation = 'Location';
+
+  List<String> categoryList = ['Bridal', 'Groom'];
+  String category = 'Category';
+
   Booking venueModel = Booking();
   final formKey = GlobalKey<FormState>();
 
@@ -65,6 +69,8 @@ class _AddSalonPageState extends State<AddSalonPage> {
               buildAddPhotos(context),
               buildDivider(),
               buildLocation(context),
+              buildDivider(),
+              buildCategory(context),
               buildDivider(),
               buildVenueName(),
               buildVenueDes(),
@@ -440,6 +446,7 @@ class _AddSalonPageState extends State<AddSalonPage> {
             onPressed: () {
               if (formKey.currentState!.validate() ||
                   venueLocation != 'Location' ||
+                  category != 'Category' ||
                   image != null) {
                 formKey.currentState!.save();
                 try {
@@ -455,6 +462,7 @@ class _AddSalonPageState extends State<AddSalonPage> {
                     inActiveDates: inActiveDates,
                     startingPrice: packagesMap.entries.first.value,
                     packages: packagesMap,
+                    category: category,
                   );
                   print(packagesMap
                       .entries.first.value); // default value change later
@@ -869,6 +877,74 @@ class _AddSalonPageState extends State<AddSalonPage> {
         ),
         title: Text(venueLocation),
         trailing: Icon(
+          size: 25,
+          color: Colors.black,
+          Icons.keyboard_arrow_down_outlined,
+        ),
+      ),
+    );
+  }
+
+  GestureDetector buildCategory(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        showModalBottomSheet(
+          backgroundColor: Colors.white.withOpacity(0),
+          context: context,
+          builder: (BuildContext context) {
+            return Container(
+                height: double.infinity,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: const [
+                          Text('Select Category'),
+                        ],
+                      ),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: categoryList.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                category = categoryList[index];
+                              });
+                              Navigator.pop(context);
+                            },
+                            child: ListTile(
+                              title: Text(categoryList[index]),
+                            ),
+                          );
+                        },
+                      )
+                    ],
+                  ),
+                ));
+          },
+        );
+      },
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundColor: kPink.withAlpha(40),
+          radius: 20,
+          child: const Icon(
+            size: 25,
+            color: Colors.black,
+            Icons.shopping_basket,
+          ),
+        ),
+        title: Text(category),
+        trailing: const Icon(
           size: 25,
           color: Colors.black,
           Icons.keyboard_arrow_down_outlined,

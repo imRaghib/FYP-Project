@@ -18,6 +18,7 @@ class SalonProvider {
     required List inActiveDates,
     required int startingPrice,
     required Map<String, int> packages,
+    required String category,
   }) async {
     await FirebaseFirestore.instance
         .collection("Bridal Salon")
@@ -36,6 +37,7 @@ class SalonProvider {
       "inActiveDates": inActiveDates,
       "startingPrice": startingPrice,
       "salonPackages": packages,
+      "category": category,
     });
   }
 }

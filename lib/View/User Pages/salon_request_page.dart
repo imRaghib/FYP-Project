@@ -1,14 +1,10 @@
-import 'dart:convert';
-
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:easy_shaadi/View/customerMainPage.dart';
-import 'package:easy_shaadi/ViewModel/Customer/customer_detail_provider.dart';
 import 'package:easy_shaadi/ViewModel/Customer/venue_request_provider.dart';
 import 'package:easy_shaadi/ViewModel/providerclass.dart';
 import 'package:easy_shaadi/constants.dart';
 import 'package:easy_shaadi/payment_config.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
