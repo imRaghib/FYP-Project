@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:easy_shaadi/Model/customer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +19,7 @@ class ProductProvider with ChangeNotifier {
   List<ProductOrder> cartList=[];
   List<ProductOrder> cartHistoryList=[];
   late ProductOrder cartHistory;
+  var products=[];
   void addToCart(String pname, int pprice, String pimage, int pquantity, int deliveryCost,String seller,String buyer,String size){
     var cart=ProductOrder(
         ProductName: pname,
@@ -31,6 +34,20 @@ class ProductProvider with ChangeNotifier {
     );
     cartList.add(cart);
 
+  }
+  getProductDetails(){
+    for(int i=0;i<cartList.length;i++){
+      products.add({
+        'ProductImage':cartList[i].ProductImages,
+        'ProductName':cartList[i].ProductName,
+        'ProductQuantity':cartList[i].ProductQuantity,
+        'size':cartList[i].size,
+        'buyerId':cartList[i].buyerId,
+        'sellerId':cartList[i].sellerId,
+        'deliveryCharges':cartList[i].deliveryCharges,
+        'totalAmount':cartList[i].totalPrice()
+      });
+    }
   }
 
   Future setcartdata()async{
@@ -78,6 +95,25 @@ class ProductProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future placeOrder ({String address='',String city='',String state='',String phone='',String postalcode=''}) async{
+    await FirebaseFirestore.instance.collection('orders').doc().set({
+      'order_id': Random().nextInt(10000000),
+      'order_date': FieldValue.serverTimestamp(),
+      'buyer_id':  FirebaseAuth.instance.currentUser!.uid,
+      'buyer_email':FirebaseAuth.instance.currentUser!.email,
+      'buyer_address':address,
+      'buyer_city':city,
+      'buyer_state':state,
+      'buyer_phone':phone,
+      'buyer_postalcode':postalcode,
+      'payment_method':'GooglePay',
+      'order_placed':true,
+      'order_confirmed':false,
+      'order_delivered':false,
+      'total_amount':'1500',
+      'orderlist':FieldValue.arrayUnion(products)
+    });
+  }
 
   Future fetchHallsData() async {
     var document = await FirebaseFirestore.instance.collection("Venues").get();

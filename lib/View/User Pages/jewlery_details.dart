@@ -304,6 +304,7 @@ class _JeweleryDetailsScreenState extends State<JeweleryDetailsScreen> {
                       padding: const EdgeInsets.only(bottom: 10.0, right: 10),
                       child: InkWell(
                         onTap: () {
+                          print(DateTime.now().toString());
                           if(quantity>0){
                             var prov = Provider.of<ProductProvider>(context,listen: false);
                             bool c=false;
@@ -329,7 +330,7 @@ class _JeweleryDetailsScreenState extends State<JeweleryDetailsScreen> {
                                   quantity,
                                   widget.deliveryCharges,
                                   widget.vendorUID,
-                                  FirebaseAuth.instance.currentUser.toString(),
+                                  FirebaseAuth.instance.currentUser!.uid,
                                   widget.tola
                               );
                               Fluttertoast.showToast(msg: '${widget.title} added in cart',

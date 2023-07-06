@@ -1,3 +1,4 @@
+import 'package:easy_shaadi/View/User%20Pages/OrderDeliveryInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -67,7 +68,12 @@ class ReviewCart extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 10.0, right: 10),
               child: InkWell(
                 onTap: () {
-
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DeliveryDetails()
+                    ),
+                  );
                 },
                 child: Center(
                   child: Container(
@@ -77,7 +83,7 @@ class ReviewCart extends StatelessWidget {
                       borderRadius: const BorderRadius.all(Radius.circular(15)),
                     ),
                     child: const Text(
-                      "   Place Order   ",
+                      "   Proceed   ",
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w700,
