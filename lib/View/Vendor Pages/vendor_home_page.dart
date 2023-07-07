@@ -24,7 +24,6 @@ class _VendorHomePageState extends State<VendorHomePage> {
     VendorChatPage(),
     VendorDirectoryPage(),
     VendorOrdersPage(),
-    VendorOrders()
   ];
 
   final PageStorageBucket bucket = PageStorageBucket();
