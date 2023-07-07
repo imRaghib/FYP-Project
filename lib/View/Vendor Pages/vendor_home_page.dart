@@ -1,5 +1,6 @@
 import 'package:easy_shaadi/View/Vendor%20Pages/add_salon_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/product_upload.dart';
+import 'package:easy_shaadi/View/Vendor%20Pages/tab_bar.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_chat_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_dashboard_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_directory_page.dart';
@@ -23,7 +24,7 @@ class _VendorHomePageState extends State<VendorHomePage> {
     VendorDashboardPage(),
     VendorChatPage(),
     VendorDirectoryPage(),
-    VendorOrdersPage(),
+    OrderTabs(),
   ];
 
   final PageStorageBucket bucket = PageStorageBucket();
@@ -266,7 +267,7 @@ class _VendorHomePageState extends State<VendorHomePage> {
                   minWidth: 40,
                   onPressed: () {
                     setState(() {
-                      currentScreen = VendorOrdersPage();
+                      currentScreen = OrderTabs();
                       currentTab = 4;
                     });
                   },

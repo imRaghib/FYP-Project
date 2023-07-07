@@ -1,9 +1,10 @@
+import 'package:easy_shaadi/View/Vendor%20Pages/vendor_orders_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_orders_screen.dart';
 import 'package:easy_shaadi/constants.dart';
 import 'package:flutter/material.dart';
 
-class VendorOrdersPage extends StatelessWidget {
-  const VendorOrdersPage({Key? key}) : super(key: key);
+class OrderTabs extends StatelessWidget {
+  const OrderTabs({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,10 @@ class VendorOrdersPage extends StatelessWidget {
                 )
               ],
             ),
-            TabBarView(children: [VendorOrdersPage(), VendorOrders()])
+            TabBarView(children: [
+              VendorOrdersPage(),
+              VendorOrders()
+            ])
           ],
         ),
       ),
