@@ -1,3 +1,4 @@
+import 'package:easy_shaadi/bottom_nav_bar.dart';
 import 'package:easy_shaadi/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -27,70 +28,78 @@ class _DeliveryDetailsState extends State<DeliveryDetails> {
         title: Text('Shipping Info'),
         centerTitle: true,
       ),
-      body: Form(
-        key: formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            //     Text('Delivery Details',style: TextStyle(
-            //   fontFamily: 'SourceSansPro-SemiBold',
-            //   fontSize: 25,
-            // ),
-            //   textAlign: TextAlign.center,
-            // ),
-            //     SizedBox(height: 30,),
-            buildAddress(),
-            buildCity(),
-            buildState(),
-            buildPostalCode(),
-            buildPhone(),
-            SizedBox(
-              height: 50,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10.0, right: 10),
-              child: InkWell(
-                onTap: () {
-                  if (formKey.currentState!.validate()) {
-                    formKey.currentState!.save();
-                    try {
-                      Provider.of<ProductProvider>(context, listen: false)
-                          .getProductDetails();
-                      Provider.of<ProductProvider>(context, listen: false)
-                          .placeOrder(
-                              address: address,
-                              city: city,
-                              state: state,
-                              postalcode: postalcode,
-                              phone: phone);
-                    } catch (e) {
-                      setState(() {
-                        error = e.toString();
-                      });
+      body: SingleChildScrollView(
+        child: Form(
+          key: formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('Delivery Details',style: TextStyle(
+                fontFamily: 'SourceSansPro-SemiBold',
+                fontSize: 25,
+              ),
+                textAlign: TextAlign.center,
+              ),
+                  ),
+                  SizedBox(height: 20,),
+              buildAddress(),
+              buildCity(),
+              buildState(),
+              buildPostalCode(),
+              buildPhone(),
+              SizedBox(
+                height: 50,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10.0, right: 10),
+                child: InkWell(
+                  onTap: () {
+                    if (formKey.currentState!.validate()) {
+                      formKey.currentState!.save();
+                      try {
+                        Provider.of<ProductProvider>(context, listen: false)
+                            .getProductDetails();
+                        Provider.of<ProductProvider>(context, listen: false)
+                            .placeOrder(
+                                address: address,
+                                city: city,
+                                state: state,
+                                postalcode: postalcode,
+                                phone: phone);
+                        Provider.of<ProductProvider>(context,listen: false).cartList=[];
+                        print('hello  bnandbanmfbd');
+
+                      } catch (e) {
+                        setState(() {
+                          error = e.toString();
+                        });
+                      }
                     }
-                  }
-                },
-                child: Center(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 100, vertical: 18),
-                    decoration: BoxDecoration(
-                      color: kPink.withOpacity(0.4),
-                      borderRadius: const BorderRadius.all(Radius.circular(15)),
-                    ),
-                    child: const Text(
-                      "   Place Order   ",
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w700,
-                        color: kPurple,
+                  },
+                  child: Center(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 100, vertical: 18),
+                      decoration: BoxDecoration(
+                        color: kPink.withOpacity(0.4),
+                        borderRadius: const BorderRadius.all(Radius.circular(15)),
+                      ),
+                      child: const Text(
+                        "   Place Order   ",
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                          color: kPurple,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -232,7 +241,7 @@ class _DeliveryDetailsState extends State<DeliveryDetails> {
                   return null;
                 }
               },
-              onSaved: (value) => setState(() => address = value!),
+              onSaved: (value) => setState(() => state = value!),
             ),
           ),
         ],
@@ -280,7 +289,7 @@ class _DeliveryDetailsState extends State<DeliveryDetails> {
                   return null;
                 }
               },
-              onSaved: (value) => setState(() => address = value!),
+              onSaved: (value) => setState(() => postalcode = value!),
             ),
           ),
         ],

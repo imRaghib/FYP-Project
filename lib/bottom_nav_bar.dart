@@ -1,4 +1,5 @@
 import 'package:easy_shaadi/View/Messenger%20Screens/home_screen.dart';
+import 'package:easy_shaadi/View/User%20Pages/order_history.dart';
 import 'package:easy_shaadi/View/customerMainPage.dart';
 import 'package:easy_shaadi/ViewModel/providerclass.dart';
 import 'package:easy_shaadi/checklist/pages/home_page.dart';
@@ -20,6 +21,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     CustomerMainPage(),
     HomeScreen(),
     ReviewCart(),
+    OrderHistory(),
     CheckList(),
     GuestList()
   ];
@@ -56,6 +58,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 icon: Icon(Icons.mail_outlined), label: 'Messages'),
             BottomNavigationBarItem(
                 icon: Icon(Icons.shopping_cart_outlined), label: 'Cart'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.history), label: 'Orders'),
             BottomNavigationBarItem(
                 icon: Icon(Icons.inventory_outlined), label: 'Checklist'),
             BottomNavigationBarItem(

@@ -109,10 +109,15 @@ class ProductProvider with ChangeNotifier {
       'payment_method':'GooglePay',
       'order_placed':true,
       'order_confirmed':false,
+      'order_on_delivery':false,
       'order_delivered':false,
       'total_amount':'1500',
       'orderlist':FieldValue.arrayUnion(products)
     });
+  }
+  
+  getAllOrders(){
+    return FirebaseFirestore.instance.collection('orders').where('buyer_id',isEqualTo: FirebaseAuth.instance.currentUser!.uid).snapshots();
   }
 
   Future fetchHallsData() async {
