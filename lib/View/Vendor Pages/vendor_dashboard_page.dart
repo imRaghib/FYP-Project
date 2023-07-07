@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/request_payments.dart';
+import 'package:easy_shaadi/View/Vendor%20Pages/vendor_drawer.dart';
 import 'package:easy_shaadi/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -20,21 +21,7 @@ class _VendorDashboardPageState extends State<VendorDashboardPage> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(title: const Text("Dashboard")),
-      drawer: Drawer(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            ElevatedButton(
-                onPressed: () {
-                  signout();
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, 'StreamPage', (route) => false);
-                },
-                child: const Text('Sign out')),
-          ],
-        ),
-      ),
+      drawer: VendorDrawer(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(kDefaultPadding),
