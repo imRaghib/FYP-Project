@@ -16,6 +16,7 @@ class CartListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var size=MediaQuery.of(context).size;
     var myProvider = Provider.of<ProductProvider>(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -47,11 +48,12 @@ class CartListTile extends StatelessWidget {
                   height: 100,
                   child: Center(
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(lname,
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: size.width *0.038,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -59,7 +61,7 @@ class CartListTile extends StatelessWidget {
                             height: 2,
                           ),
                           Text(lsize, style: TextStyle(
-                            fontSize: 16,
+                            fontSize: size.width *0.038,
                             fontWeight: FontWeight.bold,
                           ),),
                           const SizedBox(
@@ -68,7 +70,7 @@ class CartListTile extends StatelessWidget {
                           // Text(totalPrice!().toString() + ' Rs',
                           Text(lprice.toString() + ' Rs',
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: size.width *0.038,
                               fontWeight: FontWeight.bold,
                             ),)
                         ],
@@ -85,7 +87,8 @@ class CartListTile extends StatelessWidget {
                     child: Center(
                         child: Text('Quantity: ' + lquantity.toString(),
                           style: const TextStyle(
-                              color: Colors.black),
+                              color: Colors.black,
+                          ),
                         )
                     ),
                       ),
@@ -94,7 +97,7 @@ class CartListTile extends StatelessWidget {
                       width: 10,
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(6.0),
                       child: InkWell(
                           onTap: () {
                             bool check = false;

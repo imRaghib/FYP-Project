@@ -20,6 +20,9 @@ class ProductProvider with ChangeNotifier {
   List<ProductOrder> cartHistoryList=[];
   late ProductOrder cartHistory;
   var products=[];
+  var orders=[];
+
+
   void addToCart(String pname, int pprice, String pimage, int pquantity, int deliveryCost,String seller,String buyer,String size){
     var cart=ProductOrder(
         ProductName: pname,
@@ -94,8 +97,22 @@ class ProductProvider with ChangeNotifier {
     cartHistoryList=newlist;
     notifyListeners();
   }
+  getSameVendorOrders(data){
+    orders.clear();
+    for (var item in data['orderlist']){
+      if(item['sellerId'] == FirebaseAuth.instance.currentUser!.uid){
+        orders.add(item);
+      }
+    }
+  }
+
+  
+  getVendorOrders(){
+    return FirebaseFirestore.instance.collection('orders').where('vendors',arrayContains: FirebaseAuth.instance.currentUser!.uid).snapshots();
+  }
 
   Future placeOrder ({String address='',String city='',String state='',String phone='',String postalcode=''}) async{
+    var total_amount=getTotalAmount()+getTotalDelivery();
     await FirebaseFirestore.instance.collection('orders').doc().set({
       'order_id': Random().nextInt(10000000),
       'order_date': FieldValue.serverTimestamp(),
@@ -111,7 +128,7 @@ class ProductProvider with ChangeNotifier {
       'order_confirmed':false,
       'order_on_delivery':false,
       'order_delivered':false,
-      'total_amount':'1500',
+      'total_amount':total_amount,
       'orderlist':FieldValue.arrayUnion(products)
     });
   }

@@ -47,10 +47,10 @@ class OrderHistory extends StatelessWidget {
                       },
                         
                       leading: Image(image: NetworkImage(data[index]['orderlist'][0]['ProductImage'])),
-                      title: Text(data[index]['order_id'].toString(),style: TextStyle(
+                      title: Text('Order id : '+data[index]['order_id'].toString(),style: TextStyle(
                         color: Colors.red,fontWeight: FontWeight.bold,fontSize: 16
                       ),),
-                      subtitle: Text(data[index]['total_amount'].toString()+' Rs'),
+                      subtitle: Text('Total Amount : '+data[index]['total_amount'].toString()+' Rs'),
                       trailing: Text('${intl.DateFormat().add_yMd().format(d.toDate())}'),
                     ),
                   )
