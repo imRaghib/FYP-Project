@@ -34,10 +34,7 @@ class OrderTabs extends StatelessWidget {
               ],
             ),
             Expanded(
-              child: TabBarView(children: [
-                VendorOrdersPage(),
-                VendorOrders(),
-              ]),
+              child: TabBarView(children: [VendorOrdersPage(), VendorOrders()]),
             )
           ],
         ),
