@@ -5,6 +5,7 @@ import 'package:easy_shaadi/View/Vendor%20Pages/vendor_dashboard_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_directory_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_listing_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_orders_page.dart';
+import 'package:easy_shaadi/View/Vendor%20Pages/vendor_orders_screen.dart';
 import 'package:easy_shaadi/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class _VendorHomePageState extends State<VendorHomePage> {
     VendorChatPage(),
     VendorDirectoryPage(),
     VendorOrdersPage(),
+    VendorOrders()
   ];
 
   final PageStorageBucket bucket = PageStorageBucket();
