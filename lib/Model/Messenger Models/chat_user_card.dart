@@ -1,8 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:easy_shaadi/ViewModel/customer_authentication.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import '../../View/Messenger Screens/chat_screen.dart';
 import '../../ViewModel/Messenger Class/apis.dart';
 import '../../main.dart';

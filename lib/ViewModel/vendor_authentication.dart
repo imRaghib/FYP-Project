@@ -6,7 +6,7 @@ int onHoldPayments = 0;
 
 Future vendorSignup({
   required String email,
-  required String buisnessName,
+  required String businessName,
   required String password,
   required String name,
   required String cnic,
@@ -21,7 +21,7 @@ Future vendorSignup({
   await record.set({
     'Name': name,
     'Email': email,
-    'BuisnessName': buisnessName,
+    'BusinessName': businessName,
     'Cnic': cnic,
     'Number': number,
     'Address': address,
@@ -34,7 +34,7 @@ Future vendorSignup({
   await record1.set({
     'Name': name,
     'Email': email,
-    'BuisnessName': buisnessName,
+    'BusinessName': businessName,
     'Cnic': cnic,
     'Number': number,
     'Address': address,
@@ -47,7 +47,7 @@ Future vendorSignup({
     'Id': vendorUID,
     'Name': name,
     'Email': email,
-    'BuisnessName': buisnessName,
+    'BusinessName': businessName,
     'Cnic': cnic,
     'Number': number,
     'Address': address,

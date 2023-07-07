@@ -104,7 +104,7 @@ class _VendorSignupPageState extends State<VendorSignupPage> {
         decoration: kTextFieldDecoration.copyWith(
             hintText: "Enter your CNIC Number", labelText: "CNIC"),
         validator: (value) {
-          if (value!.isEmpty || !RegExp(r'^[0-9]+$').hasMatch(value!)) {
+          if (value!.isEmpty || !RegExp(r'^[0-9]+$').hasMatch(value)) {
             return "Please Enter Correct CNIC";
           } else {
             return null;
@@ -133,8 +133,8 @@ class _VendorSignupPageState extends State<VendorSignupPage> {
             hintText: "Enter your Email", labelText: "Email"),
         validator: (value) {
           if (value!.isEmpty ||
-              !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                  .hasMatch(value!)) {
+              !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                  .hasMatch(value)) {
             return "Please Enter Correct Email";
           } else {
             return null;
@@ -149,12 +149,12 @@ class _VendorSignupPageState extends State<VendorSignupPage> {
             hintText: "Enter your Business Name", labelText: "Business Name"),
         validator: (value) {
           if (value!.isEmpty || !RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
-            return "Please Enter Correct Buisness Name";
+            return "Please Enter Correct Business Name";
           } else {
             return null;
           }
         },
-        onSaved: (value) => setState(() => obj.buisnessName = value!),
+        onSaved: (value) => setState(() => obj.businessName = value!),
       );
 
   Widget buildPassword() => TextFormField(
@@ -165,8 +165,8 @@ class _VendorSignupPageState extends State<VendorSignupPage> {
             hintText: "Enter your Password", labelText: "Password"),
         validator: (value) {
           if (value!.isEmpty ||
-              !RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
-                  .hasMatch(value!)) {
+              !RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#&*~]).{8,}$')
+                  .hasMatch(value)) {
             return "Password must have "
                 "\nleast one upper case "
                 "\nleast one lower case"
@@ -204,7 +204,7 @@ class _VendorSignupPageState extends State<VendorSignupPage> {
                 await vendorSignup(
                     name: obj.name,
                     email: obj.email,
-                    buisnessName: obj.buisnessName,
+                    businessName: obj.businessName,
                     password: obj.password,
                     cnic: obj.cnic,
                     number: obj.number,
@@ -214,7 +214,7 @@ class _VendorSignupPageState extends State<VendorSignupPage> {
               }
             },
             style: ElevatedButton.styleFrom(
-              primary: kPurple,
+              backgroundColor: kPurple,
             ),
             child: Text(
               "Sign up",

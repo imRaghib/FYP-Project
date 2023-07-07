@@ -213,7 +213,8 @@ class _LoginPageState extends State<LoginPage> {
       alignment: Alignment.centerRight,
       child: TextButton(
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>ForgotPassword()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => ForgotPassword()));
         },
         child: Text(
           "Forgot Password",
@@ -233,8 +234,8 @@ class _LoginPageState extends State<LoginPage> {
             hintText: "Enter your Email", labelText: "Email"),
         validator: (value) {
           if (value!.isEmpty ||
-              !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                  .hasMatch(value!)) {
+              !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                  .hasMatch(value)) {
             return "Enter Correct Email";
           } else {
             return null;
@@ -275,7 +276,11 @@ class _LoginPageState extends State<LoginPage> {
           ),
           onPressed: () {
             googleLogin();
-            showDialog(context: context, builder: (context)=>Center(child: CircularProgressIndicator(),));
+            showDialog(
+                context: context,
+                builder: (context) => Center(
+                      child: CircularProgressIndicator(),
+                    ));
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 4),

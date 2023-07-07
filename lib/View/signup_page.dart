@@ -235,8 +235,8 @@ class _SignupPageState extends State<SignupPage> {
             hintText: "Enter your Email", labelText: "Email"),
         validator: (value) {
           if (value!.isEmpty ||
-              !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                  .hasMatch(value!)) {
+              !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                  .hasMatch(value)) {
             return "Enter Correct Email";
           } else {
             return null;
@@ -277,7 +277,11 @@ class _SignupPageState extends State<SignupPage> {
           ),
           onPressed: () {
             googleLogin();
-            showDialog(context: context, builder: (context)=>Center(child: CircularProgressIndicator(),));
+            showDialog(
+                context: context,
+                builder: (context) => Center(
+                      child: CircularProgressIndicator(),
+                    ));
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 4),

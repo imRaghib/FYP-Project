@@ -1,9 +1,7 @@
-import 'package:easy_shaadi/Model/Messenger%20Models/chat_user.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_home_page.dart';
-import 'package:easy_shaadi/View/admin_page.dart';
+import 'package:easy_shaadi/View/Admin%20Pages/admin_page.dart';
 import 'package:easy_shaadi/View/loading_screen.dart';
 import 'package:easy_shaadi/View/splash_screen.dart';
-
 import 'package:easy_shaadi/View/vendorWaitScreen.dart';
 import 'package:easy_shaadi/View/welcome_page.dart';
 import 'package:easy_shaadi/ViewModel/VendorScreenDecide.dart';
@@ -19,7 +17,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
 late Size mq;
-
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -1,7 +1,7 @@
 class Vendor {
   String name;
   String cnic;
-  String buisnessName;
+  String businessName;
   String email;
   String password;
   String number;
@@ -10,7 +10,7 @@ class Vendor {
   Vendor(
       {this.email = '',
       this.name = '',
-      this.buisnessName = '',
+      this.businessName = '',
       this.cnic = '',
       this.password = '',
       this.number = '',
