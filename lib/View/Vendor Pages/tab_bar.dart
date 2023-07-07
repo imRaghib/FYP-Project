@@ -16,7 +16,7 @@ class OrderTabs extends StatelessWidget {
           centerTitle: true,
         ),
         body: Column(
-          children: [
+          children: const [
             TabBar(
               tabs: [
                 Tab(
@@ -33,10 +33,12 @@ class OrderTabs extends StatelessWidget {
                 )
               ],
             ),
-            TabBarView(children: [
-              VendorOrdersPage(),
-              VendorOrders()
-            ])
+            Expanded(
+              child: TabBarView(children: [
+                VendorOrdersPage(),
+                VendorOrders(),
+              ]),
+            )
           ],
         ),
       ),
