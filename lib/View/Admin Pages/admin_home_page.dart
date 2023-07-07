@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../ViewModel/providerclass.dart';
 
 class AdminHomePage extends StatelessWidget {
@@ -8,6 +7,7 @@ class AdminHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var auth = Provider.of<ProductProvider>(context, listen: true);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Admin Page"),
@@ -19,9 +19,8 @@ class AdminHomePage extends StatelessWidget {
           children: [
             ElevatedButton(
                 onPressed: () {
-                  Provider.of<ProductProvider>(context).signOut();
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, 'StreamPage', (route) => false);
+                  auth.signOut().whenComplete(() =>
+                      {Navigator.pushReplacementNamed(context, 'mainScreen')});
                 },
                 child: const Text('Sign out')),
           ],

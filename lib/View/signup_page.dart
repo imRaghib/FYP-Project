@@ -169,10 +169,10 @@ class _SignupPageState extends State<SignupPage> {
   buildShowAlert() {
     if (error != null) {
       return Padding(
-        padding: EdgeInsets.only(bottom: 20),
+        padding: const EdgeInsets.only(bottom: 20),
         child: Text(
           "Invalid email or password $error",
-          style: TextStyle(color: Colors.red),
+          style: const TextStyle(color: Colors.red),
         ),
       );
     }
@@ -266,8 +266,8 @@ class _SignupPageState extends State<SignupPage> {
       children: [
         OutlinedButton(
           style: ButtonStyle(
-            side: MaterialStateProperty.all(
-                BorderSide(color: kPink, width: 1.0, style: BorderStyle.solid)),
+            side: MaterialStateProperty.all(const BorderSide(
+                color: kPink, width: 1.0, style: BorderStyle.solid)),
             backgroundColor: MaterialStateProperty.all(Colors.white),
             shape: MaterialStateProperty.all(
               RoundedRectangleBorder(
@@ -279,7 +279,7 @@ class _SignupPageState extends State<SignupPage> {
             googleLogin();
             showDialog(
                 context: context,
-                builder: (context) => Center(
+                builder: (context) => const Center(
                       child: CircularProgressIndicator(),
                     ));
           },

@@ -1,4 +1,5 @@
 import 'package:easy_shaadi/View/Admin%20Pages/admin_home_page.dart';
+import 'package:easy_shaadi/View/Admin%20Pages/manage_payments_page.dart';
 import 'package:easy_shaadi/View/Admin%20Pages/user_detail_page.dart';
 import 'package:easy_shaadi/View/Admin%20Pages/vendor_request_page.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ class _AdminPageState extends State<AdminPage> {
     AdminHomePage(),
     VendorRequestPage(),
     UserDetailPage(),
+    ManagePaymentsPage()
   ];
 
   @override
