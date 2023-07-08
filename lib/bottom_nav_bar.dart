@@ -19,7 +19,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   int currentindex = 0;
   List Screens=[
     CustomerMainPage(),
-    HomeScreen(),
+    MessengerScreen(),
     ReviewCart(),
     OrderHistory(),
     CheckList(),

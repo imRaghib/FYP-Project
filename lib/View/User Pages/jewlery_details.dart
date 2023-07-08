@@ -25,6 +25,7 @@ class JeweleryDetailsScreen extends StatefulWidget {
   final Carrots;
   final tola;
   final deliveryCharges;
+  final email;
   JeweleryDetailsScreen ({
     super.key,
     this.imageUrlList,
@@ -38,6 +39,7 @@ class JeweleryDetailsScreen extends StatefulWidget {
     this.contact,
     this.vendorUID,
     this.venueId,
+    this.email
   });
 
   @override
@@ -260,6 +262,8 @@ class _JeweleryDetailsScreenState extends State<JeweleryDetailsScreen> {
                         ),
                         BottomButtons(
                           contact: widget.contact,
+                          email: widget.email,
+                          vendorId: widget.vendorUID,
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(

@@ -9,14 +9,14 @@ import '../../ViewModel/Messenger Class/apis.dart';
 import '../../main.dart';
 
 //home screen -- where all available contacts are shown
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class MessengerScreen extends StatefulWidget {
+  const MessengerScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<MessengerScreen> createState() => _MessengerScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _MessengerScreenState extends State<MessengerScreen> {
   // for storing all users
   List<ChatUser> _list = [];
 
@@ -26,6 +26,22 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     APIs.getSelfInfo();
+    //for updating user active status according to lifecycle events
+    //resume -- active or online
+    //pause  -- inactive or offline
+    SystemChannels.lifecycle.setMessageHandler((message) {
+
+      if (APIs.auth.currentUser != null) {
+        if (message.toString().contains('resume')) {
+          APIs.updateActiveStatus(true);
+        }
+        if (message.toString().contains('pause')) {
+          APIs.updateActiveStatus(false);
+        }
+      }
+
+      return Future.value(message);
+    });
   }
 
   @override
@@ -43,14 +59,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
 
         //floating button to add new user
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.only(bottom: 10),
-          child: FloatingActionButton(
-              onPressed: () {
-                _addChatUserDialog();
-              },
-              child: const Icon(Icons.add_comment_rounded)),
-        ),
 
         //body
         body: StreamBuilder(

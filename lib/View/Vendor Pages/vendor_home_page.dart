@@ -1,3 +1,4 @@
+import 'package:easy_shaadi/View/Messenger%20Screens/home_screen.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/add_salon_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/product_upload.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/tab_bar.dart';
@@ -27,7 +28,7 @@ class _VendorHomePageState extends State<VendorHomePage> {
   int currentindex = 0;
   List Screens = [
     VendorDashboardPage(),
-    VendorChatPage(),
+    MessengerScreen(),
     VendorDirectoryPage(),
     OrderTabs(),
   ];

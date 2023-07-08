@@ -53,6 +53,7 @@ class ProductProvider with ChangeNotifier {
     }
   }
 
+
   Future setcartdata()async{
     for(int i=0;i<cartList.length;i++){
       var basedata = await FirebaseFirestore.instance.collection("mycart").doc(FirebaseAuth.instance.currentUser!.uid).collection('reviewcart').doc();

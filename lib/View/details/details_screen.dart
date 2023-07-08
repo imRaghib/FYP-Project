@@ -20,7 +20,7 @@ class DetailsScreen extends StatefulWidget {
   final vendorUID;
   final venueId;
   final menuMap;
-
+  final email;
   DetailsScreen({
     super.key,
     this.imageUrlList,
@@ -34,6 +34,7 @@ class DetailsScreen extends StatefulWidget {
     this.vendorUID,
     this.venueId,
     this.menuMap,
+    this.email
   });
 
   @override
@@ -182,6 +183,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         ),
                         BottomButtons(
                           contact: widget.contact,
+                          email: widget.email,
+                          vendorId: widget.vendorUID,
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(

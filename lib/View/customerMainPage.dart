@@ -220,6 +220,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                                 vendorUID: data['vendorUID'],
                                 venueId: data['venueId'],
                                 menuMap: data['menus'],
+                                email: data['vendorEmail'],
                               ),
                             ),
                           );
@@ -399,6 +400,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                                 contact: data['vendorNumber'],
                                 vendorUID: data['vendorUID'],
                                 venueId: data['venueId'],
+                                email: data['vendorEmail'],
                                 Carrots: '24k',
                                 tola: '1 tola',
                                 deliveryCharges: 300,

@@ -81,7 +81,7 @@ class APIs {
 
     final chatUser = ChatUser(
         id: user.uid,
-        name: user.displayName.toString(),
+        name: user.email.toString(),
         email: user.email.toString(),
         about: "Hey, I'm using We Chat!",
         image: user.photoURL.toString(),

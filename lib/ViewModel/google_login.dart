@@ -30,7 +30,7 @@ Future googleLogin()async{
 }
 
 Future<void> createUser() async {
-  final user = FirebaseAuth.instance.currentUser!;
+  final user = await FirebaseAuth.instance.currentUser!;
 
   final time = DateTime
       .now()
@@ -39,7 +39,7 @@ Future<void> createUser() async {
 
   final chatUser = ChatUser(
       id: user.uid,
-      name: user.email.toString(),
+      name: user.displayName.toString(),
       email: user.email.toString(),
       about: "Hey, I'm using We Chat!",
       image: user.photoURL.toString(),

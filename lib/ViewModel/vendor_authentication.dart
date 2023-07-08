@@ -1,8 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_shaadi/ViewModel/Messenger%20Class/apis.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import '../Model/Messenger Models/chat_user.dart';
 
 int readyPayments = 0;
 int onHoldPayments = 0;
+var user = FirebaseAuth.instance.currentUser!;
 
 Future vendorSignup({
   required String email,
@@ -54,4 +58,25 @@ Future vendorSignup({
     'Role': 'Vendor',
     'RequestStatus': 'waiting'
   });
+  await createUser(name);
+
+}
+Future<void> createUser(String username) async {
+  final time = DateTime.now().millisecondsSinceEpoch.toString();
+
+  final chatUser = ChatUser(
+      id: user.uid,
+      name: username,
+      email: user.email.toString(),
+      about: "Hey, I'm using We Chat!",
+      image: user.photoURL.toString(),
+      createdAt: time,
+      isOnline: false,
+      lastActive: time,
+      pushToken: '');
+
+  return await FirebaseFirestore.instance
+      .collection('users')
+      .doc(user.uid)
+      .set(chatUser.toJson());
 }

@@ -21,6 +21,7 @@ class SalonDetailsScreen extends StatefulWidget {
   final vendorUID;
   final venueId;
   final menuMap;
+  final email;
 
   SalonDetailsScreen({
     super.key,
@@ -35,6 +36,7 @@ class SalonDetailsScreen extends StatefulWidget {
     this.vendorUID,
     this.venueId,
     this.menuMap,
+    this.email
   });
 
   @override
@@ -170,6 +172,8 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                         ),
                         BottomButtons(
                           contact: widget.contact,
+                          email: widget.email,
+                          vendorId: widget.vendorUID,
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(
