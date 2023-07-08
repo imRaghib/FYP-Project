@@ -30,6 +30,11 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
         .where('private', isEqualTo: false)
         .snapshots();
 
+    final Stream<QuerySnapshot> jewleryStream = FirebaseFirestore.instance
+        .collection('Jewelerys')
+        .where('private', isEqualTo: false)
+        .snapshots();
+
     int totalRating = 10;
     int totalFeedbacks = 1;
 
@@ -352,7 +357,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
             ),
 
             StreamBuilder<QuerySnapshot>(
-              stream: usersStream,
+              stream: jewleryStream,
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
@@ -382,28 +387,29 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                       var data = snapshot.data?.docs[index];
                       return ItemCard(
                         context: context,
-                        image: data!['venueImages'][0],
-                        title: data['venueName'],
-                        price: data['venuePrice'],
-                        totalRating: data['venueRating'],
-                        totalFeedbacks: data['venueFeedback'],
+                        image: data!['productImages'][0],
+                        title: data['productName'],
+                        price: data['productPrice'],
+                        totalRating: data['productRating'],
+                        totalFeedbacks: data['productFeedback'],
                         press: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => JeweleryDetailsScreen(
-                                imageUrlList: data['venueImages'],
-                                title: data['venueName'],
-                                address: data['venueAddress'],
-                                description: data['venueDescription'],
-                                price: data['venuePrice'],
-                                contact: data['vendorNumber'],
-                                vendorUID: data['vendorUID'],
-                                venueId: data['venueId'],
-                                email: data['vendorEmail'],
-                                Carrots: '24k',
-                                tola: '1 tola',
-                                deliveryCharges: 300,
+                                imageUrlList: data['productImages'],
+                                title: data['productName'],
+                                address: data['productAddress'],
+                                description: data['productDescription'],
+                                price: data['productPrice'],
+                                contact: data['productNumber'],
+                                vendorUID: data['productUID'],
+                                venueId: data['productId'],
+                                email: data['productEmail'],
+                                Carrots: data['productCarrots'],
+                                tola: data['productSize'],
+                                deliveryCharges: data['productDelivery'],
+                                availableQuantity: data['availableQuantity'],
                               ),
                             ),
                           );

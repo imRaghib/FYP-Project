@@ -1,8 +1,12 @@
 import 'package:easy_shaadi/bottom_nav_bar.dart';
 import 'package:easy_shaadi/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:pay/pay.dart';
 import 'package:provider/provider.dart';
+import '../../ViewModel/Customer/venue_request_provider.dart';
 import '../../ViewModel/providerclass.dart';
+import '../../payment_config.dart';
+import '../customerMainPage.dart';
 
 String address = '';
 String city = '';
@@ -11,8 +15,9 @@ String phone = '';
 String postalcode = '';
 
 class DeliveryDetails extends StatefulWidget {
-  const DeliveryDetails({Key? key}) : super(key: key);
-
+   DeliveryDetails({this.productName,this.totalPrice});
+  final productName;
+  final totalPrice;
   @override
   State<DeliveryDetails> createState() => _DeliveryDetailsState();
 }
@@ -52,50 +57,64 @@ class _DeliveryDetailsState extends State<DeliveryDetails> {
               SizedBox(
                 height: 50,
               ),
+
+
+
               Padding(
                 padding: const EdgeInsets.only(bottom: 10.0, right: 10),
-                child: InkWell(
-                  onTap: () {
+                child: GooglePayButton(
+                  paymentConfiguration:
+                  PaymentConfiguration.fromJsonString(defaultGooglePay),
+                  paymentItems: [
+                    PaymentItem(
+                        label: widget.productName,
+                        amount: widget.totalPrice.toString(),
+                        status: PaymentItemStatus.final_price),
+                  ],
+                  type: GooglePayButtonType.buy,
+                  margin: const EdgeInsets.only(top: 15.0),
+                  onPaymentResult: (result) {
+
                     if (formKey.currentState!.validate()) {
                       formKey.currentState!.save();
                       try {
-                        Provider.of<ProductProvider>(context, listen: false)
-                            .getProductDetails();
-                        Provider.of<ProductProvider>(context, listen: false)
-                            .placeOrder(
-                                address: address,
-                                city: city,
-                                state: state,
-                                postalcode: postalcode,
-                                phone: phone);
-                        Provider.of<ProductProvider>(context,listen: false).cartList=[];
-                        print('hello  bnandbanmfbd');
+                        try {
 
+                          Provider.of<ProductProvider>(context, listen: false)
+                              .getProductDetails();
+                          Provider.of<ProductProvider>(context, listen: false)
+                              .placeOrder(
+                              address: address,
+                              city: city,
+                              state: state,
+                              postalcode: postalcode,
+                              phone: phone);
+                          Provider.of<ProductProvider>(context,listen: false).cartList=[];
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const CustomerMainPage(),
+                            ),
+                          );
+                        } catch (error) {
+                          debugPrint("Payment request Error: ${error.toString()}");
+                        }
                       } catch (e) {
                         setState(() {
                           error = e.toString();
                         });
                       }
                     }
+
+
                   },
-                  child: Center(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 100, vertical: 18),
-                      decoration: BoxDecoration(
-                        color: kPink.withOpacity(0.4),
-                        borderRadius: const BorderRadius.all(Radius.circular(15)),
-                      ),
-                      child: const Text(
-                        "   Place Order   ",
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w700,
-                          color: kPurple,
-                        ),
-                      ),
-                    ),
+                  loadingIndicator: const Center(
+                    child: CircularProgressIndicator(),
                   ),
+                  onError: (error) {
+                    debugPrint("Payment Error: ${error.toString()}");
+                  },
                 ),
               ),
             ],
@@ -344,3 +363,4 @@ class _DeliveryDetailsState extends State<DeliveryDetails> {
     );
   }
 }
+

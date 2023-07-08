@@ -383,6 +383,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                 venueId: widget.venueId,
                                 perPerson: cost,
                                 selectedMenu: selectedMenu,
+                                email: widget.email,
                               ),
                             ),
                           );

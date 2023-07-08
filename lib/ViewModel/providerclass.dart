@@ -203,6 +203,17 @@ class ProductProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future updateQuantity() async {
+    var document =
+    await FirebaseFirestore.instance.collection('Vendor Requests').get();
+    for (var element in document.docs) {
+      request = Requests(id: element.get('Id'), name: element.get('Name'));
+      requestList.add(request);
+      // print(requestList.length);
+    }
+    notifyListeners();
+  }
+
   Future signOut() async {
     APIs.updateActiveStatus(false);
     if (await googleSignin.isSignedIn()) {

@@ -71,7 +71,10 @@ class ReviewCart extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => DeliveryDetails()
+                      builder: (context) => DeliveryDetails(
+                        productName:'hammad' ,
+                        totalPrice: Provider.of<ProductProvider>(context,listen: false).getTotalDelivery(),
+                      )
                     ),
                   );
                 },

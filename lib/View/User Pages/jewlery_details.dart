@@ -26,6 +26,8 @@ class JeweleryDetailsScreen extends StatefulWidget {
   final tola;
   final deliveryCharges;
   final email;
+  final availableQuantity;
+
   JeweleryDetailsScreen ({
     super.key,
     this.imageUrlList,
@@ -39,7 +41,8 @@ class JeweleryDetailsScreen extends StatefulWidget {
     this.contact,
     this.vendorUID,
     this.venueId,
-    this.email
+    this.email,
+    this.availableQuantity
   });
 
   @override
@@ -140,7 +143,7 @@ class _JeweleryDetailsScreenState extends State<JeweleryDetailsScreen> {
                                ElevatedButton(
                                  onPressed: () {
                                    setState(() {
-                                     if(quantity<10)
+                                     if(quantity<widget.availableQuantity)
                                        {
                                          quantity++;
                                        }
