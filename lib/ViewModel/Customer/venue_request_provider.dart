@@ -46,12 +46,12 @@ updateVenueDate({
 
 String orderId = getRandomString();
 String paymentStatus = 'onHold';
-String orderStatus = 'inProcess';
+bool orderStatus = false;
 void bookVenue({
   required int payment,
   required String venueId,
   required String vendorUID,
-  required String venueBookOn,
+  required String venueBookedOn,
   required String customerName,
   required String customerEmail,
   required Map<String, int> selectedMenu,
@@ -68,7 +68,7 @@ void bookVenue({
       .set({
     "orderId": orderId,
     "bookingDate": DateFormat('dd/MM/yyyy').format(DateTime.now()).toString(),
-    "venueBookOn": venueBookOn,
+    "venueBookedOn": venueBookedOn,
     "payment": payment,
     "venueId": venueId,
     "customerUID": customerUID,
@@ -97,19 +97,3 @@ void updatePayments({
     debugPrint('Error adding value: $error');
   });
 }
-
-// addPayments(
-//   String vendorUId,
-//   String paymentAmount,
-// ) async {
-//   // Get a reference to the document you want to update
-//   DocumentReference documentRef =
-//       FirebaseFirestore.instance.collection('Venues').doc(venueId);
-//
-//   // Update the field
-//   await documentRef.update({
-//     'inActiveDates': FieldValue.arrayUnion([bookingDate])
-//   });
-//
-//   print('Document updated successfully!');
-// }

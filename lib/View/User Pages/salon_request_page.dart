@@ -191,7 +191,7 @@ class _SolonAppointmentPageState extends State<SolonAppointmentPage> {
                     vendorUID: widget.vendorUID,
                     customerName: customerDetails.customer.Name,
                     customerEmail: customerDetails.customer.Email,
-                    venueBookOn: DateFormat('dd/MM/yyyy')
+                    venueBookedOn: DateFormat('dd/MM/yyyy')
                         .format(selectedDate)
                         .toString(),
                     selectedMenu: {},

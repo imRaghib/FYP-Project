@@ -51,6 +51,7 @@ class _BookingPageState extends State<BookingPage> {
   int count = 100;
   final int platformFee = 5000;
   int totalPayment = 0;
+
   DateTime selectedDate = DateTime.now().add(const Duration(days: 90));
 
   DateTimeRange selectedDates = DateTimeRange(
@@ -167,12 +168,12 @@ class _BookingPageState extends State<BookingPage> {
             ElevatedButton(
                 onPressed: () {
                   bookVenue(
-                    payment: totalPayment,
+                    payment: returnVendorTotal(),
                     venueId: widget.venueId,
                     vendorUID: widget.vendorUID,
                     customerName: customerDetails.customer.Name,
                     customerEmail: customerDetails.customer.Email,
-                    venueBookOn: DateFormat('dd/MM/yyyy')
+                    venueBookedOn: DateFormat('dd/MM/yyyy')
                         .format(selectedDate)
                         .toString(),
                     selectedMenu: widget.selectedMenu,
@@ -183,7 +184,7 @@ class _BookingPageState extends State<BookingPage> {
 
                   updatePayments(
                     vendorUID: widget.vendorUID,
-                    payment: totalPayment,
+                    payment: returnVendorTotal(),
                   );
 
                   updateVenueDate(
@@ -222,12 +223,13 @@ class _BookingPageState extends State<BookingPage> {
                   // );
 
                   bookVenue(
-                    payment: totalPayment,
+                    payment:
+                        returnVendorTotal(), //Vendor does not get platform fee
                     venueId: widget.venueId,
                     vendorUID: widget.vendorUID,
                     customerName: customerDetails.customer.Name,
                     customerEmail: customerDetails.customer.Email,
-                    venueBookOn: DateFormat('dd/MM/yyyy')
+                    venueBookedOn: DateFormat('dd/MM/yyyy')
                         .format(selectedDate)
                         .toString(),
                     selectedMenu: widget.selectedMenu,
@@ -238,7 +240,7 @@ class _BookingPageState extends State<BookingPage> {
 
                   updatePayments(
                     vendorUID: widget.vendorUID,
-                    payment: totalPayment,
+                    payment: returnVendorTotal(),
                   );
 
                   updateVenueDate(
@@ -304,26 +306,6 @@ class _BookingPageState extends State<BookingPage> {
                 ),
                 Text(
                   "${money.format(widget.perPerson * guests)} PKR",
-                  style: TextStyle(
-                    color: Colors.black.withOpacity(0.4),
-                    fontSize: kDefaultText,
-                  ),
-                ),
-              ],
-            ),
-            buildSizedBox(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Venue booking fee",
-                  style: TextStyle(
-                    color: Colors.black.withOpacity(0.4),
-                    fontSize: kDefaultText,
-                  ),
-                ),
-                Text(
-                  "${money.format(widget.venuePrice)} PKR",
                   style: TextStyle(
                     color: Colors.black.withOpacity(0.4),
                     fontSize: kDefaultText,
@@ -843,9 +825,13 @@ class _BookingPageState extends State<BookingPage> {
   }
 
   returnTotal() {
-    totalPayment =
-        (widget.perPerson * guests) + platformFee + widget.venuePrice;
+    totalPayment = (widget.perPerson * guests) + platformFee;
     return totalPayment;
+  }
+
+  returnVendorTotal() {
+    var vendorTotal = (widget.perPerson * guests) - platformFee;
+    return vendorTotal;
   }
 
   formatDate() {

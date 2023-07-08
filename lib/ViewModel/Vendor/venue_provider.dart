@@ -37,22 +37,10 @@ class VenueProvider {
       "vendorNumber": vendorNumber,
       "inActiveDates": inActiveDates,
       "menus": menus,
+      "isPrivate": false,
+      "vendorEmail": FirebaseAuth.instance.currentUser!.email
     });
   }
-}
-
-updateRequestStatus(
-  String requestId,
-  String updatedStatus,
-) async {
-  // Get a reference to the document you want to update
-  DocumentReference documentRef =
-      FirebaseFirestore.instance.collection('Venue Requests').doc(requestId);
-
-  // Update the field
-  await documentRef.update({'requestStatus': updatedStatus});
-
-  print('Document updated successfully!');
 }
 
 String? vendorName;
@@ -70,4 +58,70 @@ getVendorName() async {
   } catch (e) {
     print('Error: $e');
   }
+}
+
+updateBookingStatus({
+  required String orderId,
+  required bool updatedStatus,
+}) async {
+  // Get a reference to the document you want to update
+
+  FirebaseFirestore.instance
+      .collection('Vendor Orders')
+      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .collection('Venue Orders')
+      .doc(orderId)
+      .update({
+    'orderStatus': updatedStatus,
+  }).then((value) {
+    print('Order status updated successfully');
+  }).catchError((error) {
+    print('Failed to update order status: $error');
+  });
+}
+
+void payVendor({
+  required int payment,
+}) {
+  FirebaseFirestore.instance
+      .collection('Vendors')
+      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .update({
+    'readyPayments': FieldValue.increment(payment),
+  }).then((_) {
+    debugPrint('Value added successfully!');
+  }).catchError((error) {
+    debugPrint('Error adding value: $error');
+  });
+}
+
+const updatedStatus = "approved";
+void releaseVendorPayments({
+  required int payment,
+  required String orderId,
+}) {
+  FirebaseFirestore.instance
+      .collection('Vendors')
+      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .update({
+    'readyPayments': FieldValue.increment(payment),
+    'onHoldPayments': FieldValue.increment(-payment),
+  }).then((_) {
+    debugPrint('Value added successfully!');
+  }).catchError((error) {
+    debugPrint('Error adding value: $error');
+  });
+
+  FirebaseFirestore.instance
+      .collection('Vendor Orders')
+      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .collection('Venue Orders')
+      .doc(orderId)
+      .update({
+    'paymentStatus': updatedStatus,
+  }).then((value) {
+    print('Order status updated successfully');
+  }).catchError((error) {
+    print('Failed to update order status: $error');
+  });
 }

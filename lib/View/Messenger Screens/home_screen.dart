@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    mq=MediaQuery.of(context).size;
+    mq = MediaQuery.of(context).size;
     return GestureDetector(
       //for hiding keyboard when a tap is detected on screen
       onTap: () => FocusScope.of(context).unfocus(),
@@ -59,12 +59,12 @@ class _HomeScreenState extends State<HomeScreen> {
           //get id of only known users
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
-            //if data is loading
+              //if data is loading
               case ConnectionState.waiting:
               case ConnectionState.none:
                 return const Center(child: CircularProgressIndicator());
 
-            //if some or all data is loaded then show it
+              //if some or all data is loaded then show it
               case ConnectionState.active:
               case ConnectionState.done:
                 return StreamBuilder(
@@ -74,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   //get only those user, who's ids are provided
                   builder: (context, snapshot) {
                     switch (snapshot.connectionState) {
-                    //if data is loading
+                      //if data is loading
                       case ConnectionState.waiting:
                       case ConnectionState.none:
                       // return const Center(
@@ -85,8 +85,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       case ConnectionState.done:
                         final data = snapshot.data?.docs;
                         _list = data
-                            ?.map((e) => ChatUser.fromJson(e.data()))
-                            .toList() ??
+                                ?.map((e) => ChatUser.fromJson(e.data()))
+                                .toList() ??
                             [];
 
                         if (_list.isNotEmpty) {
@@ -95,8 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               padding: EdgeInsets.only(top: mq.height * .01),
                               physics: const BouncingScrollPhysics(),
                               itemBuilder: (context, index) {
-                                return ChatUserCard(
-                                    user: _list[index]);
+                                return ChatUserCard(user: _list[index]);
                               });
                         } else {
                           return const Center(
@@ -121,65 +120,65 @@ class _HomeScreenState extends State<HomeScreen> {
     showDialog(
         context: context,
         builder: (_) => AlertDialog(
-          contentPadding: const EdgeInsets.only(
-              left: 24, right: 24, top: 20, bottom: 10),
+              contentPadding: const EdgeInsets.only(
+                  left: 24, right: 24, top: 20, bottom: 10),
 
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
 
-          //title
-          title: Row(
-            children: const [
-              Icon(
-                Icons.person_add,
-                color: Colors.blue,
-                size: 28,
+              //title
+              title: Row(
+                children: const [
+                  Icon(
+                    Icons.person_add,
+                    color: Colors.blue,
+                    size: 28,
+                  ),
+                  Text('  Add User')
+                ],
               ),
-              Text('  Add User')
-            ],
-          ),
 
-          //content
-          content: TextFormField(
-            maxLines: null,
-            onChanged: (value) => email = value,
-            decoration: InputDecoration(
-                hintText: 'Email Id',
-                prefixIcon: const Icon(Icons.email, color: Colors.blue),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15))),
-          ),
+              //content
+              content: TextFormField(
+                maxLines: null,
+                onChanged: (value) => email = value,
+                decoration: InputDecoration(
+                    hintText: 'Email Id',
+                    prefixIcon: const Icon(Icons.email, color: Colors.blue),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15))),
+              ),
 
-          //actions
-          actions: [
-            //cancel button
-            MaterialButton(
-                onPressed: () {
-                  //hide alert dialog
-                  Navigator.pop(context);
-                },
-                child: const Text('Cancel',
-                    style: TextStyle(color: Colors.blue, fontSize: 16))),
+              //actions
+              actions: [
+                //cancel button
+                MaterialButton(
+                    onPressed: () {
+                      //hide alert dialog
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Cancel',
+                        style: TextStyle(color: Colors.blue, fontSize: 16))),
 
-            //add button
-            MaterialButton(
-                onPressed: () async {
-                  //hide alert dialog
-                  Navigator.pop(context);
-                  if (email.isNotEmpty) {
-                    await APIs.addChatUser(email).then((value) {
-                      if (!value) {
-                        Dialogs.showSnackbar(
-                            context, 'User does not Exists!');
+                //add button
+                MaterialButton(
+                    onPressed: () async {
+                      //hide alert dialog
+                      Navigator.pop(context);
+                      if (email.isNotEmpty) {
+                        await APIs.addChatUser(email).then((value) {
+                          if (!value) {
+                            Dialogs.showSnackbar(
+                                context, 'User does not Exists!');
+                          }
+                        });
                       }
-                    });
-                  }
-                },
-                child: const Text(
-                  'Add',
-                  style: TextStyle(color: Colors.blue, fontSize: 16),
-                ))
-          ],
-        ));
+                    },
+                    child: const Text(
+                      'Add',
+                      style: TextStyle(color: Colors.blue, fontSize: 16),
+                    ))
+              ],
+            ));
   }
 }

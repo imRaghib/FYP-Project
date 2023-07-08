@@ -6,18 +6,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class BookingDetailPage extends StatefulWidget {
-  final menuMap;
-  final customerName;
-  final bookingDate;
-  final customerEmail;
+import '../../ViewModel/Vendor/venue_provider.dart';
 
-  BookingDetailPage({
-    this.menuMap,
-    this.customerName,
-    this.bookingDate,
-    this.customerEmail,
-  });
+class BookingDetailPage extends StatefulWidget {
+  final bookingData;
+
+  BookingDetailPage({this.bookingData});
 
   @override
   State<BookingDetailPage> createState() => _BookingDetailPageState();
@@ -28,11 +22,9 @@ formatDate(String date) {
 }
 
 class _BookingDetailPageState extends State<BookingDetailPage> {
-  // String name = 'Raghib Ahmed';
-  final double kDefaultTitle = 22;
-  final double kDefaultText = 17;
-  bool status = false;
-
+  final money = NumberFormat("#,##0", "en_US");
+  late var status = widget.bookingData["orderStatus"];
+  final int platformFee = 5000;
   @override
   Widget build(BuildContext context) {
     Divider buildDivider() {
@@ -58,12 +50,19 @@ class _BookingDetailPageState extends State<BookingDetailPage> {
                   setState(() {
                     status = value;
                   });
-                  // value = true;
+                  status
+                      ? updateBookingStatus(
+                          orderId: widget.bookingData["orderId"],
+                          updatedStatus: true)
+                      : updateBookingStatus(
+                          orderId: widget.bookingData["orderId"],
+                          updatedStatus: false);
                 }),
             buildDivider(),
             Padding(
               padding: const EdgeInsets.all(kDefaultPadding),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -71,16 +70,95 @@ class _BookingDetailPageState extends State<BookingDetailPage> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             "Booking Summary",
                             style: TextStyle(
                                 fontWeight: FontWeight.w600, fontSize: 20),
                           ),
                           Text(
-                            "Booking number: 5357889",
+                            "Booking number: ${widget.bookingData["orderId"]}",
                           ),
-                          Text("Booking time: 7/7/2023"),
+                          Text("Date:  ${widget.bookingData["bookingDate"]}"),
                         ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  buildDivider(),
+                  const SizedBox(height: 10),
+                  const Text(
+                    "Customer Details",
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
+                  ),
+                  Text("Name: ${widget.bookingData["customerName"]}"),
+                  Text("Email: ${widget.bookingData["customerEmail"]}"),
+                  const SizedBox(height: 10),
+                  buildDivider(),
+                  const SizedBox(height: 10),
+                  const Text(
+                    "Booking Details",
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Venue Booked On: ${widget.bookingData["venueBookedOn"]}",
+                  ),
+                  Text(
+                      "Expected Guests: ${widget.bookingData["expectedGuests"]}"),
+                  const SizedBox(height: 10),
+                  const Text("Selected Menu:"),
+                  ExpandableText(
+                    widget.bookingData["selectedMenu"].keys.first,
+                    expandText: '\nShow More',
+                    collapseText: '\nShow Less',
+                    maxLines: 4,
+                    linkColor: kPurple,
+                    style: TextStyle(
+                      color: black.withOpacity(0.4),
+                      height: 1.5,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  buildDivider(),
+                  const SizedBox(height: 10),
+                  const Text(
+                    "Payment Details",
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "${widget.bookingData["selectedMenu"].values.first} PKR x ${widget.bookingData["expectedGuests"]} guests",
+                      ),
+                      Text(
+                        "${money.format(widget.bookingData["payment"] + platformFee)} PKR", // "${money.format(widget.perPerson * guests)} PKR",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Platform Fee",
+                      ),
+                      Text(
+                        "-5,000 PKR",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Total",
+                      ),
+                      Text(
+                        "${money.format(widget.bookingData["payment"])} PKR", // "${money.format(widget.perPerson * guests)} PKR",
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -90,111 +168,33 @@ class _BookingDetailPageState extends State<BookingDetailPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Customer Name: ${widget.customerName}"),
-                          const SizedBox(height: 10),
-                          Text("Customer Email: ${widget.customerEmail}"),
-                          const SizedBox(height: 10),
-                          // Text("Venue Booked On: ${widget.date}"),
-                          const SizedBox(height: 10),
-                          Text("Expect Guests: 100"),
-                          const SizedBox(height: 10),
-                          Text("Selected Menu: "),
-                          // SizedBox(
-                          //   height: 200,
-                          //   child: ListView.separated(
-                          //     physics: PageScrollPhysics(),
-                          //     shrinkWrap: true,
-                          //     itemCount: widget.menuMap.length,
-                          //     separatorBuilder:
-                          //         (BuildContext context, int index) =>
-                          //             const Divider(),
-                          //     itemBuilder: (BuildContext context, int index) {
-                          //       String key =
-                          //           widget.menuMap.keys.elementAt(index);
-                          //       int value = widget.menuMap[key];
-                          //       return Container(
-                          //         decoration: BoxDecoration(
-                          //           color: kPink.withAlpha(50),
-                          //           borderRadius: const BorderRadius.all(
-                          //               Radius.circular(15)),
-                          //         ),
-                          //         child: Padding(
-                          //           padding:
-                          //               const EdgeInsets.all(kDefaultPadding),
-                          //           child: Column(
-                          //             crossAxisAlignment:
-                          //                 CrossAxisAlignment.stretch,
-                          //             mainAxisAlignment:
-                          //                 MainAxisAlignment.start,
-                          //             children: [
-                          //               const Text(
-                          //                 'Chosen Menu',
-                          //                 style: TextStyle(
-                          //                   fontSize: 20,
-                          //                   fontWeight: FontWeight.w500,
-                          //                 ),
-                          //               ),
-                          //               const SizedBox(
-                          //                 height: 10,
-                          //               ),
-                          //               ExpandableText(
-                          //                 key,
-                          //                 expandText: '\n\nShow More',
-                          //                 collapseText: '\n\nShow Less',
-                          //                 maxLines: 6,
-                          //                 linkColor: kPurple,
-                          //               ),
-                          //               const SizedBox(
-                          //                 height: 20,
-                          //               ),
-                          //               Container(
-                          //                 padding: const EdgeInsets.all(10),
-                          //                 decoration: BoxDecoration(
-                          //                   color: kPink.withOpacity(0.4),
-                          //                   borderRadius:
-                          //                       const BorderRadius.all(
-                          //                           Radius.circular(15)),
-                          //                 ),
-                          //                 child: Text(
-                          //                   "Rs. $value",
-                          //                   style: const TextStyle(
-                          //                     fontSize: 15,
-                          //                     fontWeight: FontWeight.w700,
-                          //                     color: kPurple,
-                          //                   ),
-                          //                 ),
-                          //               ),
-                          //             ],
-                          //           ),
-                          //         ),
-                          //       );
-                          //     },
-                          //   ),
-                          // ),
-                          ElevatedButton(
-                              onPressed: () async {
-                                print(widget.customerEmail);
-                                if (widget.customerEmail.isNotEmpty) {
-                                  await APIs.addChatUser(widget.customerEmail)
-                                      .then((value) {
-                                    if (!value) {
-                                      Dialogs.showSnackbar(
-                                          context, 'User does not Exists!');
-                                    }
-                                  });
-                                }
-                              },
-                              child: Text("Message"))
-                        ],
+                      const Text(
+                        "Contact the User",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600, fontSize: 20),
                       ),
+                      ElevatedButton(
+                          onPressed: () async {
+                            if (widget
+                                .bookingData["customerEmail"].isNotEmpty) {
+                              await APIs.addChatUser(
+                                      widget.bookingData["customerEmail"])
+                                  .then((value) {
+                                if (!value) {
+                                  Dialogs.showSnackbar(
+                                      context, 'User does not Exists!');
+                                }
+                              });
+                            }
+                          },
+                          child: const Text("Message")),
                     ],
                   ),
+                  const SizedBox(height: 10),
+                  buildDivider(),
                 ],
               ),
-            )
+            ),
           ],
         )
         // body: Padding(

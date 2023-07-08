@@ -1,5 +1,5 @@
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_salon_page.dart';
-import 'package:easy_shaadi/View/Vendor%20Pages/vendor_venue_booking_page.dart';
+import 'package:easy_shaadi/View/Vendor%20Pages/booking_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_orders_screen.dart';
 import 'package:easy_shaadi/constants.dart';
 import 'package:flutter/material.dart';
