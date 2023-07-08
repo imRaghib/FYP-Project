@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_shaadi/Model/Messenger%20Models/dialogs.dart';
 import 'package:easy_shaadi/ViewModel/Messenger%20Class/apis.dart';
 import 'package:easy_shaadi/constants.dart';
@@ -5,13 +6,18 @@ import 'package:expandable_text/expandable_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
+import '../../Model/Messenger Models/chat_user.dart';
 import '../../ViewModel/Vendor/venue_provider.dart';
+import '../Messenger Screens/chat_screen.dart';
+
+late ChatUser me;
 
 class BookingDetailPage extends StatefulWidget {
   final bookingData;
+  final email;
+  final customerId;
 
-  BookingDetailPage({this.bookingData});
+  BookingDetailPage({this.bookingData,this.email,this.customerId});
 
   @override
   State<BookingDetailPage> createState() => _BookingDetailPageState();
@@ -175,17 +181,16 @@ class _BookingDetailPageState extends State<BookingDetailPage> {
                       ),
                       ElevatedButton(
                           onPressed: () async {
-                            if (widget
-                                .bookingData["customerEmail"].isNotEmpty) {
-                              await APIs.addChatUser(
-                                      widget.bookingData["customerEmail"])
-                                  .then((value) {
-                                if (!value) {
-                                  Dialogs.showSnackbar(
-                                      context, 'User does not Exists!');
-                                }
-                              });
-                            }
+                            APIs.addChatUser(widget.email);
+                            await FirebaseFirestore.instance.collection('users').doc(widget.customerId).get().then((user) async {
+                              if (user.exists) {
+                                me = ChatUser.fromJson(user.data()!);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) => ChatScreen(user: me)));
+                              }
+                            });
                           },
                           child: const Text("Message")),
                     ],

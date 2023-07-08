@@ -72,6 +72,8 @@ class _VendorVenueBookingPageState extends State<VendorVenueBookingPage> {
                                   builder: (BuildContext context) =>
                                       BookingDetailPage(
                                         bookingData: venueOrderData,
+                                        email: venueOrderData['customerEmail'],
+                                        customerId: venueOrderData['customerUID'],
                                       )));
                         },
                         tileColor: Colors.white,
