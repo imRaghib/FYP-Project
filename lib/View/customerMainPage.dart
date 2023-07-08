@@ -10,6 +10,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'User Pages/item_Card.dart';
 import '../ViewModel/providerclass.dart';
 import 'User Pages/jewlery_details.dart';
+import 'details/components/productCard.dart';
 
 class CustomerMainPage extends StatefulWidget {
   const CustomerMainPage({Key? key}) : super(key: key);
@@ -386,7 +387,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
                       var data = snapshot.data?.docs[index];
-                      return ItemCard(
+                      return ProductCard(
                         context: context,
                         image: data!['productImages'][0],
                         title: data['productName'],
