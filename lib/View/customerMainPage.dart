@@ -316,6 +316,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                                 vendorUID: data['vendorUID'],
                                 venueId: data['venueId'],
                                 menuMap: data['menus'],
+                                email: data['vendorEmail'],
                               ),
                             ),
                           );
