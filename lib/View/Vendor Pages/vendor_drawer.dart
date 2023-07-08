@@ -1,3 +1,4 @@
+import 'package:easy_shaadi/View/Vendor%20Pages/private_mode_status.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_home_page.dart';
 import 'package:easy_shaadi/View/customerMainPage.dart';
 import 'package:easy_shaadi/bottom_nav_bar.dart';
@@ -33,6 +34,8 @@ class VendorDrawer extends StatefulWidget {
 
 class _VendorDrawerState extends State<VendorDrawer> {
   @override
+
+  @override
   Widget build(BuildContext context) {
     var auth = Provider.of<ProductProvider>(context,listen: true);
 
@@ -61,6 +64,16 @@ class _VendorDrawerState extends State<VendorDrawer> {
                   ),
                 )
             ),
+            SwitchListTile(
+              value: pmode.private,
+                onChanged: (val){
+              pmode.privateMode(val);
+              setState(() {
+              });
+                },
+              title: Text('Private Mode',style: TextStyle(fontWeight: FontWeight.bold),),
+
+                ),
 
             InkWell(
                 onTap: (){

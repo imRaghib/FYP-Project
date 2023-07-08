@@ -11,6 +11,7 @@ import 'package:easy_shaadi/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'private_mode_status.dart';
 
 import '../../ViewModel/providerclass.dart';
 
@@ -32,6 +33,7 @@ class _VendorHomePageState extends State<VendorHomePage> {
   ];
   @override
   void initState() {
+    pmode.getprivateMode();
     Provider.of<ProductProvider>(context, listen: false).fetchHallsData();
     currentindex=widget.val;
     // Provider.of<ProductProvider>(context, listen: false).fetchHallsData1();

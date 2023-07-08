@@ -163,6 +163,30 @@ class ProductProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // updateGrowScore(String phoneNumber, String post_type) async {
+  //   QuerySnapshot querySnapshot = await ref
+  //       .watch(firestoreProvider)
+  //       .collection("my_users")
+  //       .where("mobile", isEqualTo: phoneNumber)
+  //       .get();
+  //
+  //   List documentIds = querySnapshot.map((doc) => doc.id).toList();
+  //   for (int index = 0; index < documentIds.length; index++) {
+  //     final currentDoxId = documentIds[index];
+  //
+  //     await ref
+  //         .watch(firestoreProvider)
+  //         .collection('my_users')
+  //         .doc(currentDoxId)
+  //         .update(
+  //       {
+  //         'growScore': FieldValue.increment(post_type == "Bad" ? -5 : 5),
+  //       },
+  //     );
+  //     print("${currentDoxId} growScore updated");
+  //   }
+  // }
+
   getUserEmail() {
     return FirebaseAuth.instance.currentUser!.email;
   }

@@ -26,7 +26,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
     Size size = MediaQuery.of(context).size;
 
     final Stream<QuerySnapshot> usersStream =
-        FirebaseFirestore.instance.collection('Venues').snapshots();
+        FirebaseFirestore.instance.collection('Venues').where('private',isEqualTo: false).snapshots();
 
     int totalRating = 10;
     int totalFeedbacks = 1;
@@ -165,7 +165,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
             ),
             StreamBuilder<QuerySnapshot>(
               stream:
-                  FirebaseFirestore.instance.collection('Venues').snapshots(),
+                  FirebaseFirestore.instance.collection('Venues').where('private',isEqualTo:false ).snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {

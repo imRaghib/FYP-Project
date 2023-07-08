@@ -2,6 +2,7 @@ import 'package:easy_shaadi/View/Vendor%20Pages/vendor_orders_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_orders_screen.dart';
 import 'package:easy_shaadi/constants.dart';
 import 'package:flutter/material.dart';
+import 'private_mode_status.dart';
 
 class OrderTabs extends StatelessWidget {
   const OrderTabs({Key? key}) : super(key: key);
