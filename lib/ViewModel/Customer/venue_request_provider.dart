@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_shaadi/genRandomString.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 // String requestId = getRandomString();
 // String requestStatus = 'pending';
@@ -50,9 +51,13 @@ void bookVenue({
   required int payment,
   required String venueId,
   required String vendorUID,
-  required String bookingDate,
+  required String venueBookOn,
   required String customerName,
   required String customerEmail,
+  required Map<String, int> selectedMenu,
+  required int expectedGuests,
+  required String venueName,
+  required String venueImg,
 }) async {
   String customerUID = FirebaseAuth.instance.currentUser!.uid;
   await FirebaseFirestore.instance
@@ -62,8 +67,8 @@ void bookVenue({
       .doc(orderId)
       .set({
     "orderId": orderId,
-    "date": DateTime.now().toString(),
-    "bookingDate": bookingDate,
+    "bookingDate": DateFormat('dd/MM/yyyy').format(DateTime.now()).toString(),
+    "venueBookOn": venueBookOn,
     "payment": payment,
     "venueId": venueId,
     "customerUID": customerUID,
@@ -71,6 +76,10 @@ void bookVenue({
     "orderStatus": orderStatus,
     "customerName": customerName,
     "customerEmail": customerEmail,
+    "selectedMenu": selectedMenu,
+    "expectedGuests": expectedGuests,
+    "venueName": venueName,
+    "venueImg": venueImg,
   });
 }
 

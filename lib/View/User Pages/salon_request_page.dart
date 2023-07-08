@@ -189,9 +189,15 @@ class _SolonAppointmentPageState extends State<SolonAppointmentPage> {
                     payment: total,
                     venueId: widget.venueId,
                     vendorUID: widget.vendorUID,
-                    bookingDate: selectedDate.toString(),
                     customerName: customerDetails.customer.Name,
                     customerEmail: customerDetails.customer.Email,
+                    venueBookOn: DateFormat('dd/MM/yyyy')
+                        .format(selectedDate)
+                        .toString(),
+                    selectedMenu: {},
+                    expectedGuests: guests,
+                    venueName: widget.title,
+                    venueImg: widget.imageUrlList,
                   );
 
                   updatePayments(vendorUID: widget.vendorUID, payment: total);

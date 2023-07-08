@@ -31,7 +31,7 @@ class _VendorDirectoryPageState extends State<VendorDirectoryPage> {
         stream: _usersStream,
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
-            return Text('Something went wrong');
+            return const Text('Something went wrong');
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -45,7 +45,7 @@ class _VendorDirectoryPageState extends State<VendorDirectoryPage> {
 
           return ListView.separated(
             separatorBuilder: (context, index) => const SizedBox(),
-            physics: ClampingScrollPhysics(),
+            physics: const ClampingScrollPhysics(),
             shrinkWrap: true,
             scrollDirection: Axis.vertical,
             itemCount: snapshot.data!.docs.length,
@@ -64,7 +64,7 @@ class _VendorDirectoryPageState extends State<VendorDirectoryPage> {
                             AspectRatio(
                               aspectRatio: 4 / 3,
                               child: ClipRRect(
-                                borderRadius: BorderRadius.all(
+                                borderRadius: const BorderRadius.all(
                                   Radius.circular(10),
                                 ),
                                 child: Image.network(

@@ -22,6 +22,7 @@ class BookingPage extends StatefulWidget {
   final vendorUID;
   final venueId;
   final perPerson;
+  final selectedMenu;
 
   BookingPage({
     super.key,
@@ -35,6 +36,7 @@ class BookingPage extends StatefulWidget {
     this.vendorUID,
     this.venueId,
     this.perPerson,
+    this.selectedMenu,
   });
 
   @override
@@ -48,7 +50,7 @@ class _BookingPageState extends State<BookingPage> {
   int guests = 100;
   int count = 100;
   final int platformFee = 5000;
-  int total = 0;
+  int totalPayment = 0;
   DateTime selectedDate = DateTime.now().add(const Duration(days: 90));
 
   DateTimeRange selectedDates = DateTimeRange(
@@ -67,7 +69,6 @@ class _BookingPageState extends State<BookingPage> {
   @override
   void initState() {
     Provider.of<ProductProvider>(context, listen: false).getCustomerDetails();
-
     super.initState();
   }
 
@@ -78,7 +79,7 @@ class _BookingPageState extends State<BookingPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: Text(
+        title: const Text(
           "Request to book",
           style: TextStyle(color: Colors.black),
         ),
@@ -86,7 +87,7 @@ class _BookingPageState extends State<BookingPage> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back,
             color: Colors.black,
           ),
@@ -97,9 +98,9 @@ class _BookingPageState extends State<BookingPage> {
           children: [
             buildHallDetails(size),
             buildSizedBox(),
-            buildYourBooking(context, size, selectedDates),
+            buildYourBooking(size, selectedDates),
             buildSizedBox(),
-            buildPriceDetails(context),
+            buildPriceDetails(),
             buildSizedBox(),
             buildMessageHost(),
             buildSizedBox(),
@@ -163,6 +164,41 @@ class _BookingPageState extends State<BookingPage> {
                 fontWeight: FontWeight.w700,
               ),
             ),
+            ElevatedButton(
+                onPressed: () {
+                  bookVenue(
+                    payment: totalPayment,
+                    venueId: widget.venueId,
+                    vendorUID: widget.vendorUID,
+                    customerName: customerDetails.customer.Name,
+                    customerEmail: customerDetails.customer.Email,
+                    venueBookOn: DateFormat('dd/MM/yyyy')
+                        .format(selectedDate)
+                        .toString(),
+                    selectedMenu: widget.selectedMenu,
+                    expectedGuests: guests,
+                    venueName: widget.title,
+                    venueImg: widget.imageUrlList,
+                  );
+
+                  updatePayments(
+                    vendorUID: widget.vendorUID,
+                    payment: totalPayment,
+                  );
+
+                  updateVenueDate(
+                      venueId: widget.venueId,
+                      bookingDate: selectedDate.toString());
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, 'StreamPage', (route) => false);
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => const CustomerMainPage(),
+                  //   ),
+                  // );
+                },
+                child: Text("test button")),
             GooglePayButton(
               paymentConfiguration:
                   PaymentConfiguration.fromJsonString(defaultGooglePay),
@@ -186,19 +222,29 @@ class _BookingPageState extends State<BookingPage> {
                   // );
 
                   bookVenue(
-                    payment: total,
+                    payment: totalPayment,
                     venueId: widget.venueId,
                     vendorUID: widget.vendorUID,
-                    bookingDate: selectedDate.toString(),
                     customerName: customerDetails.customer.Name,
                     customerEmail: customerDetails.customer.Email,
+                    venueBookOn: DateFormat('dd/MM/yyyy')
+                        .format(selectedDate)
+                        .toString(),
+                    selectedMenu: widget.selectedMenu,
+                    expectedGuests: guests,
+                    venueName: widget.title,
+                    venueImg: widget.imageUrlList,
                   );
 
-                  updatePayments(vendorUID: widget.vendorUID, payment: total);
+                  updatePayments(
+                    vendorUID: widget.vendorUID,
+                    payment: totalPayment,
+                  );
 
                   updateVenueDate(
                       venueId: widget.venueId,
                       bookingDate: selectedDate.toString());
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -228,7 +274,7 @@ class _BookingPageState extends State<BookingPage> {
     );
   }
 
-  Container buildPriceDetails(BuildContext context) {
+  Container buildPriceDetails() {
     final money = NumberFormat("#,##0", "en_US");
 
     return Container(
@@ -331,39 +377,13 @@ class _BookingPageState extends State<BookingPage> {
                 ),
               ],
             ),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.end,
-            //   children: [
-            //     TextButton(
-            //       onPressed: () {
-            //         showModalBottomSheet(
-            //             context: context,
-            //             builder: (BuildContext context) {
-            //               return Container();
-            //             });
-            //       },
-            //       style: TextButton.styleFrom(
-            //         padding: EdgeInsets.zero,
-            //       ),
-            //       child: Text(
-            //         "More Info",
-            //         style: TextStyle(
-            //             color: Colors.black,
-            //             fontSize: kDefaultText,
-            //             fontWeight: FontWeight.w500,
-            //             decoration: TextDecoration.underline),
-            //       ),
-            //     ),
-            //   ],
-            // ),
           ],
         ),
       ),
     );
   }
 
-  Container buildYourBooking(
-      BuildContext context, Size size, DateTimeRange selectedDates) {
+  Container buildYourBooking(Size size, DateTimeRange selectedDates) {
     return Container(
       color: Colors.white,
       child: Padding(
@@ -441,7 +461,7 @@ class _BookingPageState extends State<BookingPage> {
                                   child: DatePicker(
                                     height: size.height * 0.26,
                                     DateTime.now(),
-                                    daysCount: 30,
+                                    daysCount: 90,
                                     inactiveDates: inActiveDates,
                                     initialSelectedDate: selectedDate,
                                     deactivatedColor:
@@ -823,8 +843,9 @@ class _BookingPageState extends State<BookingPage> {
   }
 
   returnTotal() {
-    total = (widget.perPerson * guests) + platformFee + widget.venuePrice;
-    return total;
+    totalPayment =
+        (widget.perPerson * guests) + platformFee + widget.venuePrice;
+    return totalPayment;
   }
 
   formatDate() {

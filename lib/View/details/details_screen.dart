@@ -43,7 +43,8 @@ class DetailsScreen extends StatefulWidget {
 class _DetailsScreenState extends State<DetailsScreen> {
   int activeIndex = 0;
   int cost = 0;
-  int selectedCheckboxIndex = 0;
+  int? selectedCheckboxIndex;
+  Map<String, int>? selectedMenu;
 
   @override
   Widget build(BuildContext context) {
@@ -98,12 +99,24 @@ class _DetailsScreenState extends State<DetailsScreen> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    'Rs. ${money.format(widget.price)}',
-                                    style: TextStyle(
-                                      fontSize: 28,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Rs. ${money.format(widget.price)}',
+                                        style: TextStyle(
+                                          fontSize: 28,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        '   per Person',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          color: black.withOpacity(0.6),
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   SizedBox(
                                     height: 5,
@@ -226,9 +239,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                     (BuildContext context, int index) =>
                                         const Divider(),
                                 itemBuilder: (BuildContext context, int index) {
-                                  String key =
+                                  String menuKey =
                                       widget.menuMap.keys.elementAt(index);
-                                  int value = widget.menuMap[key];
+                                  int value = widget.menuMap[menuKey];
                                   return Container(
                                     decoration: BoxDecoration(
                                       color: kPink.withAlpha(50),
@@ -263,8 +276,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                                     setState(() {
                                                       selectedCheckboxIndex =
                                                           value!;
-                                                      cost =
-                                                          widget.menuMap[key];
+                                                      cost = widget
+                                                          .menuMap[menuKey];
+                                                      selectedMenu = {
+                                                        menuKey: cost
+                                                      };
+                                                      print(selectedMenu);
                                                     });
                                                   }),
                                             ],
@@ -273,7 +290,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                             height: 10,
                                           ),
                                           ExpandableText(
-                                            key,
+                                            menuKey,
                                             expandText: '\n\nShow More',
                                             collapseText: '\n\nShow Less',
                                             maxLines: 6,
@@ -362,6 +379,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                 vendorUID: widget.vendorUID,
                                 venueId: widget.venueId,
                                 perPerson: cost,
+                                selectedMenu: selectedMenu,
                               ),
                             ),
                           );

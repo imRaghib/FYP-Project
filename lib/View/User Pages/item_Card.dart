@@ -57,7 +57,7 @@ class ItemCard extends StatelessWidget {
                           color: Colors.black),
                     ),
                     TextSpan(
-                      text: "Rs. ${money.format(price)}",
+                      text: "per Person Rs.${money.format(price)}",
                       style: TextStyle(
                         color: kPurple,
                       ),

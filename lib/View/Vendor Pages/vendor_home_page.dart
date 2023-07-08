@@ -5,7 +5,7 @@ import 'package:easy_shaadi/View/Vendor%20Pages/vendor_chat_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_dashboard_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_directory_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_listing_page.dart';
-import 'package:easy_shaadi/View/Vendor%20Pages/vendor_orders_page.dart';
+import 'package:easy_shaadi/View/Vendor%20Pages/vendor_venue_booking_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_orders_screen.dart';
 import 'package:easy_shaadi/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,7 +16,7 @@ import 'private_mode_status.dart';
 import '../../ViewModel/providerclass.dart';
 
 class VendorHomePage extends StatefulWidget {
-  VendorHomePage({this.val=0});
+  VendorHomePage({this.val = 0});
   final val;
 
   @override
@@ -25,7 +25,7 @@ class VendorHomePage extends StatefulWidget {
 
 class _VendorHomePageState extends State<VendorHomePage> {
   int currentindex = 0;
-  List Screens=[
+  List Screens = [
     VendorDashboardPage(),
     VendorChatPage(),
     VendorDirectoryPage(),
@@ -35,14 +35,13 @@ class _VendorHomePageState extends State<VendorHomePage> {
   void initState() {
     pmode.getprivateMode();
     Provider.of<ProductProvider>(context, listen: false).fetchHallsData();
-    currentindex=widget.val;
+    currentindex = widget.val;
     // Provider.of<ProductProvider>(context, listen: false).fetchHallsData1();
     super.initState();
   }
 
   Widget build(BuildContext context) {
     return Scaffold(
-
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
@@ -183,13 +182,11 @@ class _VendorHomePageState extends State<VendorHomePage> {
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-
       body: Screens[currentindex],
       bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: kPink,
           type: BottomNavigationBarType.fixed,
           selectedItemColor: kPurple,
-          iconSize: 30,
+          iconSize: 25,
           currentIndex: currentindex,
           onTap: (indexValue) {
             setState(() {
@@ -198,17 +195,21 @@ class _VendorHomePageState extends State<VendorHomePage> {
           },
           items: const [
             BottomNavigationBarItem(
-                backgroundColor:kPink,
-                icon: Icon(
-                  Icons.dashboard,
-                ),
-                label: 'Dashboard'),
+              icon: Icon(Icons.dashboard),
+              label: 'Dashboard',
+            ),
             BottomNavigationBarItem(
-                icon: Icon(Icons.chat), label: 'Chat'),
+              icon: Icon(Icons.chat),
+              label: 'Chat',
+            ),
             BottomNavigationBarItem(
-                icon: Icon(Icons.library_add), label: 'Directory'),
+              icon: Icon(Icons.library_add),
+              label: 'Directory',
+            ),
             BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_cart_rounded), label: 'Order'),
+              icon: Icon(Icons.shopping_cart_rounded),
+              label: 'Order',
+            ),
           ]),
     );
   }

@@ -25,8 +25,10 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
     var prov = Provider.of<ProductProvider>(context);
     Size size = MediaQuery.of(context).size;
 
-    final Stream<QuerySnapshot> usersStream =
-        FirebaseFirestore.instance.collection('Venues').where('private',isEqualTo: false).snapshots();
+    final Stream<QuerySnapshot> usersStream = FirebaseFirestore.instance
+        .collection('Venues')
+        .where('private', isEqualTo: false)
+        .snapshots();
 
     int totalRating = 10;
     int totalFeedbacks = 1;
@@ -164,8 +166,10 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
               ),
             ),
             StreamBuilder<QuerySnapshot>(
-              stream:
-                  FirebaseFirestore.instance.collection('Venues').where('private',isEqualTo:false ).snapshots(),
+              stream: FirebaseFirestore.instance
+                  .collection('Venues')
+                  .where('private', isEqualTo: false)
+                  .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
@@ -254,68 +258,68 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
               ),
             ),
 
-            // StreamBuilder<QuerySnapshot>(
-            //   stream: usersStream,
-            //   builder: (BuildContext context,
-            //       AsyncSnapshot<QuerySnapshot> snapshot) {
-            //     if (snapshot.hasError) {
-            //       return const Text('Something went wrong');
-            //     }
-            //
-            //     if (snapshot.connectionState == ConnectionState.waiting) {
-            //       return Center(
-            //         child: CircularProgressIndicator(
-            //           valueColor: AlwaysStoppedAnimation<Color>(
-            //               Theme.of(context).primaryColor),
-            //         ),
-            //       );
-            //     }
-            //
-            //     return SizedBox(
-            //       height: size.height * 0.21,
-            //       child: ListView.separated(
-            //         separatorBuilder: (context, index) => const SizedBox(
-            //           width: 15,
-            //         ),
-            //         physics: const ClampingScrollPhysics(),
-            //         shrinkWrap: true,
-            //         scrollDirection: Axis.horizontal,
-            //         itemCount: snapshot.data!.docs.length,
-            //         itemBuilder: (context, index) {
-            //           var data = snapshot.data?.docs[index];
-            //           return ItemCard(
-            //             context: context,
-            //             image: data!['venueImages'][0],
-            //             title: data['venueName'],
-            //             price: data['venuePrice'],
-            //             totalRating: data['venueRating'],
-            //             totalFeedbacks: data['venueFeedback'],
-            //             press: () {
-            //               Navigator.push(
-            //                 context,
-            //                 MaterialPageRoute(
-            //                   builder: (context) => DetailsScreen(
-            //                     imageUrlList: data['venueImages'],
-            //                     title: data['venueName'],
-            //                     address: data['venueAddress'],
-            //                     description: data['venueDescription'],
-            //                     price: data['venuePrice'],
-            //                     isFav: false,
-            //                     contact: data['vendorNumber'],
-            //                     inactiveDates: data['inActiveDates'],
-            //                     vendorUID: data['vendorUID'],
-            //                     venueId: data['venueId'],
-            //                     menuMap: data['menus'],
-            //                   ),
-            //                 ),
-            //               );
-            //             },
-            //           );
-            //         },
-            //       ),
-            //     );
-            //   },
-            // ),
+            StreamBuilder<QuerySnapshot>(
+              stream: usersStream,
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return const Text('Something went wrong');
+                }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).primaryColor),
+                    ),
+                  );
+                }
+
+                return SizedBox(
+                  height: size.height * 0.21,
+                  child: ListView.separated(
+                    separatorBuilder: (context, index) => const SizedBox(
+                      width: 15,
+                    ),
+                    physics: const ClampingScrollPhysics(),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      var data = snapshot.data?.docs[index];
+                      return ItemCard(
+                        context: context,
+                        image: data!['venueImages'][0],
+                        title: data['venueName'],
+                        price: data['venuePrice'],
+                        totalRating: data['venueRating'],
+                        totalFeedbacks: data['venueFeedback'],
+                        press: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailsScreen(
+                                imageUrlList: data['venueImages'],
+                                title: data['venueName'],
+                                address: data['venueAddress'],
+                                description: data['venueDescription'],
+                                price: data['venuePrice'],
+                                isFav: false,
+                                contact: data['vendorNumber'],
+                                inactiveDates: data['inActiveDates'],
+                                vendorUID: data['vendorUID'],
+                                venueId: data['venueId'],
+                                menuMap: data['menus'],
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
 
             // not live data
 
