@@ -74,30 +74,30 @@ class _VendorDrawerState extends State<VendorDrawer> {
                 onTap: () {
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) {
-                    return VendorHomePage(
-                      val: 0,
-                    );
-                  }));
+                        return VendorHomePage(
+                          val: 0,
+                        );
+                      }));
                 },
                 child: listTile(icon: Icons.dashboard, title: "Dashboard")),
             InkWell(
                 onTap: () {
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) {
-                    return VendorHomePage(
-                      val: 1,
-                    );
-                  }));
+                        return VendorHomePage(
+                          val: 1,
+                        );
+                      }));
                 },
                 child: listTile(icon: Icons.chat, title: "Chats")),
             InkWell(
                 onTap: () {
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) {
-                    return VendorHomePage(
-                      val: 2,
-                    );
-                  }));
+                        return VendorHomePage(
+                          val: 2,
+                        );
+                      }));
                 },
                 child: listTile(
                     icon: Icons.store_mall_directory,
@@ -106,31 +106,31 @@ class _VendorDrawerState extends State<VendorDrawer> {
                 onTap: () {
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) {
-                    return VendorHomePage(
-                      val: 3,
-                    );
-                  }));
+                        return VendorHomePage(
+                          val: 3,
+                        );
+                      }));
                 },
                 child: listTile(icon: Icons.library_add, title: "Directory")),
             InkWell(
                 onTap: () {
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) {
-                    return VendorHomePage(
-                      val: 4,
-                    );
-                  }));
+                        return VendorHomePage(
+                          val: 4,
+                        );
+                      }));
                 },
                 child: listTile(icon: Icons.history, title: "Orders")),
             InkWell(
                 onTap: () {
                   auth.signOut().whenComplete(() =>
-                      {Navigator.pushReplacementNamed(context, 'mainScreen')});
+                  {Navigator.pushReplacementNamed(context, 'mainScreen')});
 
                   // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>MyApp()), (route) => route.isFirst);
                 },
                 child:
-                    listTile(icon: Icons.logout_outlined, title: "Sign out")),
+                listTile(icon: Icons.logout_outlined, title: "Sign out")),
             const SizedBox(
               height: 10,
             ),
@@ -144,10 +144,10 @@ class _VendorDrawerState extends State<VendorDrawer> {
                   children: const [
                     Center(
                         child: Text(
-                      "Support",
-                      style:
+                          "Support",
+                          style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    )),
+                        )),
                     Center(child: Text("Contact: 042 111 111 111")),
                     Center(child: Text("Email: EasyShaadi@gmail.com"))
                   ],
