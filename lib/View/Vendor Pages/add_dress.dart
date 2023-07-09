@@ -9,17 +9,17 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../ViewModel/Vendor/venue_provider.dart';
 
-class AddJewelleryPage extends StatefulWidget {
-  const AddJewelleryPage({Key? key}) : super(key: key);
+class AddDressPage extends StatefulWidget {
+  const AddDressPage({Key? key}) : super(key: key);
 
   @override
-  State<AddJewelleryPage> createState() => _AddJewelleryPageState();
+  State<AddDressPage> createState() => _AddDressPageState();
 }
 
-class _AddJewelleryPageState extends State<AddJewelleryPage> {
+class _AddDressPageState extends State<AddDressPage> {
   final formKey = GlobalKey<FormState>();
   TextEditingController controller = TextEditingController();
-  JewelleryModel jewelleryModel = JewelleryModel();
+  JewelleryModel DressModel = JewelleryModel();
 
   List<String> listOfUrls = [];
   File? image;
@@ -82,19 +82,18 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
                 formKey.currentState!.save();
 
                 try {
-                  VenueProvider().addJeweleryData(
+                  VenueProvider().addDressData(
                       productImages: listOfUrls,
-                      productLocation: jewelleryModel.productAddress,
-                      productName: jewelleryModel.productName,
-                      productPrice: jewelleryModel.productPrice,
-                      productDescription: jewelleryModel.productDescription,
+                      productLocation: DressModel.productAddress,
+                      productName: DressModel.productName,
+                      productPrice: DressModel.productPrice,
+                      productDescription: DressModel.productDescription,
                       productRating: 0,
                       productFeedback: 0,
-                      productNumber: jewelleryModel.productNumber,
-                      productQuantity: jewelleryModel.availableQuantity,
-                      productSize: jewelleryModel.productSize,
-                      productCarrots: jewelleryModel.productCarrots,
-                      productDelivery: jewelleryModel.productDelivery
+                      productNumber: DressModel.productNumber,
+                      productQuantity: DressModel.availableQuantity,
+                      productSize: DressModel.productSize,
+                      productDelivery: DressModel.productDelivery
                   );
 
                   Navigator.pushNamedAndRemoveUntil(
@@ -157,7 +156,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
                 }
               },
               onSaved: (value) =>
-                  setState(() => jewelleryModel.productNumber = value!),
+                  setState(() => DressModel.productNumber = value!),
             ),
           ),
         ],
@@ -224,7 +223,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
                 }
               },
               onSaved: (value) =>
-                  setState(() => jewelleryModel.productAddress = value!),
+                  setState(() => DressModel.productAddress = value!),
             ),
           ),
         ],
@@ -234,7 +233,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
 
   Future getImage() async {
     XFile? pickedFile =
-        await imagePicker.pickImage(source: ImageSource.gallery);
+    await imagePicker.pickImage(source: ImageSource.gallery);
     setState(() {
       if (pickedFile != null) {
         image = File(pickedFile.path);
@@ -290,102 +289,102 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
       padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
       child: image == null
           ? DottedBorder(
-              color: Colors.black,
-              strokeWidth: 2,
-              dashPattern: const [8, 4],
-              child: InkWell(
-                  onTap: getImage,
-                  child: Container(
-                      height: 150,
-                      width: double.infinity,
-                      color: kPink.withAlpha(40),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Icon(
-                              size: 35,
-                              color: Colors.grey,
-                              Icons.camera_alt_outlined),
-                          Text('Add Photo'),
-                        ],
-                      ))),
-            )
-          : DottedBorder(
-              color: Colors.black,
-              strokeWidth: 2,
-              dashPattern: const [8, 4],
-              child: Center(
+        color: Colors.black,
+        strokeWidth: 2,
+        dashPattern: const [8, 4],
+        child: InkWell(
+            onTap: getImage,
+            child: Container(
+                height: 150,
+                width: double.infinity,
+                color: kPink.withAlpha(40),
                 child: Column(
-                  children: [
-                    SizedBox(
-                      height: size.height * 0.15,
-                      child: ListView.separated(
-                        separatorBuilder: (context, index) => const SizedBox(
-                          width: 5,
-                        ),
-                        physics: const ClampingScrollPhysics(),
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: listOfUrls.length,
-                        itemBuilder: (context, index) => SizedBox(
-                          width: size.width * 0.35,
-                          child: Stack(
-                            children: [
-                              AspectRatio(
-                                  aspectRatio: 1 / 1,
-                                  child: Image.network(
-                                    listOfUrls[index],
-                                    fit: BoxFit.cover,
-                                  )),
-                              IconButton(
-                                  onPressed: () {
-                                    try {
-                                      FirebaseStorage.instance
-                                          .refFromURL(listOfUrls[index])
-                                          .delete();
-                                    } catch (error) {
-                                      Fluttertoast.showToast(
-                                        msg: error.toString(),
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.BOTTOM,
-                                        timeInSecForIosWeb: 1,
-                                        backgroundColor: Colors.grey,
-                                        fontSize: 15,
-                                      );
-                                    }
-                                    setState(() {
-                                      listOfUrls.removeAt(index);
-                                    });
-                                  },
-                                  icon: const Icon(Icons.clear)),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(
-                        onPressed: getImage,
-                        style:
-                            ElevatedButton.styleFrom(backgroundColor: kPurple),
-                        child: const Text(
-                          "Add More Photos",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    if (isUploading)
-                      Center(
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                              Theme.of(context).primaryColor),
-                        ),
-                      ),
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(
+                        size: 35,
+                        color: Colors.grey,
+                        Icons.camera_alt_outlined),
+                    Text('Add Photo'),
                   ],
+                ))),
+      )
+          : DottedBorder(
+        color: Colors.black,
+        strokeWidth: 2,
+        dashPattern: const [8, 4],
+        child: Center(
+          child: Column(
+            children: [
+              SizedBox(
+                height: size.height * 0.15,
+                child: ListView.separated(
+                  separatorBuilder: (context, index) => const SizedBox(
+                    width: 5,
+                  ),
+                  physics: const ClampingScrollPhysics(),
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: listOfUrls.length,
+                  itemBuilder: (context, index) => SizedBox(
+                    width: size.width * 0.35,
+                    child: Stack(
+                      children: [
+                        AspectRatio(
+                            aspectRatio: 1 / 1,
+                            child: Image.network(
+                              listOfUrls[index],
+                              fit: BoxFit.cover,
+                            )),
+                        IconButton(
+                            onPressed: () {
+                              try {
+                                FirebaseStorage.instance
+                                    .refFromURL(listOfUrls[index])
+                                    .delete();
+                              } catch (error) {
+                                Fluttertoast.showToast(
+                                  msg: error.toString(),
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.grey,
+                                  fontSize: 15,
+                                );
+                              }
+                              setState(() {
+                                listOfUrls.removeAt(index);
+                              });
+                            },
+                            icon: const Icon(Icons.clear)),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: getImage,
+                  style:
+                  ElevatedButton.styleFrom(backgroundColor: kPurple),
+                  child: const Text(
+                    "Add More Photos",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+              if (isUploading)
+                Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                        Theme.of(context).primaryColor),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -438,7 +437,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
                 }
               },
               onSaved: (value) =>
-                  setState(() => jewelleryModel.productName = value!),
+                  setState(() => DressModel.productName = value!),
             ),
           ),
         ],
@@ -490,7 +489,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
                 }
               },
               onSaved: (value) =>
-                  setState(() => jewelleryModel.productDescription = value!),
+                  setState(() => DressModel.productDescription = value!),
             ),
           ),
         ],
@@ -538,7 +537,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
                 }
               },
               onSaved: (value) => setState(
-                  () => jewelleryModel.productPrice = int.parse(value!)),
+                      () => DressModel.productPrice = int.parse(value!)),
             ),
           ),
         ],
@@ -588,7 +587,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
                 }
               },
               onSaved: (value) =>
-                  setState(() => jewelleryModel.productSize = value!),
+                  setState(() => DressModel.productSize = value!),
             ),
           ),
         ],
@@ -636,7 +635,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
                 }
               },
               onSaved: (value) => setState(
-                  () => jewelleryModel.productDelivery = int.parse(value!)),
+                      () => DressModel.productDelivery = int.parse(value!)),
             ),
           ),
         ],
@@ -688,7 +687,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
                     }
                   },
                   onSaved: (value) =>
-                      setState(() => jewelleryModel.productCarrots = value!),
+                      setState(() => DressModel.productCarrots = value!),
                 ),
               ),
               const SizedBox(
@@ -719,7 +718,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
                     }
                   },
                   onSaved: (value) => setState(() =>
-                      jewelleryModel.availableQuantity = int.parse(value!)),
+                  DressModel.availableQuantity = int.parse(value!)),
                 ),
               ),
 

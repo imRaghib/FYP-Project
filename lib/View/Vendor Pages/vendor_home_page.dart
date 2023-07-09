@@ -1,4 +1,5 @@
 import 'package:easy_shaadi/View/Messenger%20Screens/home_screen.dart';
+import 'package:easy_shaadi/View/Vendor%20Pages/add_dress.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/add_salon_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/add_jewellery .dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/tab_bar.dart';
@@ -98,7 +99,7 @@ class _VendorHomePageState extends State<VendorHomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => AddVenuePage()),
+                                      builder: (context) => AddDressPage()),
                                 );
                               },
                               child: Column(

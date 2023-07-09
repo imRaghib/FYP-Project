@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_shaadi/View/User%20Pages/dress_details.dart';
 import 'package:easy_shaadi/View/User%20Pages/salon_details_screen.dart';
 import 'package:easy_shaadi/View/details/details_screen.dart';
 import 'package:easy_shaadi/View/viewAll.dart';
@@ -33,6 +34,10 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
 
     final Stream<QuerySnapshot> jewleryStream = FirebaseFirestore.instance
         .collection('Jewelerys')
+        .where('isPrivate', isEqualTo: false)
+        .snapshots();
+    final Stream<QuerySnapshot> DressStream = FirebaseFirestore.instance
+        .collection('Dresses')
         .where('isPrivate', isEqualTo: false)
         .snapshots();
 
@@ -358,70 +363,70 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
               ),
             ),
 
-            StreamBuilder<QuerySnapshot>(
-              stream: jewleryStream,
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasError) {
-                  return Text('Something went wrong');
-                }
-
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                          Theme.of(context).primaryColor),
-                    ),
-                  );
-                }
-
-                return SizedBox(
-                  height: size.height * 0.21,
-                  child: ListView.separated(
-                    separatorBuilder: (context, index) => const SizedBox(
-                      width: 15,
-                    ),
-                    physics: ClampingScrollPhysics(),
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: snapshot.data!.docs.length,
-                    itemBuilder: (context, index) {
-                      var data = snapshot.data?.docs[index];
-                      return ProductCard(
-                        context: context,
-                        image: data!['productImages'][0],
-                        title: data['productName'],
-                        price: data['productPrice'],
-                        totalRating: data['productRating'],
-                        totalFeedbacks: data['productFeedback'],
-                        press: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => JeweleryDetailsScreen(
-                                imageUrlList: data['productImages'],
-                                title: data['productName'],
-                                address: data['productAddress'],
-                                description: data['productDescription'],
-                                price: data['productPrice'],
-                                contact: data['sellerNumber'],
-                                vendorUID: data['sellerUID'],
-                                venueId: data['productId'],
-                                email: data['sellerEmail'],
-                                Carrots: data['productCarrots'],
-                                tola: data['productSize'],
-                                deliveryCharges: data['productDelivery'],
-                                availableQuantity: data['availableQuantity'],
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                );
-              },
-            ),
+            // StreamBuilder<QuerySnapshot>(
+            //   stream: jewleryStream,
+            //   builder: (BuildContext context,
+            //       AsyncSnapshot<QuerySnapshot> snapshot) {
+            //     if (snapshot.hasError) {
+            //       return Text('Something went wrong');
+            //     }
+            //
+            //     if (snapshot.connectionState == ConnectionState.waiting) {
+            //       return Center(
+            //         child: CircularProgressIndicator(
+            //           valueColor: AlwaysStoppedAnimation<Color>(
+            //               Theme.of(context).primaryColor),
+            //         ),
+            //       );
+            //     }
+            //
+            //     return SizedBox(
+            //       height: size.height * 0.21,
+            //       child: ListView.separated(
+            //         separatorBuilder: (context, index) => const SizedBox(
+            //           width: 15,
+            //         ),
+            //         physics: ClampingScrollPhysics(),
+            //         shrinkWrap: true,
+            //         scrollDirection: Axis.horizontal,
+            //         itemCount: snapshot.data!.docs.length,
+            //         itemBuilder: (context, index) {
+            //           var data = snapshot.data?.docs[index];
+            //           return ProductCard(
+            //             context: context,
+            //             image: data!['productImages'][0],
+            //             title: data['productName'],
+            //             price: data['productPrice'],
+            //             totalRating: data['productRating'],
+            //             totalFeedbacks: data['productFeedback'],
+            //             press: () {
+            //               Navigator.push(
+            //                 context,
+            //                 MaterialPageRoute(
+            //                   builder: (context) => JeweleryDetailsScreen(
+            //                     imageUrlList: data['productImages'],
+            //                     title: data['productName'],
+            //                     address: data['productAddress'],
+            //                     description: data['productDescription'],
+            //                     price: data['productPrice'],
+            //                     contact: data['sellerNumber'],
+            //                     vendorUID: data['sellerUID'],
+            //                     venueId: data['productId'],
+            //                     email: data['sellerEmail'],
+            //                     Carrots: data['productCarrots'],
+            //                     tola: data['productSize'],
+            //                     deliveryCharges: data['productDelivery'],
+            //                     availableQuantity: data['availableQuantity'],
+            //                   ),
+            //                 ),
+            //               );
+            //             },
+            //           );
+            //         },
+            //       ),
+            //     );
+            //   },
+            // ),
 
             Padding(
               padding:
@@ -632,78 +637,68 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                 ],
               ),
             ),
-            SizedBox(
-              height: size.height * 0.21,
-              child: ListView.separated(
-                separatorBuilder: (context, index) => const SizedBox(
-                  width: 15,
-                ),
-                physics: const ClampingScrollPhysics(),
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: 6,
-                itemBuilder: (context, index) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: AspectRatio(
-                          aspectRatio: 4 / 3,
-                          child: ClipRRect(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                            child: Image.network(
-                              'https://cdn.shopify.com/s/files/1/1732/6543/products/LatestRedBridalDressinPishwasFrockandLehengaStyle_620x.jpg?v=1661375562',
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: "Glamour Emporium\n".toUpperCase(),
-                                  style: TextStyle(
-                                      fontFamily: 'SourceSansPro-SemiBold',
-                                      fontSize: 15,
-                                      color: Colors.black),
-                                ),
-                                TextSpan(
-                                  text: "Rs. 10,000",
-                                  style: TextStyle(
-                                    color: kPurple,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      RatingBar.builder(
-                        itemSize: 20,
-                        ignoreGestures: true,
-                        itemBuilder: (context, index) => Icon(
-                          Icons.star,
-                          size: 20,
-                          color: Colors.amber,
-                        ),
-                        itemCount: 5,
-                        initialRating: (totalRating / (5 * totalFeedbacks)) * 5,
-                        unratedColor: Colors.grey,
-                        maxRating: 5,
-                        allowHalfRating: true,
-                        onRatingUpdate: (value) {
-                          value = (totalRating / (5 * totalFeedbacks)) * 5;
-                        },
-                      ),
-                    ],
+            StreamBuilder<QuerySnapshot>(
+              stream: DressStream,
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Something went wrong');
+                }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).primaryColor),
+                    ),
                   );
-                },
-              ),
+                }
+
+                return SizedBox(
+                  height: size.height * 0.21,
+                  child: ListView.separated(
+                    separatorBuilder: (context, index) => const SizedBox(
+                      width: 15,
+                    ),
+                    physics: ClampingScrollPhysics(),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      var data = snapshot.data?.docs[index];
+                      return ProductCard(
+                        context: context,
+                        image: data!['productImages'][0],
+                        title: data['productName'],
+                        price: data['productPrice'],
+                        totalRating: data['productRating'],
+                        totalFeedbacks: data['productFeedback'],
+                        press: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DressDetailsScreen(
+                                imageUrlList: data['productImages'],
+                                title: data['productName'],
+                                address: data['productAddress'],
+                                description: data['productDescription'],
+                                price: data['productPrice'],
+                                contact: data['sellerNumber'],
+                                vendorUID: data['sellerUID'],
+                                venueId: data['productId'],
+                                email: data['sellerEmail'],
+                                size: data['productSize'],
+                                deliveryCharges: data['productDelivery'],
+                                availableQuantity: data['availableQuantity'],
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                );
+              },
             ),
           ],
         ),
