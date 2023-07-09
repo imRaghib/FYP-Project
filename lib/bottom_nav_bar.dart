@@ -1,5 +1,6 @@
 import 'package:easy_shaadi/View/Messenger%20Screens/home_screen.dart';
 import 'package:easy_shaadi/View/User%20Pages/order_history.dart';
+import 'package:easy_shaadi/View/User%20Pages/orders_tab_bar.dart';
 import 'package:easy_shaadi/View/customerMainPage.dart';
 import 'package:easy_shaadi/ViewModel/providerclass.dart';
 import 'package:easy_shaadi/checklist/pages/home_page.dart';
@@ -21,7 +22,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     CustomerMainPage(),
     MessengerScreen(),
     ReviewCart(),
-    OrderHistory(),
+    CustomerOrderTabs(),
     CheckList(),
     GuestList()
   ];

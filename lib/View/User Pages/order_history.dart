@@ -5,19 +5,24 @@ import 'package:easy_shaadi/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart' as intl;
-class OrderHistory extends StatelessWidget {
+class OrderHistory extends StatefulWidget {
   const OrderHistory({Key? key}) : super(key: key);
 
+  @override
+  State<OrderHistory> createState() => _OrderHistoryState();
+}
+
+class _OrderHistoryState extends State<OrderHistory> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Orders'),
+        title: Text('Completed'),
         centerTitle: true,
         backgroundColor: kPink,
       ),
       body: StreamBuilder(
-        stream: Provider.of<ProductProvider>(context).getAllOrders(),
+        stream: Provider.of<ProductProvider>(context).getComletedOrders(),
           builder: (context,AsyncSnapshot<QuerySnapshot> snapshot){
           if(!snapshot.hasData){
             return Center(child: CircularProgressIndicator());
@@ -45,7 +50,7 @@ class OrderHistory extends StatelessWidget {
                           ),
                         );
                       },
-                        
+
                       leading: Image(image: NetworkImage(data[index]['orderlist'][0]['ProductImage'])),
                       title: Text('Order id : '+data[index]['order_id'].toString(),style: TextStyle(
                         color: Colors.red,fontWeight: FontWeight.bold,fontSize: 16

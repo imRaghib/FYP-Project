@@ -7,24 +7,24 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart' as intl;
 
 import '../User Pages/order_history_detail.dart';
-class CompletedVendorOrders extends StatefulWidget {
-  const CompletedVendorOrders({Key? key}) : super(key: key);
+class InProgressVendorOrders extends StatefulWidget {
+  const InProgressVendorOrders({Key? key}) : super(key: key);
 
   @override
-  State<CompletedVendorOrders> createState() => _CompletedVendorOrdersState();
+  State<InProgressVendorOrders> createState() => _InProgressVendorOrdersState();
 }
 
-class _CompletedVendorOrdersState extends State<CompletedVendorOrders> {
+class _InProgressVendorOrdersState extends State<InProgressVendorOrders> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Orders'),
+        title: Text('In Progress'),
         centerTitle: true,
 
       ),
       body: StreamBuilder(
-          stream: Provider.of<ProductProvider>(context).getComletedOrders(),
+          stream: Provider.of<ProductProvider>(context).getInProgressVendorOrders(),
           builder: (context,AsyncSnapshot<QuerySnapshot> snapshot){
             if(!snapshot.hasData){
               return Center(child: CircularProgressIndicator());

@@ -31,7 +31,7 @@ class OrderDetails extends StatelessWidget {
             showDone: data['order_placed']
           ),
           orderStatus(
-              color: Colors.blue,
+              color: kPurple,
               icon: Icons.thumb_up_alt_sharp,
               title: "Order Confirmed",
               showDone: data['order_confirmed']

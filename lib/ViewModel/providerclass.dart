@@ -108,10 +108,12 @@ class ProductProvider with ChangeNotifier {
   }
 
   
-  getVendorOrders(){
-    return FirebaseFirestore.instance.collection('orders').where('vendors',arrayContains: FirebaseAuth.instance.currentUser!.uid).snapshots();
+  getInProgressVendorOrders(){
+    return FirebaseFirestore.instance.collection('orders').where('vendors',arrayContains: FirebaseAuth.instance.currentUser!.uid).where('order_delivered',isEqualTo: false).snapshots();
   }
-
+  getCompletedVendorOrders(){
+    return FirebaseFirestore.instance.collection('orders').where('vendors',arrayContains: FirebaseAuth.instance.currentUser!.uid).where('order_delivered',isEqualTo: true).snapshots();
+  }
   Future placeOrder ({String address='',String city='',String state='',String phone='',String postalcode=''}) async{
     var total_amount=getTotalAmount()+getTotalDelivery();
     await FirebaseFirestore.instance.collection('orders').doc().set({
@@ -137,7 +139,12 @@ class ProductProvider with ChangeNotifier {
   getAllOrders(){
     return FirebaseFirestore.instance.collection('orders').where('buyer_id',isEqualTo: FirebaseAuth.instance.currentUser!.uid).snapshots();
   }
-
+  getInProgressOrders(){
+    return FirebaseFirestore.instance.collection('orders').where('buyer_id',isEqualTo: FirebaseAuth.instance.currentUser!.uid).where('order_delivered',isEqualTo: false).snapshots();
+  }
+  getComletedOrders(){
+    return FirebaseFirestore.instance.collection('orders').where('buyer_id',isEqualTo: FirebaseAuth.instance.currentUser!.uid).where('order_delivered',isEqualTo: true).snapshots();
+  }
   Future fetchHallsData() async {
     var document = await FirebaseFirestore.instance.collection("Venues").get();
 

@@ -1,30 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:easy_shaadi/View/Vendor%20Pages/vendor_order_details.dart';
+import 'package:easy_shaadi/View/User%20Pages/order_history_detail.dart';
 import 'package:easy_shaadi/ViewModel/providerclass.dart';
 import 'package:easy_shaadi/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart' as intl;
-
-import '../User Pages/order_history_detail.dart';
-class CompletedVendorOrders extends StatefulWidget {
-  const CompletedVendorOrders({Key? key}) : super(key: key);
+class OrdersInProgress extends StatefulWidget {
+  const OrdersInProgress({Key? key}) : super(key: key);
 
   @override
-  State<CompletedVendorOrders> createState() => _CompletedVendorOrdersState();
+  State<OrdersInProgress> createState() => _OrdersInProgressState();
 }
 
-class _CompletedVendorOrdersState extends State<CompletedVendorOrders> {
+class _OrdersInProgressState extends State<OrdersInProgress> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Orders'),
+        title: Text('In Progress'),
         centerTitle: true,
-
+        backgroundColor: kPink,
       ),
       body: StreamBuilder(
-          stream: Provider.of<ProductProvider>(context).getComletedOrders(),
+          stream: Provider.of<ProductProvider>(context).getInProgressOrders(),
           builder: (context,AsyncSnapshot<QuerySnapshot> snapshot){
             if(!snapshot.hasData){
               return Center(child: CircularProgressIndicator());
@@ -48,13 +46,13 @@ class _CompletedVendorOrdersState extends State<CompletedVendorOrders> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => VendorOrderDetails(data: data[index],)
+                                    builder: (context) => OrderDetails(data: data[index],)
                                 ),
                               );
                             },
 
                             leading: Image(image: NetworkImage(data[index]['orderlist'][0]['ProductImage'])),
-                            title: Text('Order Id : '+data[index]['order_id'].toString(),style: TextStyle(
+                            title: Text('Order id : '+data[index]['order_id'].toString(),style: TextStyle(
                                 color: Colors.red,fontWeight: FontWeight.bold,fontSize: 16
                             ),),
                             subtitle: Text('Total Amount : '+data[index]['total_amount'].toString()+' Rs'),
