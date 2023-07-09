@@ -7,6 +7,7 @@ import 'package:easy_shaadi/ViewModel/providerclass.dart';
 import 'package:easy_shaadi/constants.dart';
 import 'package:easy_shaadi/payment_config.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:pay/pay.dart';
@@ -32,21 +33,20 @@ class BookingPage extends StatefulWidget {
   final selectedMenu;
   final email;
 
-  BookingPage({
-    super.key,
-    this.imageUrlList,
-    this.title,
-    this.address,
-    this.description,
-    this.venuePrice,
-    this.contact,
-    this.inactiveDates,
-    this.vendorUID,
-    this.venueId,
-    this.perPerson,
-    this.selectedMenu,
-    this.email
-  });
+  BookingPage(
+      {super.key,
+      this.imageUrlList,
+      this.title,
+      this.address,
+      this.description,
+      this.venuePrice,
+      this.contact,
+      this.inactiveDates,
+      this.vendorUID,
+      this.venueId,
+      this.perPerson,
+      this.selectedMenu,
+      this.email});
 
   @override
   State<BookingPage> createState() => _BookingPageState();
@@ -61,7 +61,7 @@ class _BookingPageState extends State<BookingPage> {
   final int platformFee = 5000;
   int totalPayment = 0;
 
-  DateTime selectedDate = DateTime.now().add(const Duration(days: 90));
+  DateTime selectedDate = DateTime.now().add(const Duration(days: 150));
 
   DateTimeRange selectedDates = DateTimeRange(
     start: DateTime.now(),
@@ -150,18 +150,23 @@ class _BookingPageState extends State<BookingPage> {
                   width: 20,
                 ),
                 ElevatedButton(
-                    onPressed: () async{
-                  APIs.addChatUser(widget.email);
-                  await FirebaseFirestore.instance.collection('users').doc(widget.vendorUID).get().then((user) async {
-                    if (user.exists) {
-                      me = ChatUser.fromJson(user.data()!);
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => ChatScreen(user: me)));
-                    }
-                  });
-                }, child: const Text('Message'))
+                    onPressed: () async {
+                      APIs.addChatUser(widget.email);
+                      await FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(widget.vendorUID)
+                          .get()
+                          .then((user) async {
+                        if (user.exists) {
+                          me = ChatUser.fromJson(user.data()!);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => ChatScreen(user: me)));
+                        }
+                      });
+                    },
+                    child: const Text('Message'))
               ],
             ),
           ],
@@ -188,37 +193,43 @@ class _BookingPageState extends State<BookingPage> {
             ),
             ElevatedButton(
                 onPressed: () {
-                  bookVenue(
-                    payment: returnVendorTotal(),
-                    venueId: widget.venueId,
-                    vendorUID: widget.vendorUID,
-                    customerName: customerDetails.customer.Name,
-                    customerEmail: customerDetails.customer.Email,
-                    venueBookedOn: DateFormat('dd/MM/yyyy')
-                        .format(selectedDate)
-                        .toString(),
-                    selectedMenu: widget.selectedMenu,
-                    expectedGuests: guests,
-                    venueName: widget.title,
-                    venueImg: widget.imageUrlList,
-                  );
-
-                  updatePayments(
-                    vendorUID: widget.vendorUID,
-                    payment: returnVendorTotal(),
-                  );
-
-                  updateVenueDate(
-                      venueId: widget.venueId,
-                      bookingDate: selectedDate.toString());
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, 'StreamPage', (route) => false);
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => const CustomerMainPage(),
-                  //   ),
-                  // );
+                  // without formatting, dateTime comes with time and time will never match
+                  DateFormat('yyyy-MM-dd').format(selectedDate) ==
+                          DateFormat('yyyy-MM-dd').format(
+                              DateTime.now().add(const Duration(days: 150)))
+                      ? Fluttertoast.showToast(
+                          msg: 'Please select a valid date!',
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.grey,
+                          fontSize: 15,
+                        )
+                      : {
+                          bookVenue(
+                            payment: returnVendorTotal(),
+                            venueId: widget.venueId,
+                            vendorUID: widget.vendorUID,
+                            customerName: customerDetails.customer.Name,
+                            customerEmail: customerDetails.customer.Email,
+                            venueBookedOn: DateFormat('dd/MM/yyyy')
+                                .format(selectedDate)
+                                .toString(),
+                            selectedMenu: widget.selectedMenu,
+                            expectedGuests: guests,
+                            venueName: widget.title,
+                            venueImg: widget.imageUrlList,
+                          ),
+                          updatePayments(
+                            vendorUID: widget.vendorUID,
+                            payment: returnVendorTotal(),
+                          ),
+                          updateVenueDate(
+                              venueId: widget.venueId,
+                              bookingDate: selectedDate.toString()),
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, 'StreamPage', (route) => false)
+                        };
                 },
                 child: Text("test button")),
             GooglePayButton(

@@ -5,8 +5,11 @@ import 'package:easy_shaadi/View/details/components/custom_app_bar.dart';
 import 'package:easy_shaadi/constants.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
+import '../../Model/Messenger Models/dialogs.dart';
 
 class DetailsScreen extends StatefulWidget {
   final imageUrlList;
@@ -21,21 +24,20 @@ class DetailsScreen extends StatefulWidget {
   final venueId;
   final menuMap;
   final email;
-  DetailsScreen({
-    super.key,
-    this.imageUrlList,
-    this.title,
-    this.address,
-    this.description,
-    this.price,
-    this.isFav,
-    this.contact,
-    this.inactiveDates,
-    this.vendorUID,
-    this.venueId,
-    this.menuMap,
-    this.email
-  });
+  DetailsScreen(
+      {super.key,
+      this.imageUrlList,
+      this.title,
+      this.address,
+      this.description,
+      this.price,
+      this.isFav,
+      this.contact,
+      this.inactiveDates,
+      this.vendorUID,
+      this.venueId,
+      this.menuMap,
+      this.email});
 
   @override
   _DetailsScreenState createState() => _DetailsScreenState();
@@ -284,7 +286,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                                       selectedMenu = {
                                                         menuKey: cost
                                                       };
-                                                      print(selectedMenu);
                                                     });
                                                   }),
                                             ],
@@ -368,25 +369,34 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       padding: const EdgeInsets.only(bottom: 10.0, right: 10),
                       child: InkWell(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => BookingPage(
-                                imageUrlList: widget.imageUrlList[0],
-                                title: widget.title,
-                                address: widget.address,
-                                description: widget.description,
-                                venuePrice: widget.price,
-                                contact: widget.contact,
-                                inactiveDates: widget.inactiveDates,
-                                vendorUID: widget.vendorUID,
-                                venueId: widget.venueId,
-                                perPerson: cost,
-                                selectedMenu: selectedMenu,
-                                email: widget.email,
-                              ),
-                            ),
-                          );
+                          selectedMenu == null
+                              ? Fluttertoast.showToast(
+                                  msg: 'Please select a Menu!',
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.grey,
+                                  fontSize: 15,
+                                )
+                              : Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => BookingPage(
+                                      imageUrlList: widget.imageUrlList[0],
+                                      title: widget.title,
+                                      address: widget.address,
+                                      description: widget.description,
+                                      venuePrice: widget.price,
+                                      contact: widget.contact,
+                                      inactiveDates: widget.inactiveDates,
+                                      vendorUID: widget.vendorUID,
+                                      venueId: widget.venueId,
+                                      perPerson: cost,
+                                      selectedMenu: selectedMenu,
+                                      email: widget.email,
+                                    ),
+                                  ),
+                                );
                         },
                         child: Container(
                           padding: const EdgeInsets.all(12),

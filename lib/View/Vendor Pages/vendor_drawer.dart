@@ -8,8 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../../ViewModel/providerclass.dart';
 
-
-Widget listTile({IconData ?icon, String title=""}){
+Widget listTile({IconData? icon, String title = ""}) {
   return ListTile(
     leading: Icon(
       icon,
@@ -22,6 +21,7 @@ Widget listTile({IconData ?icon, String title=""}){
     ),
   );
 }
+
 // Future SignOut()async{
 //   await FirebaseAuth.instance.signOut();
 // }
@@ -34,10 +34,9 @@ class VendorDrawer extends StatefulWidget {
 
 class _VendorDrawerState extends State<VendorDrawer> {
   @override
-
   @override
   Widget build(BuildContext context) {
-    var auth = Provider.of<ProductProvider>(context,listen: true);
+    var auth = Provider.of<ProductProvider>(context, listen: true);
 
     return Drawer(
       child: Container(
@@ -45,9 +44,7 @@ class _VendorDrawerState extends State<VendorDrawer> {
         child: ListView(
           children: [
             DrawerHeader(
-                decoration: const BoxDecoration(
-                    color: Colors.orange
-                ),
+                decoration: const BoxDecoration(color: Colors.orange),
                 child: Center(
                   child: Column(
                     children: [
@@ -59,65 +56,82 @@ class _VendorDrawerState extends State<VendorDrawer> {
                       const SizedBox(
                         height: 10,
                       ),
-                      Text( auth.getUserEmail() ?? "Unknown"),
+                      Text(auth.getUserEmail() ?? "Unknown"),
                     ],
                   ),
-                )
-            ),
+                )),
             SwitchListTile(
               value: pmode.private,
-                onChanged: (val){
-              pmode.privateMode(val);
-              setState(() {
-              });
-                },
-              title: Text('Private Mode',style: TextStyle(fontWeight: FontWeight.bold),),
-
-                ),
-
-            InkWell(
-                onTap: (){
-                  Navigator.pushReplacement(context,MaterialPageRoute(builder: (context){
-                    return VendorHomePage(val: 0,);
-                  }));
-                },
-                child: listTile(icon: Icons.dashboard,title: "Dashboard")
+              onChanged: (val) {
+                pmode.privateMode(val);
+                setState(() {});
+              },
+              title: Text(
+                'Private Mode',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
-
             InkWell(
-                onTap: (){
-                  Navigator.pushReplacement(context,MaterialPageRoute(builder: (context){
-                    return VendorHomePage(val: 1,);
+                onTap: () {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) {
+                    return VendorHomePage(
+                      val: 0,
+                    );
                   }));
                 },
-                child: listTile(icon:Icons.chat,title: "Chats")),
-
+                child: listTile(icon: Icons.dashboard, title: "Dashboard")),
             InkWell(
-                onTap: (){
-                  Navigator.pushReplacement(context,MaterialPageRoute(builder: (context){
-                    return VendorHomePage(val: 2,);
+                onTap: () {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) {
+                    return VendorHomePage(
+                      val: 0,
+                    );
                   }));
                 },
-                child: listTile(icon:Icons.library_add,title: "Directory")),
-
+                child: listTile(
+                    icon: Icons.accessible_forward_sharp,
+                    title: "Transaction History")),
             InkWell(
-                onTap: (){
-                  Navigator.pushReplacement(context,MaterialPageRoute(builder: (context){
-                    return VendorHomePage(val: 3,);
+                onTap: () {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) {
+                    return VendorHomePage(
+                      val: 1,
+                    );
                   }));
                 },
-                child: listTile(icon:Icons.history,title: "Orders")),
-
-
+                child: listTile(icon: Icons.chat, title: "Chats")),
             InkWell(
-                onTap: (){
-                  auth.signOut().whenComplete(() => {
-                    Navigator.pushReplacementNamed(context, 'mainScreen')
-                  });
+                onTap: () {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) {
+                    return VendorHomePage(
+                      val: 2,
+                    );
+                  }));
+                },
+                child: listTile(icon: Icons.library_add, title: "Directory")),
+            InkWell(
+                onTap: () {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) {
+                    return VendorHomePage(
+                      val: 3,
+                    );
+                  }));
+                },
+                child: listTile(icon: Icons.history, title: "Orders")),
+            InkWell(
+                onTap: () {
+                  auth.signOut().whenComplete(() =>
+                      {Navigator.pushReplacementNamed(context, 'mainScreen')});
 
                   // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>MyApp()), (route) => route.isFirst);
                 },
-                child: listTile(icon: Icons.logout_outlined,title: "Sign out")),
+                child:
+                    listTile(icon: Icons.logout_outlined, title: "Sign out")),
             const SizedBox(
               height: 10,
             ),
@@ -129,7 +143,12 @@ class _VendorDrawerState extends State<VendorDrawer> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: const [
-                    Center(child: Text("Support",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),)),
+                    Center(
+                        child: Text(
+                      "Support",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    )),
                     Center(child: Text("Contact: 042 111 111 111")),
                     Center(child: Text("Email: EasyShaadi@gmail.com"))
                   ],

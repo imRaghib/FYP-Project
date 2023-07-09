@@ -1,11 +1,11 @@
 import 'package:easy_shaadi/View/Messenger%20Screens/home_screen.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/add_salon_page.dart';
-import 'package:easy_shaadi/View/Vendor%20Pages/product_upload.dart';
+import 'package:easy_shaadi/View/Vendor%20Pages/add_jewellery .dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/tab_bar.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_chat_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_dashboard_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_directory_page.dart';
-import 'package:easy_shaadi/View/Vendor%20Pages/vendor_listing_page.dart';
+import 'package:easy_shaadi/View/Vendor%20Pages/add_venue_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/booking_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_orders_screen.dart';
 import 'package:easy_shaadi/constants.dart';
@@ -101,8 +101,7 @@ class _VendorHomePageState extends State<VendorHomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          VendorListingPage()),
+                                      builder: (context) => AddVenuePage()),
                                 );
                               },
                               child: Column(
@@ -127,8 +126,7 @@ class _VendorHomePageState extends State<VendorHomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          VendorListingPage()),
+                                      builder: (context) => AddVenuePage()),
                                 );
                               },
                               child: Column(
@@ -153,7 +151,7 @@ class _VendorHomePageState extends State<VendorHomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => Product()),
+                                      builder: (context) => AddJewelleryPage()),
                                 );
                               },
                               child: Column(

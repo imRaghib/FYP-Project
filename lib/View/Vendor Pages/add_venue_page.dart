@@ -10,14 +10,14 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../constants.dart';
 
-class VendorListingPage extends StatefulWidget {
-  const VendorListingPage({Key? key}) : super(key: key);
+class AddVenuePage extends StatefulWidget {
+  const AddVenuePage({Key? key}) : super(key: key);
 
   @override
-  State<VendorListingPage> createState() => _VendorListingPageState();
+  State<AddVenuePage> createState() => _AddVenuePageState();
 }
 
-class _VendorListingPageState extends State<VendorListingPage> {
+class _AddVenuePageState extends State<AddVenuePage> {
   void dispose() {
     menuDesController.dispose();
     menuCostController.dispose();
@@ -361,8 +361,11 @@ class _VendorListingPageState extends State<VendorListingPage> {
                 },
               );
             },
-            child: Text("Add Menus"),
             style: ElevatedButton.styleFrom(backgroundColor: kPurple),
+            child: const Text(
+              "Add Menus",
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -399,8 +402,11 @@ class _VendorListingPageState extends State<VendorListingPage> {
                 },
               );
             },
-            child: Text("Select Non Active Dates"),
             style: ElevatedButton.styleFrom(backgroundColor: kPurple),
+            child: const Text(
+              "Select Non Active Dates",
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -485,8 +491,11 @@ class _VendorListingPageState extends State<VendorListingPage> {
                 }
               }
             },
-            child: Text("Submit"),
             style: ElevatedButton.styleFrom(backgroundColor: kPurple),
+            child: const Text(
+              "Submit",
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -771,8 +780,11 @@ class _VendorListingPageState extends State<VendorListingPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
                     onPressed: getImage,
-                    child: Text("Add More Photos"),
                     style: ElevatedButton.styleFrom(backgroundColor: kPurple),
+                    child: const Text(
+                      "Add More Photos",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ],
