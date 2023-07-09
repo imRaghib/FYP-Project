@@ -27,14 +27,14 @@ class CustomerOrderTabs extends StatelessWidget {
                 Tab(
                   icon: Icon(
                     Icons.shopify,
-                    color: kPink,
+                    color: kPurple,
                   ),
                 ),
 
                 Tab(
                   icon: Icon(
                     Icons.history,
-                    color: kPink,
+                    color: kPurple,
                   ),
                 ),
               ],

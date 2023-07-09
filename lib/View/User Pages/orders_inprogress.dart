@@ -19,7 +19,7 @@ class _OrdersInProgressState extends State<OrdersInProgress> {
       appBar: AppBar(
         title: Text('In Progress'),
         centerTitle: true,
-        backgroundColor: kPink,
+
       ),
       body: StreamBuilder(
           stream: Provider.of<ProductProvider>(context).getInProgressOrders(),

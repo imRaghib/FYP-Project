@@ -19,7 +19,6 @@ class _OrderHistoryState extends State<OrderHistory> {
       appBar: AppBar(
         title: Text('Completed'),
         centerTitle: true,
-        backgroundColor: kPink,
       ),
       body: StreamBuilder(
         stream: Provider.of<ProductProvider>(context).getComletedOrders(),

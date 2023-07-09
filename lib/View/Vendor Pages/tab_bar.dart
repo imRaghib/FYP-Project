@@ -25,25 +25,25 @@ class OrderTabs extends StatelessWidget {
                 Tab(
                   icon: Icon(
                     Icons.menu_book,
-                    color: kPink,
+                    color: kPurple,
                   ),
                 ),
                 Tab(
                   icon: Icon(
                     Icons.brush,
-                    color: kPink,
+                    color: kPurple,
                   ),
                 ),
                 Tab(
                   icon: Icon(
                     Icons.shopify,
-                    color: kPink,
+                    color: kPurple,
                   ),
                 ),
                 Tab(
                   icon: Icon(
                     Icons.history,
-                    color: kPink,
+                    color: kPurple,
                   ),
                 ),
               ],
