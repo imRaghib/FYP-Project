@@ -34,7 +34,6 @@ class VendorDrawer extends StatefulWidget {
 
 class _VendorDrawerState extends State<VendorDrawer> {
   @override
-  @override
   Widget build(BuildContext context) {
     var auth = Provider.of<ProductProvider>(context, listen: true);
 
@@ -66,7 +65,7 @@ class _VendorDrawerState extends State<VendorDrawer> {
                 pmode.privateMode(val);
                 setState(() {});
               },
-              title: Text(
+              title: const Text(
                 'Private Mode',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
@@ -86,18 +85,6 @@ class _VendorDrawerState extends State<VendorDrawer> {
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) {
                     return VendorHomePage(
-                      val: 0,
-                    );
-                  }));
-                },
-                child: listTile(
-                    icon: Icons.accessible_forward_sharp,
-                    title: "Transaction History")),
-            InkWell(
-                onTap: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) {
-                    return VendorHomePage(
                       val: 1,
                     );
                   }));
@@ -112,13 +99,25 @@ class _VendorDrawerState extends State<VendorDrawer> {
                     );
                   }));
                 },
-                child: listTile(icon: Icons.library_add, title: "Directory")),
+                child: listTile(
+                    icon: Icons.store_mall_directory,
+                    title: "Booking History")),
             InkWell(
                 onTap: () {
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) {
                     return VendorHomePage(
                       val: 3,
+                    );
+                  }));
+                },
+                child: listTile(icon: Icons.library_add, title: "Directory")),
+            InkWell(
+                onTap: () {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) {
+                    return VendorHomePage(
+                      val: 4,
                     );
                   }));
                 },
@@ -135,7 +134,7 @@ class _VendorDrawerState extends State<VendorDrawer> {
             const SizedBox(
               height: 10,
             ),
-            Container(
+            SizedBox(
               height: 220,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),

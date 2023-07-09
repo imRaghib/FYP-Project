@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:easy_shaadi/View/Vendor%20Pages/booking_detail_page.dart';
+import 'package:easy_shaadi/View/Vendor%20Pages/venue_booking_detail_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +16,7 @@ class _VendorVenueBookingPageState extends State<VendorVenueBookingPage> {
       .collection('Vendor Orders')
       .doc(FirebaseAuth.instance.currentUser!.uid)
       .collection('Venue Orders')
+      .where('orderStatus', isEqualTo: false)
       .snapshots();
 
   @override
@@ -24,7 +25,7 @@ class _VendorVenueBookingPageState extends State<VendorVenueBookingPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Bookings"),
+        title: const Text("Active Booking Orders"),
         centerTitle: true,
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -43,25 +44,28 @@ class _VendorVenueBookingPageState extends State<VendorVenueBookingPage> {
             );
           }
 
-          return ListView.separated(
-            separatorBuilder: (context, index) => const SizedBox(
-              width: 10,
-            ),
-            physics: const ClampingScrollPhysics(),
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-            itemCount: snapshot.data!.docs.length,
-            itemBuilder: (context, index) {
-              var venueOrderData = snapshot.data?.docs[index];
+          return snapshot.data!.docs.isEmpty
+              ? const Center(
+                  child: Text(
+                    "No Bookings",
+                    style: TextStyle(color: Colors.black, fontSize: 20),
+                  ),
+                )
+              : ListView.separated(
+                  separatorBuilder: (context, index) => const SizedBox(
+                    width: 10,
+                  ),
+                  physics: const ClampingScrollPhysics(),
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (context, index) {
+                    var venueOrderData = snapshot.data?.docs[index];
 
-              String customerName = venueOrderData!['customerName'];
-              String bookingDate = venueOrderData['venueBookedOn'];
+                    String customerName = venueOrderData!['customerName'];
+                    String bookingDate = venueOrderData['venueBookedOn'];
 
-              return venueOrderData == null
-                  ? const Center(
-                      child: Text("No Bookings"),
-                    )
-                  : Material(
+                    return Material(
                       elevation: 2,
                       borderRadius: BorderRadius.circular(10),
                       child: ListTile(
@@ -73,7 +77,8 @@ class _VendorVenueBookingPageState extends State<VendorVenueBookingPage> {
                                       BookingDetailPage(
                                         bookingData: venueOrderData,
                                         email: venueOrderData['customerEmail'],
-                                        customerId: venueOrderData['customerUID'],
+                                        customerId:
+                                            venueOrderData['customerUID'],
                                       )));
                         },
                         tileColor: Colors.white,
@@ -95,8 +100,8 @@ class _VendorVenueBookingPageState extends State<VendorVenueBookingPage> {
                         trailing: const Icon(Icons.touch_app),
                       ),
                     );
-            },
-          );
+                  },
+                );
         },
       ),
     );

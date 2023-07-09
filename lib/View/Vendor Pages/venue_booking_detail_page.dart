@@ -17,7 +17,7 @@ class BookingDetailPage extends StatefulWidget {
   final email;
   final customerId;
 
-  BookingDetailPage({this.bookingData,this.email,this.customerId});
+  BookingDetailPage({this.bookingData, this.email, this.customerId});
 
   @override
   State<BookingDetailPage> createState() => _BookingDetailPageState();
@@ -29,7 +29,7 @@ formatDate(String date) {
 
 class _BookingDetailPageState extends State<BookingDetailPage> {
   final money = NumberFormat("#,##0", "en_US");
-  late var status = widget.bookingData["orderStatus"];
+  late bool status = widget.bookingData["orderStatus"];
   final int platformFee = 5000;
   @override
   Widget build(BuildContext context) {
@@ -182,7 +182,11 @@ class _BookingDetailPageState extends State<BookingDetailPage> {
                       ElevatedButton(
                           onPressed: () async {
                             APIs.addChatUser(widget.email);
-                            await FirebaseFirestore.instance.collection('users').doc(widget.customerId).get().then((user) async {
+                            await FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(widget.customerId)
+                                .get()
+                                .then((user) async {
                               if (user.exists) {
                                 me = ChatUser.fromJson(user.data()!);
                                 Navigator.push(

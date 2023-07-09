@@ -1,5 +1,6 @@
+import 'package:easy_shaadi/View/Vendor%20Pages/vendor_drawer.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_salon_page.dart';
-import 'package:easy_shaadi/View/Vendor%20Pages/booking_page.dart';
+import 'package:easy_shaadi/View/Vendor%20Pages/venue_booking_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_orders_screen.dart';
 import 'package:easy_shaadi/constants.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +15,8 @@ class OrderTabs extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Bookings and Orders'),
-          centerTitle: true,
         ),
+        drawer: const VendorDrawer(),
         body: Column(
           children: const [
             TabBar(

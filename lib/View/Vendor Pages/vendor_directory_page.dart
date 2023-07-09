@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_shaadi/View/Vendor%20Pages/vendor_drawer.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/wedding_hall_edit_page.dart';
 import 'package:easy_shaadi/View/details/details_screen.dart';
 import 'package:easy_shaadi/ViewModel/providerclass.dart';
@@ -26,7 +27,8 @@ class _VendorDirectoryPageState extends State<VendorDirectoryPage> {
 
     return Scaffold(
       // backgroundColor: Colors.black.withOpacity(0.1),
-      appBar: AppBar(title: Text("Dashboard")),
+      appBar: AppBar(title: const Text("Dashboard")),
+      drawer: const VendorDrawer(),
       body: StreamBuilder<QuerySnapshot>(
         stream: _usersStream,
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {

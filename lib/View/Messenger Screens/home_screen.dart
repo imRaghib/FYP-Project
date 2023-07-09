@@ -7,6 +7,7 @@ import '../../Model/Messenger Models/chat_user_card.dart';
 import '../../Model/Messenger Models/dialogs.dart';
 import '../../ViewModel/Messenger Class/apis.dart';
 import '../../main.dart';
+import '../Vendor Pages/vendor_drawer.dart';
 
 //home screen -- where all available contacts are shown
 class MessengerScreen extends StatefulWidget {
@@ -30,7 +31,6 @@ class _MessengerScreenState extends State<MessengerScreen> {
     //resume -- active or online
     //pause  -- inactive or offline
     SystemChannels.lifecycle.setMessageHandler((message) {
-
       if (APIs.auth.currentUser != null) {
         if (message.toString().contains('resume')) {
           APIs.updateActiveStatus(true);
@@ -54,9 +54,8 @@ class _MessengerScreenState extends State<MessengerScreen> {
         //app bar
         appBar: AppBar(
           title: const Text('Messages'),
-          centerTitle: true,
-          backgroundColor: Colors.deepPurpleAccent,
         ),
+        drawer: const VendorDrawer(),
 
         //floating button to add new user
 

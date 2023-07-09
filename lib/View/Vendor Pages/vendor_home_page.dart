@@ -2,11 +2,11 @@ import 'package:easy_shaadi/View/Messenger%20Screens/home_screen.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/add_salon_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/add_jewellery .dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/tab_bar.dart';
-import 'package:easy_shaadi/View/Vendor%20Pages/vendor_chat_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_dashboard_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_directory_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/add_venue_page.dart';
-import 'package:easy_shaadi/View/Vendor%20Pages/booking_page.dart';
+import 'package:easy_shaadi/View/Vendor%20Pages/venue_booking_history.dart';
+import 'package:easy_shaadi/View/Vendor%20Pages/venue_booking_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_orders_screen.dart';
 import 'package:easy_shaadi/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,10 +25,11 @@ class VendorHomePage extends StatefulWidget {
 }
 
 class _VendorHomePageState extends State<VendorHomePage> {
-  int currentindex = 0;
-  List Screens = [
+  int currentIndex = 0;
+  List screens = const [
     VendorDashboardPage(),
     MessengerScreen(),
+    VenueBookingHistory(),
     VendorDirectoryPage(),
     OrderTabs(),
   ];
@@ -36,15 +37,16 @@ class _VendorHomePageState extends State<VendorHomePage> {
   void initState() {
     pmode.getprivateMode();
     Provider.of<ProductProvider>(context, listen: false).fetchHallsData();
-    currentindex = widget.val;
+    currentIndex = widget.val;
     // Provider.of<ProductProvider>(context, listen: false).fetchHallsData1();
     super.initState();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: () {
           showModalBottomSheet(
             backgroundColor: Colors.white.withOpacity(0),
@@ -63,11 +65,6 @@ class _VendorHomePageState extends State<VendorHomePage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // Text(
-                        //     "What do you want to sell? (IDK what to write here)"),
-                        // SizedBox(
-                        //   height: 20,
-                        // ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -181,15 +178,15 @@ class _VendorHomePageState extends State<VendorHomePage> {
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      body: Screens[currentindex],
+      body: screens[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           selectedItemColor: kPurple,
           iconSize: 25,
-          currentIndex: currentindex,
+          currentIndex: currentIndex,
           onTap: (indexValue) {
             setState(() {
-              currentindex = indexValue;
+              currentIndex = indexValue;
             });
           },
           items: const [
@@ -200,6 +197,10 @@ class _VendorHomePageState extends State<VendorHomePage> {
             BottomNavigationBarItem(
               icon: Icon(Icons.chat),
               label: 'Chat',
+            ),
+            BottomNavigationBarItem(
+              icon: SizedBox(),
+              label: "",
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.library_add),
