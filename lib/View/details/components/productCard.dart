@@ -77,7 +77,7 @@ class ProductCard extends StatelessWidget {
               color: Colors.amber,
             ),
             itemCount: 5,
-            initialRating: (totalRating / (5 * totalFeedbacks)) * 5,
+            initialRating: totalFeedbacks==0? 0 :(totalRating / (5 * totalFeedbacks)) * 5,
             unratedColor: Colors.grey,
             maxRating: 5,
             allowHalfRating: true,

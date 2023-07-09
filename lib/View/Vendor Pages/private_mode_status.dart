@@ -12,7 +12,7 @@ class pmode{
       ids.add(data.docs[i].id);
     }
     var d2=await  FirebaseFirestore.instance.collection('Venues').doc(ids[0]).get();
-    private=d2.get('private');
+    private=d2.get('isPrivate');
   }
 
   static  privateMode(value)async{

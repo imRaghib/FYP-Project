@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../ViewModel/Vendor/venue_provider.dart';
+
 class AddJewelleryPage extends StatefulWidget {
   const AddJewelleryPage({Key? key}) : super(key: key);
 
@@ -80,21 +82,20 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
                 formKey.currentState!.save();
 
                 try {
-                  // VenueProvider().addVenueData(
-                  //   venueLocation: venueLocation,
-                  //   venueName: venueModel.venueName,
-                  //   venuePrice: venueModel.venuePrice,
-                  //   venueDescription: venueModel.venueDescription,
-                  //   venueAddress: venueModel.venueAddress,
-                  //   venueCapacity: venueModel.venueCapacity,
-                  //   venueParking: venueModel.venueParking,
-                  //   venueImages: listOfUrls,
-                  //   venueRating: 0,
-                  //   venueFeedback: 0,
-                  //   vendorNumber: venueModel.vendorNumber,
-                  //   inActiveDates: inActiveDates,
-                  //   menus: menuMap,
-                  // ); // default value change later
+                  VenueProvider().addJeweleryData(
+                      productImages: listOfUrls,
+                      productLocation: jewelleryModel.productAddress,
+                      productName: jewelleryModel.productName,
+                      productPrice: jewelleryModel.productPrice,
+                      productDescription: jewelleryModel.productDescription,
+                      productRating: 0,
+                      productFeedback: 0,
+                      productNumber: jewelleryModel.productNumber,
+                      productQuantity: jewelleryModel.availableQuantity,
+                      productSize: jewelleryModel.productSize,
+                      productCarrots: jewelleryModel.productCarrots,
+                      productDelivery: jewelleryModel.productDelivery
+                  );
 
                   Navigator.pushNamedAndRemoveUntil(
                       context, 'StreamPage', (route) => false);

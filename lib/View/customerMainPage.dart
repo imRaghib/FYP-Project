@@ -28,12 +28,12 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
 
     final Stream<QuerySnapshot> usersStream = FirebaseFirestore.instance
         .collection('Venues')
-        .where('private', isEqualTo: false)
+        .where('isPrivate', isEqualTo: false)
         .snapshots();
 
     final Stream<QuerySnapshot> jewleryStream = FirebaseFirestore.instance
         .collection('Jewelerys')
-        .where('private', isEqualTo: false)
+        .where('isPrivate', isEqualTo: false)
         .snapshots();
 
     int totalRating = 10;
@@ -174,7 +174,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
             StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('Venues')
-                  .where('private', isEqualTo: false)
+                  .where('isPrivate', isEqualTo: false)
                   .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -404,10 +404,10 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                                 address: data['productAddress'],
                                 description: data['productDescription'],
                                 price: data['productPrice'],
-                                contact: data['productNumber'],
-                                vendorUID: data['productUID'],
+                                contact: data['sellerNumber'],
+                                vendorUID: data['sellerUID'],
                                 venueId: data['productId'],
-                                email: data['productEmail'],
+                                email: data['sellerEmail'],
                                 Carrots: data['productCarrots'],
                                 tola: data['productSize'],
                                 deliveryCharges: data['productDelivery'],

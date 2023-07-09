@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_shaadi/genRandomString.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -41,7 +43,46 @@ class VenueProvider {
       "vendorEmail": FirebaseAuth.instance.currentUser!.email
     });
   }
+
+  void addJeweleryData({
+    required List productImages,
+    required String productLocation,
+    required String productName,
+    required int productPrice,
+    required String productDescription,
+    required int productRating,
+    required int productFeedback,
+    required String productNumber,
+    required int productQuantity,
+    required String productSize,
+    required String productCarrots,
+    required int productDelivery
+  }) async {
+    await FirebaseFirestore.instance.collection("Jewelerys").doc().set({
+      "productId": Random().nextInt(100000).toString(),
+      "productImages": productImages,
+      "productAddress": productLocation,
+      "productName": productName,
+      "productPrice": productPrice,
+      "productDescription": productDescription,
+      "sellerUID": FirebaseAuth.instance.currentUser!.uid,
+      "productRating": productRating,
+      "productFeedback": productFeedback,
+      "sellerNumber": productNumber,
+      "isPrivate": false,
+      "sellerEmail": FirebaseAuth.instance.currentUser!.email,
+      "availableQuantity":productQuantity,
+      "productSize":productSize,
+      "productCarrots":productCarrots,
+      "productDelivery":productDelivery
+
+    });
+  }
+
+
 }
+
+
 
 String? vendorName;
 getVendorName() async {
