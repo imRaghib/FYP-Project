@@ -17,15 +17,15 @@ class ProductProvider with ChangeNotifier {
   late Booking halls;
   List<Requests> requestList = [];
   late Requests request;
-  List<ProductOrder> cartList=[];
-  List<ProductOrder> cartHistoryList=[];
+  List<ProductOrder> cartList = [];
+  List<ProductOrder> cartHistoryList = [];
   late ProductOrder cartHistory;
-  var products=[];
-  var orders=[];
+  var products = [];
+  var orders = [];
 
-
-  void addToCart(String pname, int pprice, String pimage, int pquantity, int deliveryCost,String seller,String buyer,String size){
-    var cart=ProductOrder(
+  void addToCart(String pname, int pprice, String pimage, int pquantity,
+      int deliveryCost, String seller, String buyer, String size) {
+    var cart = ProductOrder(
         ProductName: pname,
         ProductQuantity: pquantity,
         ProductPrice: pprice,
@@ -33,53 +33,61 @@ class ProductProvider with ChangeNotifier {
         deliveryCharges: deliveryCost,
         sellerId: seller,
         buyerId: buyer,
-        size: size
-
-    );
+        size: size);
     cartList.add(cart);
-
   }
-  getProductDetails(){
-    for(int i=0;i<cartList.length;i++){
-      products.add({
-        'ProductImage':cartList[i].ProductImages,
-        'ProductName':cartList[i].ProductName,
-        'ProductQuantity':cartList[i].ProductQuantity,
-        'size':cartList[i].size,
-        'buyerId':cartList[i].buyerId,
-        'sellerId':cartList[i].sellerId,
-        'deliveryCharges':cartList[i].deliveryCharges,
-        'totalAmount':cartList[i].totalPrice(),
 
+  getProductDetails() {
+    for (int i = 0; i < cartList.length; i++) {
+      products.add({
+        'ProductImage': cartList[i].ProductImages,
+        'ProductName': cartList[i].ProductName,
+        'ProductQuantity': cartList[i].ProductQuantity,
+        'size': cartList[i].size,
+        'buyerId': cartList[i].buyerId,
+        'sellerId': cartList[i].sellerId,
+        'deliveryCharges': cartList[i].deliveryCharges,
+        'totalAmount': cartList[i].totalPrice(),
       });
-      payVendor(vendorUID: cartList[i].sellerId, payment: cartList[i].totalPrice());
-      updateVendorStock(productName: cartList[i].ProductName, quantity: cartList[i].ProductQuantity);
+      payVendor(
+          vendorUID: cartList[i].sellerId, payment: cartList[i].totalPrice());
+      updateVendorStock(
+          productName: cartList[i].ProductName,
+          quantity: cartList[i].ProductQuantity);
     }
   }
-  void searchUpdate({required collection,required name,required quantity})async{
-    var ids=[];
-    var data= await FirebaseFirestore.instance.collection(collection).where('productName',isEqualTo: name).get();
-    for(int i=0;i<data.size;i++){
+
+  void searchUpdate(
+      {required collection, required name, required quantity}) async {
+    var ids = [];
+    var data = await FirebaseFirestore.instance
+        .collection(collection)
+        .where('productName', isEqualTo: name)
+        .get();
+    for (int i = 0; i < data.size; i++) {
       ids.add(data.docs[i].id);
     }
-    if(ids.isNotEmpty){
-      await  FirebaseFirestore.instance.collection(collection).doc(ids[0]).update({'availableQuantity': FieldValue.increment(-quantity)});
-
+    if (ids.isNotEmpty) {
+      await FirebaseFirestore.instance
+          .collection(collection)
+          .doc(ids[0])
+          .update({'availableQuantity': FieldValue.increment(-quantity)});
     }
   }
 
   void updateVendorStock({
     required String productName,
     required int quantity,
-  }) async{
-    searchUpdate(collection: 'Jewelerys', name: productName,quantity: quantity);
-    searchUpdate(collection: 'Dresses', name: productName,quantity: quantity);
+  }) async {
+    searchUpdate(
+        collection: 'Jewelerys', name: productName, quantity: quantity);
+    searchUpdate(collection: 'Dresses', name: productName, quantity: quantity);
   }
-  int getTotalDelivery(){
-    int cost=0;
-    for(int i=0;i<cartList.length;i++)
-    {
-      cost=cost+cartList[i].deliveryCharges;
+
+  int getTotalDelivery() {
+    int cost = 0;
+    for (int i = 0; i < cartList.length; i++) {
+      cost = cost + cartList[i].deliveryCharges;
     }
     return cost;
   }
@@ -92,70 +100,102 @@ class ProductProvider with ChangeNotifier {
     //cost = cost + getTotalAmount();
     return cost;
   }
-  Future getCartData()async{
-    List<ProductOrder> newlist=[];
-    var basedata = await FirebaseFirestore.instance.collection("mycart").doc(FirebaseAuth.instance.currentUser!.uid).collection('reviewcart').get();
-    basedata.docs.forEach((element){
-      cartHistory=ProductOrder(
+
+  Future getCartData() async {
+    List<ProductOrder> newlist = [];
+    var basedata = await FirebaseFirestore.instance
+        .collection("mycart")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('reviewcart')
+        .get();
+    basedata.docs.forEach((element) {
+      cartHistory = ProductOrder(
           ProductImages: element.get('imageAddress'),
           ProductName: element.get('name'),
           ProductPrice: element.get('price'),
-          ProductQuantity: element.get('quantity')
-      );
+          ProductQuantity: element.get('quantity'));
       newlist.add(cartHistory);
-    }
-    );
-    cartHistoryList=newlist;
+    });
+    cartHistoryList = newlist;
     notifyListeners();
   }
-  getSameVendorOrders(data){
+
+  getSameVendorOrders(data) {
     orders.clear();
-    for (var item in data['orderlist']){
-      if(item['sellerId'] == FirebaseAuth.instance.currentUser!.uid){
+    for (var item in data['orderlist']) {
+      if (item['sellerId'] == FirebaseAuth.instance.currentUser!.uid) {
         orders.add(item);
       }
     }
   }
 
-  
-  getInProgressVendorOrders(){
-    return FirebaseFirestore.instance.collection('orders').where('vendors',arrayContains: FirebaseAuth.instance.currentUser!.uid).where('order_delivered',isEqualTo: false).snapshots();
+  getInProgressVendorOrders() {
+    return FirebaseFirestore.instance
+        .collection('orders')
+        .where('vendors', arrayContains: FirebaseAuth.instance.currentUser!.uid)
+        .where('order_delivered', isEqualTo: false)
+        .snapshots();
   }
-  getCompletedVendorOrders(){
-    return FirebaseFirestore.instance.collection('orders').where('vendors',arrayContains: FirebaseAuth.instance.currentUser!.uid).where('order_delivered',isEqualTo: true).snapshots();
+
+  getCompletedVendorOrders() {
+    return FirebaseFirestore.instance
+        .collection('orders')
+        .where('vendors', arrayContains: FirebaseAuth.instance.currentUser!.uid)
+        .where('order_delivered', isEqualTo: true)
+        .snapshots();
   }
-  Future placeOrder ({String address='',String city='',String state='',String phone='',String postalcode=''}) async{
-    var total_amount=getTotalAmount()+getTotalDelivery();
+
+  Future placeOrder(
+      {String address = '',
+      String city = '',
+      String state = '',
+      String phone = '',
+      String postalcode = ''}) async {
+    var total_amount = getTotalAmount() + getTotalDelivery();
     await FirebaseFirestore.instance.collection('orders').doc().set({
       'order_id': Random().nextInt(10000000),
       'order_date': FieldValue.serverTimestamp(),
-      'buyer_id':  FirebaseAuth.instance.currentUser!.uid,
-      'buyer_email':FirebaseAuth.instance.currentUser!.email,
-      'buyer_address':address,
-      'buyer_city':city,
-      'buyer_state':state,
-      'buyer_phone':phone,
-      'buyer_postalcode':postalcode,
-      'payment_method':'GooglePay',
-      'order_placed':true,
-      'order_confirmed':false,
-      'order_on_delivery':false,
-      'order_delivered':false,
-      'order_cancelled':false,
-      'total_amount':total_amount,
-      'orderlist':FieldValue.arrayUnion(products)
+      'buyer_id': FirebaseAuth.instance.currentUser!.uid,
+      'buyer_email': FirebaseAuth.instance.currentUser!.email,
+      'buyer_address': address,
+      'buyer_city': city,
+      'buyer_state': state,
+      'buyer_phone': phone,
+      'buyer_postalcode': postalcode,
+      'payment_method': 'GooglePay',
+      'order_placed': true,
+      'order_confirmed': false,
+      'order_on_delivery': false,
+      'order_delivered': false,
+      'order_cancelled': false,
+      'total_amount': total_amount,
+      'orderlist': FieldValue.arrayUnion(products)
     });
   }
-  
-  getAllOrders(){
-    return FirebaseFirestore.instance.collection('orders').where('buyer_id',isEqualTo: FirebaseAuth.instance.currentUser!.uid).snapshots();
+
+  getAllOrders() {
+    return FirebaseFirestore.instance
+        .collection('orders')
+        .where('buyer_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .snapshots();
   }
-  getInProgressOrders(){
-    return FirebaseFirestore.instance.collection('orders').where('buyer_id',isEqualTo: FirebaseAuth.instance.currentUser!.uid).where('order_delivered',isEqualTo: false).snapshots();
+
+  getInProgressOrders() {
+    return FirebaseFirestore.instance
+        .collection('orders')
+        .where('buyer_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .where('order_delivered', isEqualTo: false)
+        .snapshots();
   }
-  getComletedOrders(){
-    return FirebaseFirestore.instance.collection('orders').where('buyer_id',isEqualTo: FirebaseAuth.instance.currentUser!.uid).where('order_delivered',isEqualTo: true).snapshots();
+
+  getComletedOrders() {
+    return FirebaseFirestore.instance
+        .collection('orders')
+        .where('buyer_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .where('order_delivered', isEqualTo: true)
+        .snapshots();
   }
+
   Future fetchHallsData() async {
     var document = await FirebaseFirestore.instance.collection("Venues").get();
 
@@ -223,7 +263,7 @@ class ProductProvider with ChangeNotifier {
 
   Future updateQuantity() async {
     var document =
-    await FirebaseFirestore.instance.collection('Vendor Requests').get();
+        await FirebaseFirestore.instance.collection('Vendor Requests').get();
     for (var element in document.docs) {
       request = Requests(id: element.get('Id'), name: element.get('Name'));
       requestList.add(request);
@@ -259,6 +299,7 @@ class ProductProvider with ChangeNotifier {
     notifyListeners();
   }
 }
+
 Future signout() async {
   APIs.updateActiveStatus(false);
   if (await googleSignin.isSignedIn()) {
@@ -267,6 +308,7 @@ Future signout() async {
 
   await FirebaseAuth.instance.signOut();
 }
+
 deleteDocument(String venueId) async {
   var document = await FirebaseFirestore.instance;
   document.collection("Venues").doc(venueId).delete().then(

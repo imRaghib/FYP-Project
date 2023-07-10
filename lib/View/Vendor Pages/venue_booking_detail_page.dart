@@ -12,24 +12,26 @@ import '../Messenger Screens/chat_screen.dart';
 
 late ChatUser me;
 
-class BookingDetailPage extends StatefulWidget {
+class VendorBookingDetailPage extends StatefulWidget {
   final bookingData;
   final email;
   final customerId;
 
-  BookingDetailPage({this.bookingData, this.email, this.customerId});
+  VendorBookingDetailPage({this.bookingData, this.email, this.customerId});
 
   @override
-  State<BookingDetailPage> createState() => _BookingDetailPageState();
+  State<VendorBookingDetailPage> createState() =>
+      _VendorBookingDetailPageState();
 }
 
 formatDate(String date) {
   return date.substring(0, date.indexOf(' '));
 }
 
-class _BookingDetailPageState extends State<BookingDetailPage> {
+class _VendorBookingDetailPageState extends State<VendorBookingDetailPage> {
   final money = NumberFormat("#,##0", "en_US");
   late bool status = widget.bookingData["orderStatus"];
+  late bool bookingStatus = widget.bookingData["bookingCompleted"];
   final int platformFee = 5000;
   @override
   Widget build(BuildContext context) {
@@ -63,6 +65,43 @@ class _BookingDetailPageState extends State<BookingDetailPage> {
                       : updateBookingStatus(
                           orderId: widget.bookingData["orderId"],
                           updatedStatus: false);
+                }),
+            SwitchListTile(
+                title: const Text(
+                  'Booking Completed',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+                value: bookingStatus,
+                onChanged: (value) {
+                  bookingStatus
+                      ? " "
+                      : showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                            title: const Text('Update Booking Status'),
+                            content: const Text(
+                                'Are you sure you want to update booking status as completed'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.pop(context, 'Cancel'),
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    bookingStatus = true;
+                                  });
+                                  isBookingCompleted(
+                                    orderId: widget.bookingData["orderId"],
+                                  );
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          ),
+                        );
                 }),
             buildDivider(),
             Padding(
@@ -205,19 +244,6 @@ class _BookingDetailPageState extends State<BookingDetailPage> {
               ),
             ),
           ],
-        )
-        // body: Padding(
-        //   padding: const EdgeInsets.all(kDefaultPadding),
-        //   child: Column(
-        //     children: [
-        //       const Text("Customer Information"),
-        //       Text("Name: ${widget.customerName}"),
-        //       Text("Booking Date: ${formatDate(widget.bookingDate ?? " ")}"),
-        //
-        //
-        //     ],
-        //   ),
-        // ),
-        );
+        ));
   }
 }

@@ -227,6 +227,20 @@ class _BookingPageState extends State<BookingPage> {
                           updateVenueDate(
                               venueId: widget.venueId,
                               bookingDate: selectedDate.toString()),
+                          bookingHistory(
+                            payment: totalPayment,
+                            venueId: widget.venueId,
+                            vendorUID: widget.vendorUID,
+                            venueBookedOn: DateFormat('dd/MM/yyyy')
+                                .format(selectedDate)
+                                .toString(),
+                            vendorNumber: widget.contact,
+                            vendorEmail: widget.email,
+                            selectedMenu: widget.selectedMenu,
+                            expectedGuests: guests,
+                            venueName: widget.title,
+                            venueImg: widget.imageUrlList,
+                          ),
                           Navigator.pushNamedAndRemoveUntil(
                               context, 'StreamPage', (route) => false)
                         };

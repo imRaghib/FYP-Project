@@ -40,24 +40,24 @@ class VenueProvider {
       "inActiveDates": inActiveDates,
       "menus": menus,
       "isPrivate": false,
-      "vendorEmail": FirebaseAuth.instance.currentUser!.email
+      "vendorEmail": FirebaseAuth.instance.currentUser!.email,
+      "bookingCompleted": false
     });
   }
 
-  void addJeweleryData({
-    required List productImages,
-    required String productLocation,
-    required String productName,
-    required int productPrice,
-    required String productDescription,
-    required int productRating,
-    required int productFeedback,
-    required String productNumber,
-    required int productQuantity,
-    required String productSize,
-    required String productCarrots,
-    required int productDelivery
-  }) async {
+  void addJeweleryData(
+      {required List productImages,
+      required String productLocation,
+      required String productName,
+      required int productPrice,
+      required String productDescription,
+      required int productRating,
+      required int productFeedback,
+      required String productNumber,
+      required int productQuantity,
+      required String productSize,
+      required String productCarrots,
+      required int productDelivery}) async {
     await FirebaseFirestore.instance.collection("Jewelerys").doc().set({
       "productId": Random().nextInt(100000).toString(),
       "productImages": productImages,
@@ -71,27 +71,25 @@ class VenueProvider {
       "sellerNumber": productNumber,
       "isPrivate": false,
       "sellerEmail": FirebaseAuth.instance.currentUser!.email,
-      "availableQuantity":productQuantity,
-      "productSize":productSize,
-      "productCarrots":productCarrots,
-      "productDelivery":productDelivery
-
+      "availableQuantity": productQuantity,
+      "productSize": productSize,
+      "productCarrots": productCarrots,
+      "productDelivery": productDelivery
     });
   }
 
-  void addDressData({
-    required List productImages,
-    required String productLocation,
-    required String productName,
-    required int productPrice,
-    required String productDescription,
-    required int productRating,
-    required int productFeedback,
-    required String productNumber,
-    required int productQuantity,
-    required String productSize,
-    required int productDelivery
-  }) async {
+  void addDressData(
+      {required List productImages,
+      required String productLocation,
+      required String productName,
+      required int productPrice,
+      required String productDescription,
+      required int productRating,
+      required int productFeedback,
+      required String productNumber,
+      required int productQuantity,
+      required String productSize,
+      required int productDelivery}) async {
     await FirebaseFirestore.instance.collection("Dresses").doc().set({
       "productId": Random().nextInt(100000).toString(),
       "productImages": productImages,
@@ -105,16 +103,12 @@ class VenueProvider {
       "sellerNumber": productNumber,
       "isPrivate": false,
       "sellerEmail": FirebaseAuth.instance.currentUser!.email,
-      "availableQuantity":productQuantity,
-      "productSize":productSize,
-      "productDelivery":productDelivery
-
+      "availableQuantity": productQuantity,
+      "productSize": productSize,
+      "productDelivery": productDelivery
     });
   }
-
 }
-
-
 
 String? vendorName;
 getVendorName() async {
@@ -153,14 +147,27 @@ updateBookingStatus({
   });
 }
 
-void payVendor({
-  required int payment,
-  required final vendorUID
-}) {
+isBookingCompleted({
+  required String orderId,
+}) async {
+  // Get a reference to the document you want to update
+
   FirebaseFirestore.instance
-      .collection('Vendors')
-      .doc(vendorUID)
+      .collection('Vendor Orders')
+      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .collection('Venue Orders')
+      .doc(orderId)
       .update({
+    'bookingCompleted': true,
+  }).then((value) {
+    print('Order status updated successfully');
+  }).catchError((error) {
+    print('Failed to update order status: $error');
+  });
+}
+
+void payVendor({required int payment, required final vendorUID}) {
+  FirebaseFirestore.instance.collection('Vendors').doc(vendorUID).update({
     'readyPayments': FieldValue.increment(payment),
   }).then((_) {
     debugPrint('Value added successfully!');
@@ -198,4 +205,20 @@ void releaseVendorPayments({
   }).catchError((error) {
     print('Failed to update order status: $error');
   });
+}
+
+deleteVenue(String venueId) async {
+  var document = FirebaseFirestore.instance;
+  document.collection("Venues").doc(venueId).delete().then(
+        (doc) => print("Document deleted"),
+        onError: (e) => print("Error updating document $e"),
+      );
+}
+
+deleteSalon(String salonId) async {
+  var document = FirebaseFirestore.instance;
+  document.collection("Bridal Salon").doc(salonId).delete().then(
+        (doc) => print("Document deleted"),
+        onError: (e) => print("Error updating document $e"),
+      );
 }

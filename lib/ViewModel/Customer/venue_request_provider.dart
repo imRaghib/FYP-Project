@@ -4,30 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-// String requestId = getRandomString();
-// String requestStatus = 'pending';
-
-// void bookVenue({
-//   required String customerName,
-//   required String bookingDate,
-//   required String vendorUID,
-//   required String venueId,
-//   required String customerUID,
-// }) async {
-//   await FirebaseFirestore.instance
-//       .collection("Venue Requests")
-//       .doc(requestId)
-//       .set({
-//     "customerName": customerName,
-//     "bookingDate": bookingDate,
-//     "vendorUID": vendorUID,
-//     "venueId": venueId,
-//     "requestId": requestId,
-//     // "requestStatus": requestStatus,
-//     "customerUID": customerUID,
-//   });
-// }
-
 updateVenueDate({
   required String venueId,
   required String bookingDate,
@@ -95,5 +71,40 @@ void updatePayments({
     debugPrint('Value added successfully!');
   }).catchError((error) {
     debugPrint('Error adding value: $error');
+  });
+}
+
+void bookingHistory({
+  required int payment,
+  required String venueId,
+  required String vendorUID,
+  required String venueBookedOn,
+  required String vendorNumber,
+  required String vendorEmail,
+  required Map<String, int> selectedMenu,
+  required int expectedGuests,
+  required String venueName,
+  required String venueImg,
+}) async {
+  String customerUID = FirebaseAuth.instance.currentUser!.uid;
+  await FirebaseFirestore.instance
+      .collection("User Orders")
+      .doc(customerUID)
+      .collection("Venue Orders")
+      .doc(orderId)
+      .set({
+    "orderId": orderId,
+    "bookingDate": DateFormat('dd/MM/yyyy').format(DateTime.now()).toString(),
+    "venueBookedOn": venueBookedOn,
+    "payment": payment,
+    "venueId": venueId,
+    "vendorUID": vendorUID,
+    "orderStatus": orderStatus,
+    "vendorNumber": vendorNumber,
+    "vendorEmail": vendorEmail,
+    "selectedMenu": selectedMenu,
+    "expectedGuests": expectedGuests,
+    "venueName": venueName,
+    "venueImg": venueImg,
   });
 }

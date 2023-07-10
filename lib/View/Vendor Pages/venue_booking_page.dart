@@ -16,7 +16,7 @@ class _VendorVenueBookingPageState extends State<VendorVenueBookingPage> {
       .collection('Vendor Orders')
       .doc(FirebaseAuth.instance.currentUser!.uid)
       .collection('Venue Orders')
-      .where('orderStatus', isEqualTo: false)
+      .where('bookingCompleted', isEqualTo: false)
       .snapshots();
 
   @override
@@ -74,7 +74,7 @@ class _VendorVenueBookingPageState extends State<VendorVenueBookingPage> {
                               context,
                               MaterialPageRoute(
                                   builder: (BuildContext context) =>
-                                      BookingDetailPage(
+                                      VendorBookingDetailPage(
                                         bookingData: venueOrderData,
                                         email: venueOrderData['customerEmail'],
                                         customerId:

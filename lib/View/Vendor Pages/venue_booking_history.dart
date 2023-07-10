@@ -17,7 +17,7 @@ class _VenueBookingHistoryState extends State<VenueBookingHistory> {
       .collection('Vendor Orders')
       .doc(FirebaseAuth.instance.currentUser!.uid)
       .collection('Venue Orders')
-      .where('orderStatus', isEqualTo: true)
+      .where('bookingCompleted', isEqualTo: true)
       .snapshots();
 
   @override
@@ -66,47 +66,40 @@ class _VenueBookingHistoryState extends State<VenueBookingHistory> {
                     String customerName = venueOrderData!['customerName'];
                     String bookingDate = venueOrderData['venueBookedOn'];
 
-                    return venueOrderData == null
-                        ? const Center(
-                            child: Text("No Bookings"),
-                          )
-                        : Material(
-                            elevation: 2,
-                            borderRadius: BorderRadius.circular(10),
-                            child: ListTile(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            BookingDetailPage(
-                                              bookingData: venueOrderData,
-                                              email: venueOrderData[
-                                                  'customerEmail'],
-                                              customerId:
-                                                  venueOrderData['customerUID'],
-                                            )));
-                              },
-                              tileColor: Colors.white,
-                              leading: AspectRatio(
-                                aspectRatio: 4 / 3,
-                                child: ClipRRect(
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                  child: Image.network(
-                                    venueOrderData['venueImg'],
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              title:
-                                  Text("Venue: ${venueOrderData['venueName']}"),
-                              subtitle: Text(
-                                  '$customerName has booked this Venue on date: $bookingDate'),
-                              trailing: const Icon(Icons.touch_app),
+                    return Material(
+                      elevation: 2,
+                      borderRadius: BorderRadius.circular(10),
+                      child: ListTile(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      VendorBookingDetailPage(
+                                        bookingData: venueOrderData,
+                                        email: venueOrderData['customerEmail'],
+                                        customerId:
+                                            venueOrderData['customerUID'],
+                                      )));
+                        },
+                        leading: AspectRatio(
+                          aspectRatio: 4 / 3,
+                          child: ClipRRect(
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(10),
                             ),
-                          );
+                            child: Image.network(
+                              venueOrderData['venueImg'],
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        title: Text("Venue: ${venueOrderData['venueName']}"),
+                        subtitle: Text(
+                            '$customerName has booked this Venue on date: $bookingDate'),
+                        trailing: const Icon(Icons.touch_app),
+                      ),
+                    );
                   },
                 );
         },
