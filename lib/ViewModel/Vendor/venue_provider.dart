@@ -155,10 +155,11 @@ updateBookingStatus({
 
 void payVendor({
   required int payment,
+  required final vendorUID
 }) {
   FirebaseFirestore.instance
       .collection('Vendors')
-      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .doc(vendorUID)
       .update({
     'readyPayments': FieldValue.increment(payment),
   }).then((_) {

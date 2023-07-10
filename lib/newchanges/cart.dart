@@ -68,19 +68,20 @@ class ReviewCart extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 10.0, right: 10),
               child: InkWell(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DeliveryDetails(
-                        productName:'hammad' ,
-                        totalPrice: Provider.of<ProductProvider>(context,listen: false).getTotalDelivery(),
-                      )
-                    ),
-                  );
+                  if(Provider.of<ProductProvider>(context,listen: false).cartList.isNotEmpty){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => DeliveryDetails(
+                          )
+                      ),
+                    );
+                  }
+
                 },
                 child: Center(
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 100,vertical: 18),
+                    padding: const EdgeInsets.symmetric(horizontal: 100,vertical: 15),
                     decoration: BoxDecoration(
                       color: kPink.withOpacity(0.4),
                       borderRadius: const BorderRadius.all(Radius.circular(15)),

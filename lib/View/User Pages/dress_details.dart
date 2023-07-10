@@ -13,6 +13,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import 'OrderDeliveryInfo.dart';
+
 class DressDetailsScreen extends StatefulWidget {
   final imageUrlList;
   final title;
@@ -374,22 +376,33 @@ class _DressDetailsScreenState extends State<DressDetailsScreen> {
                       padding: const EdgeInsets.only(bottom: 10.0, right: 10),
                       child: InkWell(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => BookingPage(
-                                imageUrlList: widget.imageUrlList[0],
-                                title: widget.title,
-                                address: widget.address,
-                                description: widget.description,
-                                venuePrice: widget.price,
-                                contact: widget.contact,
-                                vendorUID: widget.vendorUID,
-                                venueId: widget.venueId,
-                                perPerson: cost,
+                          if(quantity>0){
+                            Provider.of<ProductProvider>(context,listen: false).addToCart(
+                                widget.title,
+                                widget.price,
+                                widget.imageUrlList[0],
+                                quantity,
+                                widget.deliveryCharges,
+                                widget.vendorUID,
+                                FirebaseAuth.instance.currentUser!.uid,
+                                widget.size
+                            );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DeliveryDetails()
                               ),
-                            ),
-                          );
+                            );
+                          }
+                          else{
+                            Fluttertoast.showToast(msg: 'Kindly Select Quantity',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.grey,
+                              fontSize: 15,
+                            );
+                          }
                         },
                         child: Container(
                           padding: const EdgeInsets.all(18),

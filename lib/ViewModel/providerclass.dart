@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:easy_shaadi/Model/customer.dart';
+import 'package:easy_shaadi/ViewModel/Vendor/venue_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -48,22 +49,31 @@ class ProductProvider with ChangeNotifier {
         'buyerId':cartList[i].buyerId,
         'sellerId':cartList[i].sellerId,
         'deliveryCharges':cartList[i].deliveryCharges,
-        'totalAmount':cartList[i].totalPrice()
+        'totalAmount':cartList[i].totalPrice(),
+
       });
+      payVendor(vendorUID: cartList[i].sellerId, payment: cartList[i].totalPrice());
+      updateVendorStock(productName: cartList[i].ProductName, quantity: cartList[i].ProductQuantity);
+    }
+  }
+  void searchUpdate({required collection,required name,required quantity})async{
+    var ids=[];
+    var data= await FirebaseFirestore.instance.collection(collection).where('productName',isEqualTo: name).get();
+    for(int i=0;i<data.size;i++){
+      ids.add(data.docs[i].id);
+    }
+    if(ids.isNotEmpty){
+      await  FirebaseFirestore.instance.collection(collection).doc(ids[0]).update({'availableQuantity': FieldValue.increment(-quantity)});
+
     }
   }
 
-
-  Future setcartdata()async{
-    for(int i=0;i<cartList.length;i++){
-      var basedata = await FirebaseFirestore.instance.collection("mycart").doc(FirebaseAuth.instance.currentUser!.uid).collection('reviewcart').doc();
-      basedata.set({
-        "imageAddress":cartList[i].ProductImages,
-        "name":cartList[i].ProductName,
-        "price":cartList[i].totalPrice(),
-        "quantity":cartList[i].ProductQuantity,
-      });
-    }
+  void updateVendorStock({
+    required String productName,
+    required int quantity,
+  }) async{
+    searchUpdate(collection: 'Jewelerys', name: productName,quantity: quantity);
+    searchUpdate(collection: 'Dresses', name: productName,quantity: quantity);
   }
   int getTotalDelivery(){
     int cost=0;

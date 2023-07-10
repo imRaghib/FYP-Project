@@ -363,70 +363,70 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
               ),
             ),
 
-            // StreamBuilder<QuerySnapshot>(
-            //   stream: jewleryStream,
-            //   builder: (BuildContext context,
-            //       AsyncSnapshot<QuerySnapshot> snapshot) {
-            //     if (snapshot.hasError) {
-            //       return Text('Something went wrong');
-            //     }
-            //
-            //     if (snapshot.connectionState == ConnectionState.waiting) {
-            //       return Center(
-            //         child: CircularProgressIndicator(
-            //           valueColor: AlwaysStoppedAnimation<Color>(
-            //               Theme.of(context).primaryColor),
-            //         ),
-            //       );
-            //     }
-            //
-            //     return SizedBox(
-            //       height: size.height * 0.21,
-            //       child: ListView.separated(
-            //         separatorBuilder: (context, index) => const SizedBox(
-            //           width: 15,
-            //         ),
-            //         physics: ClampingScrollPhysics(),
-            //         shrinkWrap: true,
-            //         scrollDirection: Axis.horizontal,
-            //         itemCount: snapshot.data!.docs.length,
-            //         itemBuilder: (context, index) {
-            //           var data = snapshot.data?.docs[index];
-            //           return ProductCard(
-            //             context: context,
-            //             image: data!['productImages'][0],
-            //             title: data['productName'],
-            //             price: data['productPrice'],
-            //             totalRating: data['productRating'],
-            //             totalFeedbacks: data['productFeedback'],
-            //             press: () {
-            //               Navigator.push(
-            //                 context,
-            //                 MaterialPageRoute(
-            //                   builder: (context) => JeweleryDetailsScreen(
-            //                     imageUrlList: data['productImages'],
-            //                     title: data['productName'],
-            //                     address: data['productAddress'],
-            //                     description: data['productDescription'],
-            //                     price: data['productPrice'],
-            //                     contact: data['sellerNumber'],
-            //                     vendorUID: data['sellerUID'],
-            //                     venueId: data['productId'],
-            //                     email: data['sellerEmail'],
-            //                     Carrots: data['productCarrots'],
-            //                     tola: data['productSize'],
-            //                     deliveryCharges: data['productDelivery'],
-            //                     availableQuantity: data['availableQuantity'],
-            //                   ),
-            //                 ),
-            //               );
-            //             },
-            //           );
-            //         },
-            //       ),
-            //     );
-            //   },
-            // ),
+            StreamBuilder<QuerySnapshot>(
+              stream: jewleryStream,
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Something went wrong');
+                }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).primaryColor),
+                    ),
+                  );
+                }
+
+                return SizedBox(
+                  height: size.height * 0.21,
+                  child: ListView.separated(
+                    separatorBuilder: (context, index) => const SizedBox(
+                      width: 15,
+                    ),
+                    physics: ClampingScrollPhysics(),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      var data = snapshot.data?.docs[index];
+                      return ProductCard(
+                        context: context,
+                        image: data!['productImages'][0],
+                        title: data['productName'],
+                        price: data['productPrice'],
+                        totalRating: data['productRating'],
+                        totalFeedbacks: data['productFeedback'],
+                        press: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => JeweleryDetailsScreen(
+                                imageUrlList: data['productImages'],
+                                title: data['productName'],
+                                address: data['productAddress'],
+                                description: data['productDescription'],
+                                price: data['productPrice'],
+                                contact: data['sellerNumber'],
+                                vendorUID: data['sellerUID'],
+                                venueId: data['productId'],
+                                email: data['sellerEmail'],
+                                Carrots: data['productCarrots'],
+                                tola: data['productSize'],
+                                deliveryCharges: data['productDelivery'],
+                                availableQuantity: data['availableQuantity'],
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
 
             Padding(
               padding:

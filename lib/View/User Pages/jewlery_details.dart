@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_shaadi/Model/Order.dart';
+import 'package:easy_shaadi/View/User%20Pages/OrderDeliveryInfo.dart';
 import 'package:easy_shaadi/View/User%20Pages/booking_request_page.dart';
 import 'package:easy_shaadi/View/details/components/bottom_buttons.dart';
 import 'package:easy_shaadi/View/details/components/custom_app_bar.dart';
@@ -384,22 +385,34 @@ class _JeweleryDetailsScreenState extends State<JeweleryDetailsScreen> {
                       padding: const EdgeInsets.only(bottom: 10.0, right: 10),
                       child: InkWell(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => BookingPage(
-                                imageUrlList: widget.imageUrlList[0],
-                                title: widget.title,
-                                address: widget.address,
-                                description: widget.description,
-                                venuePrice: widget.price,
-                                contact: widget.contact,
-                                vendorUID: widget.vendorUID,
-                                venueId: widget.venueId,
-                                perPerson: cost,
-                              ),
-                            ),
+                          Provider.of<ProductProvider>(context,listen: false).addToCart(
+                              widget.title,
+                              widget.price,
+                              widget.imageUrlList[0],
+                              quantity,
+                              widget.deliveryCharges,
+                              widget.vendorUID,
+                              FirebaseAuth.instance.currentUser!.uid,
+                              widget.tola
                           );
+                          if(quantity>0){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DeliveryDetails()
+                              ),
+                            );
+                          }
+                          else{
+                            Fluttertoast.showToast(msg: 'Kindly Select Quantity',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.grey,
+                              fontSize: 15,
+                            );
+                          }
+
                         },
                         child: Container(
                           padding: const EdgeInsets.all(18),
