@@ -49,7 +49,7 @@ updateSalonDate({
 }) async {
   // Get a reference to the document you want to update
   DocumentReference documentRef =
-      FirebaseFirestore.instance.collection('Salon').doc(salonId);
+      FirebaseFirestore.instance.collection('Bridal Salon').doc(salonId);
 
   // Update the field
   await documentRef.update({

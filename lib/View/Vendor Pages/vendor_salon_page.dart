@@ -1,55 +1,111 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_shaadi/View/Vendor%20Pages/venue_booking_detail_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
-class VendorSalonAppointmentPage extends StatelessWidget {
+class VendorSalonAppointmentPage extends StatefulWidget {
   const VendorSalonAppointmentPage({Key? key}) : super(key: key);
 
   @override
+  State<VendorSalonAppointmentPage> createState() =>
+      _VendorSalonAppointmentPageState();
+}
+
+class _VendorSalonAppointmentPageState
+    extends State<VendorSalonAppointmentPage> {
+  final Stream<QuerySnapshot> usersStream = FirebaseFirestore.instance
+      .collection('Vendor Orders')
+      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .collection('Salon Appointments')
+      .where('bookingCompleted', isEqualTo: false)
+      .snapshots();
+
+  @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Appointments'),
+        title: const Text("Active Appointments"),
         centerTitle: true,
       ),
-      body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Material(
-            elevation: 2,
-            borderRadius: BorderRadius.circular(10),
-            child: ListTile(
-              onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //       builder: (context) => VendorOrderDetails(
-                //             data: data[index],
-                //           )),
-                // );
-              },
-              leading: AspectRatio(
-                aspectRatio: 4 / 3,
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(10),
-                  ),
-                  child: Image.network(
-                    'https://firebasestorage.googleapis.com/v0/b/easyshaadi-1311a.appspot.com/o/wedding%20halls%2Fwed4.jpg?alt=media&token=16d957d6-cd33-479f-a746-ef8b6383fca0',
-                    fit: BoxFit.cover,
-                  ),
-                ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: usersStream,
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return const Text('Something went wrong');
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                    Theme.of(context).indicatorColor),
               ),
-              title: Text(
-                'Order Id:',
-                style: TextStyle(
-                    color: Colors.red,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16),
-              ),
-              subtitle: Text('Total Amount : 10000 Rs'),
-              trailing: Text(
-                  DateFormat('dd/MM/yyyy').format(DateTime.now()).toString()),
-            ),
-          )),
+            );
+          }
+
+          return snapshot.data!.docs.isEmpty
+              ? const Center(
+                  child: Text(
+                    "No Appointments",
+                    style: TextStyle(color: Colors.black, fontSize: 20),
+                  ),
+                )
+              : ListView.separated(
+                  separatorBuilder: (context, index) => const SizedBox(
+                    width: 10,
+                  ),
+                  physics: const ClampingScrollPhysics(),
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (context, index) {
+                    var venueOrderData = snapshot.data?.docs[index];
+
+                    String customerName = venueOrderData!['customerName'];
+                    String bookingDate = venueOrderData['venueBookedOn'];
+
+                    return Material(
+                      elevation: 2,
+                      borderRadius: BorderRadius.circular(10),
+                      child: ListTile(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      VendorBookingDetailPage(
+                                        bookingData: venueOrderData,
+                                        email: venueOrderData['customerEmail'],
+                                        customerId:
+                                            venueOrderData['customerUID'],
+                                      )));
+                        },
+                        tileColor: Colors.white,
+                        leading: AspectRatio(
+                          aspectRatio: 4 / 3,
+                          child: ClipRRect(
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                            child: Image.network(
+                              venueOrderData['venueImg'],
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        title: Text("Venue: ${venueOrderData['venueName']}"),
+                        subtitle: Text(
+                            '$customerName has booked this Venue on date: $bookingDate'),
+                        trailing: const Icon(Icons.touch_app),
+                      ),
+                    );
+                  },
+                );
+        },
+      ),
     );
   }
 }
