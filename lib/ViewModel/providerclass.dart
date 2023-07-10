@@ -141,6 +141,7 @@ class ProductProvider with ChangeNotifier {
       'order_confirmed':false,
       'order_on_delivery':false,
       'order_delivered':false,
+      'order_cancelled':false,
       'total_amount':total_amount,
       'orderlist':FieldValue.arrayUnion(products)
     });

@@ -136,7 +136,7 @@ class OrderReview extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const CustomerMainPage(),
+                    builder: (context) => BottomNavBar(val: 0),
                   ),
                 );
               } catch (error) {
