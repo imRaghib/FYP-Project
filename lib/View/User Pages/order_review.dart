@@ -85,70 +85,76 @@ class OrderReview extends StatelessWidget {
               ],
             ),
           ),
-          ElevatedButton(onPressed: (){
-            Provider.of<ProductProvider>(context, listen: false)
-                .getProductDetails();
-            Provider.of<ProductProvider>(context, listen: false)
-                .placeOrder(
-                address: paddress,
-                city: pcity,
-                state: pstate,
-                postalcode: ppostalcode,
-                phone: pphone);
-            Provider
-                .of<ProductProvider>(context, listen: false)
-                .cartList = [];
-            Navigator.pop(context);
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>  BottomNavBar(val: 0,),
-              ),
-            );
-          }, child: Text('Test Order')),
-          GooglePayButton(
-            paymentConfiguration:
-            PaymentConfiguration.fromJsonString(defaultGooglePay),
-            paymentItems: [
-              PaymentItem(
-                  label: 'Hammad',
-                  amount: (prov.getTotalAmount()+prov.getTotalDelivery()).toString(),
-                  status: PaymentItemStatus.final_price),
-            ],
-            type: GooglePayButtonType.buy,
-            margin: const EdgeInsets.only(top: 15.0),
-            onPaymentResult: (result) {
-              debugPrint("Results: ${result.toString()}");
-              try {
-                Provider.of<ProductProvider>(context, listen: false)
-                    .getProductDetails();
-                Provider.of<ProductProvider>(context, listen: false)
-                    .placeOrder(
-                    address: paddress,
-                    city: pcity,
-                    state: pstate,
-                    postalcode: ppostalcode,
-                    phone: pphone);
-                Provider
-                    .of<ProductProvider>(context, listen: false)
-                    .cartList = [];
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25,vertical: 4),
+            child: ElevatedButton(onPressed: (){
+              Provider.of<ProductProvider>(context, listen: false)
+                  .getProductDetails();
+              Provider.of<ProductProvider>(context, listen: false)
+                  .placeOrder(
+                  address: paddress,
+                  city: pcity,
+                  state: pstate,
+                  postalcode: ppostalcode,
+                  phone: pphone);
+              Provider
+                  .of<ProductProvider>(context, listen: false)
+                  .cartList = [];
+              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>  BottomNavBar(val: 0,),
+                ),
+              );
+            }, child: Text('Test Order')),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25,vertical: 4),
+            child: GooglePayButton(
+              paymentConfiguration:
+              PaymentConfiguration.fromJsonString(defaultGooglePay),
+              paymentItems: [
+                PaymentItem(
+                    label: 'Hammad',
+                    amount: (prov.getTotalAmount()+prov.getTotalDelivery()).toString(),
+                    status: PaymentItemStatus.final_price),
+              ],
+              type: GooglePayButtonType.buy,
+              margin: const EdgeInsets.only(top: 15.0),
+              onPaymentResult: (result) {
+                debugPrint("Results: ${result.toString()}");
+                try {
+                  Provider.of<ProductProvider>(context, listen: false)
+                      .getProductDetails();
+                  Provider.of<ProductProvider>(context, listen: false)
+                      .placeOrder(
+                      address: paddress,
+                      city: pcity,
+                      state: pstate,
+                      postalcode: ppostalcode,
+                      phone: pphone);
+                  Provider
+                      .of<ProductProvider>(context, listen: false)
+                      .cartList = [];
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BottomNavBar(val: 0),
-                  ),
-                );
-              } catch (error) {
-                debugPrint("Payment request Error: ${error.toString()}");
-              }
-            },
-            loadingIndicator: const Center(
-              child: CircularProgressIndicator(),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BottomNavBar(val: 0),
+                    ),
+                  );
+                } catch (error) {
+                  debugPrint("Payment request Error: ${error.toString()}");
+                }
+              },
+              loadingIndicator: const Center(
+                child: CircularProgressIndicator(),
+              ),
+              onError: (error) {
+                debugPrint("Payment Error: ${error.toString()}");
+              },
             ),
-            onError: (error) {
-              debugPrint("Payment Error: ${error.toString()}");
-            },
           ),
         ],
       ),

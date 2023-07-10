@@ -62,14 +62,17 @@ class _OrderDetailsState extends State<OrderDetails> {
               ),
             ],
           ),
-          widget.data['order_confirmed'] == true || widget.data['order_cancelled'] == true || cancelled == true ? Container() : ElevatedButton(onPressed: ()async{
-            await FirebaseFirestore.instance.collection('orders').doc(dt1.id).update({
-              'order_cancelled':true,
-            });
-            setState(() {
-              cancelled=true;
-            });
-          }, child: Text('Cancel order')),
+          widget.data['order_confirmed'] == true || widget.data['order_cancelled'] == true || cancelled == true ? Container() : Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(onPressed: ()async{
+              await FirebaseFirestore.instance.collection('orders').doc(dt1.id).update({
+                'order_cancelled':true,
+              });
+              setState(() {
+                cancelled=true;
+              });
+            }, child: Text('Cancel order')),
+          ),
 
           Divider(),
          SizedBox(
