@@ -6,50 +6,55 @@ import 'package:easy_shaadi/ViewModel/providerclass.dart';
 import 'package:easy_shaadi/constants.dart';
 import 'package:easy_shaadi/payment_config.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:pay/pay.dart';
 import 'package:provider/provider.dart';
 
-class SolonAppointmentPage extends StatefulWidget {
+import '../../ViewModel/Customer/salon_functions.dart';
+
+class SalonAppointmentPage extends StatefulWidget {
   final imageUrlList;
   final title;
   final address;
   final description;
-  final venuePrice;
   final contact;
   final inactiveDates;
   final vendorUID;
-  final venueId;
+  final salonId;
   final selectedPackage;
+  final email;
+  final selectedPackagePrice;
 
-  SolonAppointmentPage({
+  SalonAppointmentPage({
     super.key,
     this.imageUrlList,
     this.title,
     this.address,
     this.description,
-    this.venuePrice,
     this.contact,
     this.inactiveDates,
     this.vendorUID,
-    this.venueId,
+    this.salonId,
     this.selectedPackage,
+    this.email,
+    this.selectedPackagePrice,
   });
 
   @override
-  State<SolonAppointmentPage> createState() => _SolonAppointmentPageState();
+  State<SalonAppointmentPage> createState() => _SalonAppointmentPageState();
 }
 
-class _SolonAppointmentPageState extends State<SolonAppointmentPage> {
+class _SalonAppointmentPageState extends State<SalonAppointmentPage> {
   final double kDefaultTitle = 22;
   final double kDefaultText = 17;
 
-  int guests = 100;
+  int totalPayment = 0;
+
   int count = 100;
   final int platformFee = 5000;
-  int total = 0;
-  DateTime selectedDate = DateTime.now().add(const Duration(days: 90));
+  DateTime selectedDate = DateTime.now().add(const Duration(days: 150));
 
   DateTimeRange selectedDates = DateTimeRange(
     start: DateTime.now(),
@@ -97,14 +102,76 @@ class _SolonAppointmentPageState extends State<SolonAppointmentPage> {
           children: [
             buildHallDetails(size),
             buildSizedBox(),
-            buildYourBooking(context, size, selectedDates),
+            buildYourBooking(size, selectedDates),
             buildSizedBox(),
-            buildPriceDetails(context),
+            buildPriceDetails(),
             buildSizedBox(),
             buildMessageHost(),
             buildSizedBox(),
             buildPayWith(),
             buildSizedBox(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Container buildHallDetails(Size size) {
+    return Container(
+      height: size.height * 0.15,
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(kDefaultPadding),
+        child: Row(
+          crossAxisAlignment:
+              CrossAxisAlignment.start, // Adjust the alignment as needed
+          children: [
+            AspectRatio(
+              aspectRatio: 4 / 3,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(10),
+                ),
+                child: Container(
+                  color: const Color(0xFFdce2f7),
+                  child: Image.network(
+                    widget.imageUrlList,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+                width:
+                    kDefaultPadding), // Add spacing between the image and text
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.title,
+                    style: const TextStyle(
+                      fontFamily: 'SourceSansPro-SemiBold',
+                      fontSize: 18,
+                    ),
+                    textAlign:
+                        TextAlign.left, // Adjust the text alignment as needed
+                  ),
+                  const SizedBox(
+                      height: kDefaultPadding /
+                          4), // Add spacing between the text elements
+                  Text(
+                    widget.address,
+                    style: const TextStyle(
+                      fontFamily: 'SourceSansPro-SemiBold',
+                    ),
+                    textAlign:
+                        TextAlign.left, // Adjust the text alignment as needed
+                  ),
+                  const SizedBox(height: kDefaultPadding / 4),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -163,6 +230,59 @@ class _SolonAppointmentPageState extends State<SolonAppointmentPage> {
                 fontWeight: FontWeight.w700,
               ),
             ),
+            ElevatedButton(
+                onPressed: () {
+                  // without formatting, dateTime comes with time and time will never match
+                  DateFormat('yyyy-MM-dd').format(selectedDate) ==
+                          DateFormat('yyyy-MM-dd').format(
+                              DateTime.now().add(const Duration(days: 150)))
+                      ? Fluttertoast.showToast(
+                          msg: 'Please select a valid date!',
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.grey,
+                          fontSize: 15,
+                        )
+                      : {
+                          bookSalon(
+                            payment: returnVendorTotal(),
+                            salonId: widget.salonId,
+                            vendorUID: widget.vendorUID,
+                            customerName: customerDetails.customer.Name,
+                            customerEmail: customerDetails.customer.Email,
+                            salonBookedOn: DateFormat('dd/MM/yyyy')
+                                .format(selectedDate)
+                                .toString(),
+                            selectedPackage: widget.selectedPackage,
+                            salonName: widget.title,
+                            salonImg: widget.imageUrlList,
+                          ),
+                          updatePayments(
+                            vendorUID: widget.vendorUID,
+                            payment: returnVendorTotal(),
+                          ),
+                          updateSalonDate(
+                              salonId: widget.salonId,
+                              bookingDate: selectedDate.toString()),
+                          appointmentHistory(
+                            payment: totalPayment,
+                            salonId: widget.salonId,
+                            vendorUID: widget.vendorUID,
+                            salonBookedOn: DateFormat('dd/MM/yyyy')
+                                .format(selectedDate)
+                                .toString(),
+                            vendorNumber: widget.contact,
+                            vendorEmail: widget.email,
+                            selectedPackage: widget.selectedPackage,
+                            salonName: widget.title,
+                            salonImg: widget.imageUrlList,
+                          ),
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, 'StreamPage', (route) => false)
+                        };
+                },
+                child: Text("test button")),
             GooglePayButton(
               paymentConfiguration:
                   PaymentConfiguration.fromJsonString(defaultGooglePay),
@@ -175,42 +295,41 @@ class _SolonAppointmentPageState extends State<SolonAppointmentPage> {
               type: GooglePayButtonType.buy,
               margin: const EdgeInsets.only(top: 15.0),
               onPaymentResult: (result) {
-                debugPrint("Results: ${result.toString()}");
                 try {
+                  // // bookVenue(
+                  // //   customerName: customerDetails.customer.Name,
+                  // //   bookingDate: selectedDate.toString(),
+                  // //   vendorUID: widget.vendorUID,
+                  // //   venueId: widget.venueId,
+                  // //   customerUID: FirebaseAuth.instance.currentUser!.uid,
+                  // // );
+                  //
                   // bookVenue(
-                  //   customerName: customerDetails.customer.Name,
-                  //   bookingDate: selectedDate.toString(),
+                  //   payment: total,
+                  //   venueId: widget.salonId,
                   //   vendorUID: widget.vendorUID,
-                  //   venueId: widget.venueId,
-                  //   customerUID: FirebaseAuth.instance.currentUser!.uid,
+                  //   customerName: customerDetails.customer.Name,
+                  //   customerEmail: customerDetails.customer.Email,
+                  //   venueBookedOn: DateFormat('dd/MM/yyyy')
+                  //       .format(selectedDate)
+                  //       .toString(),
+                  //   selectedMenu: {},
+                  //   expectedGuests: guests,
+                  //   venueName: widget.title,
+                  //   venueImg: widget.imageUrlList,
                   // );
-
-                  bookVenue(
-                    payment: total,
-                    venueId: widget.venueId,
-                    vendorUID: widget.vendorUID,
-                    customerName: customerDetails.customer.Name,
-                    customerEmail: customerDetails.customer.Email,
-                    venueBookedOn: DateFormat('dd/MM/yyyy')
-                        .format(selectedDate)
-                        .toString(),
-                    selectedMenu: {},
-                    expectedGuests: guests,
-                    venueName: widget.title,
-                    venueImg: widget.imageUrlList,
-                  );
-
-                  updatePayments(vendorUID: widget.vendorUID, payment: total);
-
-                  updateVenueDate(
-                      venueId: widget.venueId,
-                      bookingDate: selectedDate.toString());
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const CustomerMainPage(),
-                    ),
-                  );
+                  //
+                  // updatePayments(vendorUID: widget.vendorUID, payment: total);
+                  //
+                  // updateVenueDate(
+                  //     venueId: widget.salonId,
+                  //     bookingDate: selectedDate.toString());
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => const CustomerMainPage(),
+                  //   ),
+                  // );
                 } catch (error) {
                   debugPrint("Payment request Error: ${error.toString()}");
                 }
@@ -234,7 +353,7 @@ class _SolonAppointmentPageState extends State<SolonAppointmentPage> {
     );
   }
 
-  Container buildPriceDetails(BuildContext context) {
+  Container buildPriceDetails() {
     final money = NumberFormat("#,##0", "en_US");
 
     return Container(
@@ -263,7 +382,7 @@ class _SolonAppointmentPageState extends State<SolonAppointmentPage> {
                   ),
                 ),
                 Text(
-                  "${money.format(widget.selectedPackage)} PKR",
+                  "${money.format(widget.selectedPackagePrice)} PKR",
                   style: TextStyle(
                     color: Colors.black.withOpacity(0.4),
                     fontSize: kDefaultText,
@@ -317,39 +436,13 @@ class _SolonAppointmentPageState extends State<SolonAppointmentPage> {
                 ),
               ],
             ),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.end,
-            //   children: [
-            //     TextButton(
-            //       onPressed: () {
-            //         showModalBottomSheet(
-            //             context: context,
-            //             builder: (BuildContext context) {
-            //               return Container();
-            //             });
-            //       },
-            //       style: TextButton.styleFrom(
-            //         padding: EdgeInsets.zero,
-            //       ),
-            //       child: Text(
-            //         "More Info",
-            //         style: TextStyle(
-            //             color: Colors.black,
-            //             fontSize: kDefaultText,
-            //             fontWeight: FontWeight.w500,
-            //             decoration: TextDecoration.underline),
-            //       ),
-            //     ),
-            //   ],
-            // ),
           ],
         ),
       ),
     );
   }
 
-  Container buildYourBooking(
-      BuildContext context, Size size, DateTimeRange selectedDates) {
+  Container buildYourBooking(Size size, DateTimeRange selectedDates) {
     return Container(
       color: Colors.white,
       child: Padding(
@@ -482,48 +575,14 @@ class _SolonAppointmentPageState extends State<SolonAppointmentPage> {
     }
   }
 
-  Container buildHallDetails(Size size) {
-    return Container(
-      height: size.height * 0.15,
-      color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(kDefaultPadding),
-        child: Row(
-          children: [
-            AspectRatio(
-              aspectRatio: 4 / 3,
-              child: ClipRRect(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10),
-                  ),
-                  child: Container(
-                    color: Color(0xFFdce2f7),
-                    child: Image.network(
-                      widget.imageUrlList,
-                      fit: BoxFit.cover,
-                    ),
-                  )),
-            ),
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    widget.title,
-                    textAlign: TextAlign.center,
-                  ),
-                )
-              ],
-            )
-          ],
-        ),
-      ),
-    );
+  returnTotal() {
+    totalPayment = widget.selectedPackagePrice + platformFee;
+    return totalPayment;
   }
 
-  returnTotal() {
-    total = widget.selectedPackage + platformFee;
-    return total;
+  returnVendorTotal() {
+    var vendorTotal = widget.selectedPackagePrice - platformFee;
+    return vendorTotal;
   }
 
   formatDate() {

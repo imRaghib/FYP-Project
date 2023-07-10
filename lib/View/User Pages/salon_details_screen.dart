@@ -6,6 +6,7 @@ import 'package:easy_shaadi/View/details/components/custom_app_bar.dart';
 import 'package:easy_shaadi/constants.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -23,21 +24,20 @@ class SalonDetailsScreen extends StatefulWidget {
   final menuMap;
   final email;
 
-  SalonDetailsScreen({
-    super.key,
-    this.imageUrlList,
-    this.title,
-    this.address,
-    this.description,
-    this.price,
-    this.isFav,
-    this.contact,
-    this.inactiveDates,
-    this.vendorUID,
-    this.venueId,
-    this.menuMap,
-    this.email
-  });
+  SalonDetailsScreen(
+      {super.key,
+      this.imageUrlList,
+      this.title,
+      this.address,
+      this.description,
+      this.price,
+      this.isFav,
+      this.contact,
+      this.inactiveDates,
+      this.vendorUID,
+      this.venueId,
+      this.menuMap,
+      this.email});
 
   @override
   _SalonDetailsScreenState createState() => _SalonDetailsScreenState();
@@ -47,6 +47,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
   int activeIndex = 0;
   int cost = 0;
   int? selectedCheckboxIndex;
+  Map<String, int>? selectedPackage;
 
   @override
   Widget build(BuildContext context) {
@@ -128,9 +129,9 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                           padding:
                               const EdgeInsets.only(bottom: kDefaultPadding),
                           child: Text(
-                            'Solon information',
+                            'Salon information',
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -150,30 +151,6 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                               height: 1.5,
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: kDefaultPadding + 5),
-                          child: Divider(
-                            thickness: 2,
-                            color: kPurple.withOpacity(0.2),
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                              const EdgeInsets.only(bottom: kDefaultPadding),
-                          child: Text(
-                            'Contact Seller',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        BottomButtons(
-                          contact: widget.contact,
-                          email: widget.email,
-                          vendorId: widget.vendorUID,
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(
@@ -231,9 +208,9 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                                     (BuildContext context, int index) =>
                                         const Divider(),
                                 itemBuilder: (BuildContext context, int index) {
-                                  String key =
+                                  String packageKey =
                                       widget.menuMap.keys.elementAt(index);
-                                  int value = widget.menuMap[key];
+                                  int value = widget.menuMap[packageKey];
                                   return Container(
                                     decoration: BoxDecoration(
                                       color: kPink.withAlpha(50),
@@ -268,8 +245,11 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                                                     setState(() {
                                                       selectedCheckboxIndex =
                                                           value!;
-                                                      cost =
-                                                          widget.menuMap[key];
+                                                      cost = widget
+                                                          .menuMap[packageKey];
+                                                      selectedPackage = {
+                                                        packageKey: cost
+                                                      };
                                                     });
                                                   }),
                                             ],
@@ -278,7 +258,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                                             height: 10,
                                           ),
                                           ExpandableText(
-                                            key,
+                                            packageKey,
                                             expandText: '\n\nShow More',
                                             collapseText: '\n\nShow Less',
                                             maxLines: 6,
@@ -311,6 +291,28 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                                 },
                               )
                             : Container(),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: kDefaultPadding + 5),
+                          child: Divider(
+                            thickness: 2,
+                            color: kPurple.withOpacity(0.2),
+                          ),
+                        ),
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(bottom: kDefaultPadding),
+                          child: Text(
+                            'Contact Seller',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        BottomButtons(
+                          contact: widget.contact,
+                        ),
                         SizedBox(
                           height: 110,
                         )
@@ -353,23 +355,33 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                       padding: const EdgeInsets.only(bottom: 10.0, right: 10),
                       child: InkWell(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SolonAppointmentPage(
-                                imageUrlList: widget.imageUrlList[0],
-                                title: widget.title,
-                                address: widget.address,
-                                description: widget.description,
-                                venuePrice: widget.price,
-                                contact: widget.contact,
-                                inactiveDates: widget.inactiveDates,
-                                vendorUID: widget.vendorUID,
-                                venueId: widget.venueId,
-                                selectedPackage: cost,
-                              ),
-                            ),
-                          );
+                          selectedPackage == null
+                              ? Fluttertoast.showToast(
+                                  msg: 'Please select a Package!',
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.grey,
+                                  fontSize: 15,
+                                )
+                              : Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => SalonAppointmentPage(
+                                      imageUrlList: widget.imageUrlList[0],
+                                      title: widget.title,
+                                      address: widget.address,
+                                      description: widget.description,
+                                      contact: widget.contact,
+                                      inactiveDates: widget.inactiveDates,
+                                      vendorUID: widget.vendorUID,
+                                      salonId: widget.venueId,
+                                      selectedPackagePrice: cost,
+                                      selectedPackage: selectedPackage,
+                                      email: widget.email,
+                                    ),
+                                  ),
+                                );
                         },
                         child: Container(
                           padding: const EdgeInsets.all(12),

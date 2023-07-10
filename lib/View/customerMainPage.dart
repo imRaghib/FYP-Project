@@ -323,6 +323,8 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                                 venueId: data['venueId'],
                                 menuMap: data['menus'],
                                 email: data['vendorEmail'],
+                                parking: data['venueParking'],
+                                capacity: data['venueCapacity'],
                               ),
                             ),
                           );
@@ -486,7 +488,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
                       var data = snapshot.data?.docs[index];
-                      return ItemCard(
+                      return ProductCard(
                         context: context,
                         image: data!['salonImages'][0],
                         title: data['salonName'],
@@ -509,6 +511,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                                 vendorUID: data['vendorUID'],
                                 venueId: data['salonId'],
                                 menuMap: data['salonPackages'],
+                                email: data['vendorEmail'],
                               ),
                             ),
                           );

@@ -1,28 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_shaadi/View/User%20Pages/appointment_details.dart';
 import 'package:easy_shaadi/View/User%20Pages/booking_detail_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-class BookingHistory extends StatefulWidget {
-  const BookingHistory({Key? key}) : super(key: key);
+class SalonAppointmentHistory extends StatefulWidget {
+  const SalonAppointmentHistory({Key? key}) : super(key: key);
 
   @override
-  State<BookingHistory> createState() => _BookingHistoryState();
+  State<SalonAppointmentHistory> createState() =>
+      _SalonAppointmentHistoryState();
 }
 
-class _BookingHistoryState extends State<BookingHistory> {
+class _SalonAppointmentHistoryState extends State<SalonAppointmentHistory> {
   final Stream<QuerySnapshot> pendingBookings = FirebaseFirestore.instance
       .collection('User Orders')
       .doc(FirebaseAuth.instance.currentUser!.uid)
-      .collection('Venue Orders')
+      .collection('Salon Appointments')
       .where('orderStatus', isEqualTo: false)
       .snapshots();
 
   final Stream<QuerySnapshot> completedBookings = FirebaseFirestore.instance
       .collection('User Orders')
       .doc(FirebaseAuth.instance.currentUser!.uid)
-      .collection('Venue Orders')
+      .collection('Salon Appointments')
       .where('orderStatus', isEqualTo: true)
       .snapshots();
 
@@ -32,7 +34,7 @@ class _BookingHistoryState extends State<BookingHistory> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Booking History'),
+          title: const Text('Appointment History'),
         ),
         body: Column(
           children: [
@@ -81,7 +83,7 @@ class _BookingHistoryState extends State<BookingHistory> {
         return snapshot.data!.docs.isEmpty
             ? const Center(
                 child: Text(
-                  "No Bookings History",
+                  "No Appointment History",
                   style: TextStyle(color: Colors.black, fontSize: 20),
                 ),
               )
@@ -98,7 +100,7 @@ class _BookingHistoryState extends State<BookingHistory> {
                   //
                   // String vendorEmail =
                   //     venueOrderData!['vendorEmail'];
-                  String bookingDate = venueOrderData!['venueBookedOn'];
+                  String bookingDate = venueOrderData!['salonBookedOn'];
 
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -111,7 +113,7 @@ class _BookingHistoryState extends State<BookingHistory> {
                               context,
                               MaterialPageRoute(
                                   builder: (BuildContext context) =>
-                                      UserBookingDetailPage(
+                                      UserAppointmentDetailPage(
                                         bookingData: venueOrderData,
                                         email: venueOrderData['vendorEmail'],
                                         vendorId: venueOrderData['vendorUID'],
@@ -124,14 +126,13 @@ class _BookingHistoryState extends State<BookingHistory> {
                               Radius.circular(10),
                             ),
                             child: Image.network(
-                              venueOrderData['venueImg'],
+                              venueOrderData['salonImg'],
                               fit: BoxFit.cover,
                             ),
                           ),
                         ),
-                        title: Text("Venue: ${venueOrderData['venueName']}"),
-                        subtitle:
-                            Text('This venue this booked on $bookingDate'),
+                        title: Text("Salon: ${venueOrderData['salonName']}"),
+                        subtitle: Text('Appointment is made on $bookingDate'),
                         trailing: const Icon(Icons.touch_app),
                       ),
                     ),

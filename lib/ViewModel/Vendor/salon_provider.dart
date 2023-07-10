@@ -38,6 +38,8 @@ class SalonProvider {
       "startingPrice": startingPrice,
       "salonPackages": packages,
       "category": category,
+      "isPrivate": false,
+      "vendorEmail": FirebaseAuth.instance.currentUser!.email,
     });
   }
 }

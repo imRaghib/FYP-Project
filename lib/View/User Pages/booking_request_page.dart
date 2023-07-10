@@ -32,21 +32,24 @@ class BookingPage extends StatefulWidget {
   final perPerson;
   final selectedMenu;
   final email;
+  final capacity;
 
-  BookingPage(
-      {super.key,
-      this.imageUrlList,
-      this.title,
-      this.address,
-      this.description,
-      this.venuePrice,
-      this.contact,
-      this.inactiveDates,
-      this.vendorUID,
-      this.venueId,
-      this.perPerson,
-      this.selectedMenu,
-      this.email});
+  BookingPage({
+    super.key,
+    this.imageUrlList,
+    this.title,
+    this.address,
+    this.description,
+    this.venuePrice,
+    this.contact,
+    this.inactiveDates,
+    this.vendorUID,
+    this.venueId,
+    this.perPerson,
+    this.selectedMenu,
+    this.email,
+    this.capacity,
+  });
 
   @override
   State<BookingPage> createState() => _BookingPageState();
@@ -630,9 +633,25 @@ class _BookingPageState extends State<BookingPage> {
                                                 ),
                                                 RawMaterialButton(
                                                   onPressed: () {
-                                                    setModalState(() {
-                                                      count += 1;
-                                                    });
+                                                    if (count <
+                                                        widget.capacity) {
+                                                      setModalState(() {
+                                                        count += 1;
+                                                      });
+                                                    } else {
+                                                      Fluttertoast.showToast(
+                                                        msg:
+                                                            "Venue has max capacity of ${widget.capacity}",
+                                                        toastLength:
+                                                            Toast.LENGTH_SHORT,
+                                                        gravity:
+                                                            ToastGravity.BOTTOM,
+                                                        timeInSecForIosWeb: 1,
+                                                        backgroundColor:
+                                                            Colors.grey,
+                                                        fontSize: 15,
+                                                      );
+                                                    }
                                                   },
                                                   fillColor: Colors.white,
                                                   child: Icon(
@@ -654,9 +673,24 @@ class _BookingPageState extends State<BookingPage> {
                                                   top: kDefaultPadding * 2),
                                               child: OutlinedButton(
                                                 onPressed: () {
-                                                  setModalState(() {
-                                                    count += 50;
-                                                  });
+                                                  if (count < widget.capacity) {
+                                                    setModalState(() {
+                                                      count += 50;
+                                                    });
+                                                  } else {
+                                                    Fluttertoast.showToast(
+                                                      msg:
+                                                          "Venue has max capacity of ${widget.capacity}",
+                                                      toastLength:
+                                                          Toast.LENGTH_SHORT,
+                                                      gravity:
+                                                          ToastGravity.BOTTOM,
+                                                      timeInSecForIosWeb: 1,
+                                                      backgroundColor:
+                                                          Colors.grey,
+                                                      fontSize: 15,
+                                                    );
+                                                  }
                                                 },
                                                 child: Text("Add 50 Guests",
                                                     style: TextStyle(

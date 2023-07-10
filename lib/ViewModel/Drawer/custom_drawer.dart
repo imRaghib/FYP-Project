@@ -1,12 +1,14 @@
+import 'package:easy_shaadi/View/User%20Pages/salon_appointment_history.dart';
 import 'package:easy_shaadi/View/customerMainPage.dart';
 import 'package:easy_shaadi/bottom_nav_bar.dart';
 import 'package:easy_shaadi/checklist/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../View/User Pages/booking_history.dart';
 import '../providerclass.dart';
 
-Widget listTile({IconData ?icon, String title=""}){
+Widget listTile({IconData? icon, String title = ""}) {
   return ListTile(
     leading: Icon(
       icon,
@@ -19,6 +21,7 @@ Widget listTile({IconData ?icon, String title=""}){
     ),
   );
 }
+
 // Future SignOut()async{
 //   await FirebaseAuth.instance.signOut();
 // }
@@ -32,7 +35,7 @@ class MyDrawer extends StatefulWidget {
 class _MyDrawerState extends State<MyDrawer> {
   @override
   Widget build(BuildContext context) {
-    var auth = Provider.of<ProductProvider>(context,listen: true);
+    var auth = Provider.of<ProductProvider>(context, listen: true);
 
     return Drawer(
       child: Container(
@@ -40,9 +43,7 @@ class _MyDrawerState extends State<MyDrawer> {
         child: ListView(
           children: [
             DrawerHeader(
-                decoration: const BoxDecoration(
-                    color: Colors.orange
-                ),
+                decoration: const BoxDecoration(color: Colors.orange),
                 child: Center(
                   child: Column(
                     children: [
@@ -54,55 +55,79 @@ class _MyDrawerState extends State<MyDrawer> {
                       const SizedBox(
                         height: 10,
                       ),
-                      Text( auth.getUserEmail() ?? "Unknown"),
+                      Text(auth.getUserEmail() ?? "Unknown"),
                     ],
                   ),
-                )
-            ),
-
+                )),
             InkWell(
-                onTap: (){
-                  Navigator.pushReplacement(context,MaterialPageRoute(builder: (context){
-                    return BottomNavBar(val: 0,);
+                onTap: () {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) {
+                    return BottomNavBar(
+                      val: 0,
+                    );
                   }));
                 },
-                child: listTile(icon: Icons.home_outlined,title: "Home")
-            ),
-
+                child: listTile(icon: Icons.home_outlined, title: "Home")),
             InkWell(
-                onTap: (){
-                  Navigator.pushReplacement(context,MaterialPageRoute(builder: (context){
-                    return BottomNavBar(val: 1,);
+                onTap: () {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) {
+                    return BottomNavBar(
+                      val: 1,
+                    );
                   }));
                 },
-                child: listTile(icon:Icons.mail_outlined,title: "Messages")),
-
+                child: listTile(icon: Icons.mail_outlined, title: "Messages")),
             InkWell(
-                onTap: (){
-                  Navigator.pushReplacement(context,MaterialPageRoute(builder: (context){
-                    return BottomNavBar(val: 2,);
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const BookingHistory()),
+                  );
+                },
+                child: listTile(icon: Icons.store, title: "Booking History")),
+            InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SalonAppointmentHistory()),
+                  );
+                },
+                child: listTile(icon: Icons.brush, title: "Salon History")),
+            InkWell(
+                onTap: () {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) {
+                    return BottomNavBar(
+                      val: 2,
+                    );
                   }));
                 },
-                child: listTile(icon:Icons.inventory_outlined,title: "Check List")),
-
+                child: listTile(
+                    icon: Icons.inventory_outlined, title: "Check List")),
             InkWell(
-                onTap: (){
-                  Navigator.pushReplacement(context,MaterialPageRoute(builder: (context){
-                    return BottomNavBar(val: 3,);
+                onTap: () {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) {
+                    return BottomNavBar(
+                      val: 3,
+                    );
                   }));
                 },
-                child: listTile(icon:Icons.person_add_alt,title: "Guest List")),
-
-
+                child:
+                    listTile(icon: Icons.person_add_alt, title: "Guest List")),
             InkWell(
-                onTap: (){
-                  auth.signOut().whenComplete(() => {
-                    Navigator.pushReplacementNamed(context, 'mainScreen')
-                  });
+                onTap: () {
+                  auth.signOut().whenComplete(() =>
+                      {Navigator.pushReplacementNamed(context, 'mainScreen')});
 
-                 // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>MyApp()), (route) => route.isFirst);
-                  },
-                child: listTile(icon: Icons.logout_outlined,title: "Sign out")),
+                  // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>MyApp()), (route) => route.isFirst);
+                },
+                child:
+                    listTile(icon: Icons.logout_outlined, title: "Sign out")),
             const SizedBox(
               height: 10,
             ),
@@ -114,7 +139,12 @@ class _MyDrawerState extends State<MyDrawer> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: const [
-                    Center(child: Text("Support",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),)),
+                    Center(
+                        child: Text(
+                      "Support",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    )),
                     Center(child: Text("Contact: 042 111 111 111")),
                     Center(child: Text("Email: EasyShaadi@gmail.com"))
                   ],

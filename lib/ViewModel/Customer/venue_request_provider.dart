@@ -23,6 +23,7 @@ updateVenueDate({
 String orderId = getRandomString();
 String paymentStatus = 'onHold';
 bool orderStatus = false;
+bool bookingCompleted = false;
 void bookVenue({
   required int payment,
   required String venueId,
@@ -56,6 +57,7 @@ void bookVenue({
     "expectedGuests": expectedGuests,
     "venueName": venueName,
     "venueImg": venueImg,
+    "bookingCompleted": bookingCompleted,
   });
 }
 

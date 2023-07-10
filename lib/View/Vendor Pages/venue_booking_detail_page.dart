@@ -55,16 +55,35 @@ class _VendorBookingDetailPageState extends State<VendorBookingDetailPage> {
                 ),
                 value: status,
                 onChanged: (value) {
-                  setState(() {
-                    status = value;
-                  });
                   status
-                      ? updateBookingStatus(
-                          orderId: widget.bookingData["orderId"],
-                          updatedStatus: true)
-                      : updateBookingStatus(
-                          orderId: widget.bookingData["orderId"],
-                          updatedStatus: false);
+                      ? " "
+                      : showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                            title: const Text('Update Booking Status'),
+                            content: const Text(
+                                'This will notify the user about their booking status!'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.pop(context, 'Cancel'),
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    status = true;
+                                  });
+                                  updateBookingStatus(
+                                    orderId: widget.bookingData["orderId"],
+                                  );
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          ),
+                        );
                 }),
             SwitchListTile(
                 title: const Text(

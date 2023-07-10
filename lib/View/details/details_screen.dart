@@ -24,6 +24,9 @@ class DetailsScreen extends StatefulWidget {
   final venueId;
   final menuMap;
   final email;
+  final parking;
+  final capacity;
+
   DetailsScreen(
       {super.key,
       this.imageUrlList,
@@ -37,7 +40,9 @@ class DetailsScreen extends StatefulWidget {
       this.vendorUID,
       this.venueId,
       this.menuMap,
-      this.email});
+      this.email,
+      this.parking,
+      this.capacity});
 
   @override
   _DetailsScreenState createState() => _DetailsScreenState();
@@ -93,7 +98,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                             bottom: appPadding,
                           ),
                           child: Row(
@@ -106,7 +111,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                     children: [
                                       Text(
                                         'Rs. ${money.format(widget.price)}',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 28,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -121,7 +126,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 5,
                                   ),
                                   Text(
@@ -137,9 +142,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             ],
                           ),
                         ),
-                        Padding(
-                          padding:
-                              const EdgeInsets.only(bottom: kDefaultPadding),
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: kDefaultPadding),
                           child: Text(
                             'Venue information',
                             style: TextStyle(
@@ -149,7 +153,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                             bottom: kDefaultPadding,
                           ),
                           child: ExpandableText(
@@ -172,21 +176,84 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             color: kPurple.withOpacity(0.2),
                           ),
                         ),
-                        Padding(
-                          padding:
-                              const EdgeInsets.only(bottom: kDefaultPadding),
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: kDefaultPadding),
                           child: Text(
-                            'Contact Seller',
+                            'Venue Features',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                        BottomButtons(
-                          contact: widget.contact,
-                          email: widget.email,
-                          vendorId: widget.vendorUID,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: kDefaultPadding,
+                                  vertical: kDefaultPadding / 2),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: kPurple,
+                              ),
+                              child: Center(
+                                  child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    "Venue Capacity",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    int.parse(widget.capacity
+                                            .toString()
+                                            .split('.')[0])
+                                        .toString(),
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              )),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: kDefaultPadding,
+                                  vertical: kDefaultPadding / 2),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: kPurple,
+                              ),
+                              child: Center(
+                                  child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    "Car Parking",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    int.parse((widget.parking)
+                                            .toString()
+                                            .split('.')[0])
+                                        .toString(),
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              )),
+                            ),
+                          ],
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(
@@ -202,7 +269,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             const Text(
                               "Choose Your Menu",
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 16,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -237,7 +304,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         ),
                         widget.menuMap.length != null
                             ? ListView.separated(
-                                physics: PageScrollPhysics(),
+                                physics: const PageScrollPhysics(),
                                 shrinkWrap: true,
                                 itemCount: widget.menuMap.length,
                                 separatorBuilder:
@@ -313,7 +380,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                             ),
                                             child: Text(
                                               "Rs. $value",
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.w700,
                                                 color: kPurple,
@@ -327,7 +394,26 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                 },
                               )
                             : Container(),
-                        SizedBox(
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: kDefaultPadding + 5),
+                          child: Divider(
+                            thickness: 2,
+                            color: kPurple.withOpacity(0.2),
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: kDefaultPadding),
+                          child: Text(
+                            'Contact Seller',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        BottomButtons(contact: widget.contact),
+                        const SizedBox(
                           height: 110,
                         )
                       ],
@@ -342,7 +428,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
               alignment: Alignment.bottomCenter,
               child: Container(
                 padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.white,
                   border: Border(
                     top: BorderSide(),
@@ -361,7 +447,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         ),
                         Text(
                           "Rs. $cost per Person",
-                          style: TextStyle(),
+                          style: const TextStyle(),
                         ),
                       ],
                     ),
@@ -394,6 +480,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                       perPerson: cost,
                                       selectedMenu: selectedMenu,
                                       email: widget.email,
+                                      capacity: widget.capacity,
                                     ),
                                   ),
                                 );

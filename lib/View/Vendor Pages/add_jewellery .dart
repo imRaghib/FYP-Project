@@ -68,7 +68,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
         children: [
           ElevatedButton(
             onPressed: () {
-              if (image == null) {
+              if (listOfUrls.isEmpty) {
                 Fluttertoast.showToast(
                   msg: 'Please add images!',
                   toastLength: Toast.LENGTH_SHORT,
@@ -78,7 +78,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
                   fontSize: 15,
                 );
               }
-              if (formKey.currentState!.validate() || image != null) {
+              if (formKey.currentState!.validate() && listOfUrls.isNotEmpty) {
                 formKey.currentState!.save();
 
                 try {
@@ -94,8 +94,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
                       productQuantity: jewelleryModel.availableQuantity,
                       productSize: jewelleryModel.productSize,
                       productCarrots: jewelleryModel.productCarrots,
-                      productDelivery: jewelleryModel.productDelivery
-                  );
+                      productDelivery: jewelleryModel.productDelivery);
 
                   Navigator.pushNamedAndRemoveUntil(
                       context, 'StreamPage', (route) => false);

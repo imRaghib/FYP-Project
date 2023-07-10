@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_shaadi/Model/Order.dart';
 import 'package:easy_shaadi/View/User%20Pages/booking_request_page.dart';
 import 'package:easy_shaadi/View/details/components/bottom_buttons.dart';
@@ -12,7 +13,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../../Model/Messenger Models/chat_user.dart';
+import '../../ViewModel/Messenger Class/apis.dart';
+import '../Messenger Screens/chat_screen.dart';
 import 'OrderDeliveryInfo.dart';
 
 class DressDetailsScreen extends StatefulWidget {
@@ -30,21 +35,20 @@ class DressDetailsScreen extends StatefulWidget {
   final email;
   final availableQuantity;
 
-  DressDetailsScreen ({
-    super.key,
-    this.imageUrlList,
-    this.title,
-    this.address,
-    this.description,
-    this.price,
-    this.deliveryCharges,
-    this.size,
-    this.contact,
-    this.vendorUID,
-    this.venueId,
-    this.email,
-    this.availableQuantity
-  });
+  DressDetailsScreen(
+      {super.key,
+      this.imageUrlList,
+      this.title,
+      this.address,
+      this.description,
+      this.price,
+      this.deliveryCharges,
+      this.size,
+      this.contact,
+      this.vendorUID,
+      this.venueId,
+      this.email,
+      this.availableQuantity});
 
   @override
   _DressDetailsScreenState createState() => _DressDetailsScreenState();
@@ -53,7 +57,7 @@ class DressDetailsScreen extends StatefulWidget {
 class _DressDetailsScreenState extends State<DressDetailsScreen> {
   int cost = 0;
   int activeIndex = 0;
-  int quantity=0;
+  int quantity = 0;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -130,31 +134,34 @@ class _DressDetailsScreenState extends State<DressDetailsScreen> {
                             ],
                           ),
                         ),
-
                         Padding(
-                          padding: const EdgeInsets.only(bottom: kDefaultPadding),
+                          padding:
+                              const EdgeInsets.only(bottom: kDefaultPadding),
                           child: Container(
                             height: 30,
                             child: Row(
                               children: [
-                                Text('Quantity : ',style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),),
+                                Text(
+                                  'Quantity : ',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                                 ElevatedButton(
                                   onPressed: () {
                                     setState(() {
-                                      if(quantity<widget.availableQuantity)
-                                      {
+                                      if (quantity < widget.availableQuantity) {
                                         quantity++;
                                       }
-
                                     });
                                   },
-                                  child: Text('+',style: TextStyle(
-                                      fontWeight: FontWeight.bold
-                                      ,fontSize: 19
-                                  ),),
+                                  child: Text(
+                                    '+',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 19),
+                                  ),
                                   style: ElevatedButton.styleFrom(
                                     shape: CircleBorder(),
                                     //padding: EdgeInsets.all(24),
@@ -164,16 +171,17 @@ class _DressDetailsScreenState extends State<DressDetailsScreen> {
                                 ElevatedButton(
                                   onPressed: () {
                                     setState(() {
-                                      if(quantity>0){
+                                      if (quantity > 0) {
                                         quantity--;
                                       }
-
                                     });
                                   },
-                                  child: Text('-',style: TextStyle(
-                                      fontWeight: FontWeight.bold
-                                      ,fontSize: 19
-                                  ),),
+                                  child: Text(
+                                    '-',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 19),
+                                  ),
                                   style: ElevatedButton.styleFrom(
                                     shape: CircleBorder(),
                                     //padding: EdgeInsets.all(24),
@@ -183,10 +191,9 @@ class _DressDetailsScreenState extends State<DressDetailsScreen> {
                             ),
                           ),
                         ),
-
                         Padding(
                           padding:
-                          const EdgeInsets.only(bottom: kDefaultPadding),
+                              const EdgeInsets.only(bottom: kDefaultPadding),
                           child: Text(
                             'Delivery Charges : ${widget.deliveryCharges} Rs',
                             style: TextStyle(
@@ -195,11 +202,9 @@ class _DressDetailsScreenState extends State<DressDetailsScreen> {
                             ),
                           ),
                         ),
-
-
                         Padding(
                           padding:
-                          const EdgeInsets.only(bottom: kDefaultPadding),
+                              const EdgeInsets.only(bottom: kDefaultPadding),
                           child: Text(
                             'Dress Details ',
                             style: TextStyle(
@@ -208,10 +213,9 @@ class _DressDetailsScreenState extends State<DressDetailsScreen> {
                             ),
                           ),
                         ),
-                       
                         Padding(
                           padding:
-                          const EdgeInsets.only(bottom: kDefaultPadding),
+                              const EdgeInsets.only(bottom: kDefaultPadding),
                           child: Text(
                             'Size : ${widget.size}',
                             style: TextStyle(
@@ -246,7 +250,7 @@ class _DressDetailsScreenState extends State<DressDetailsScreen> {
                         ),
                         Padding(
                           padding:
-                          const EdgeInsets.only(bottom: kDefaultPadding),
+                              const EdgeInsets.only(bottom: kDefaultPadding),
                           child: Text(
                             'Contact Seller',
                             style: TextStyle(
@@ -268,11 +272,6 @@ class _DressDetailsScreenState extends State<DressDetailsScreen> {
                             color: kPurple.withOpacity(0.2),
                           ),
                         ),
-
-
-
-
-
                         SizedBox(
                           height: 110,
                         )
@@ -304,15 +303,19 @@ class _DressDetailsScreenState extends State<DressDetailsScreen> {
                       child: InkWell(
                         onTap: () {
                           print(DateTime.now().toString());
-                          if(quantity>0){
-                            var prov = Provider.of<ProductProvider>(context,listen: false);
-                            bool c=false;
+                          if (quantity > 0) {
+                            var prov = Provider.of<ProductProvider>(context,
+                                listen: false);
+                            bool c = false;
                             prov.cartList.forEach((element) {
-                              if(element.ProductName==widget.title){
-                                c=true;
-                                element.ProductQuantity=element.ProductQuantity+quantity;
+                              if (element.ProductName == widget.title) {
+                                c = true;
+                                element.ProductQuantity =
+                                    element.ProductQuantity + quantity;
                                 var total = element.ProductQuantity;
-                                Fluttertoast.showToast(msg: '${widget.title} added $total times in cart',
+                                Fluttertoast.showToast(
+                                  msg:
+                                      '${widget.title} added $total times in cart',
                                   toastLength: Toast.LENGTH_SHORT,
                                   gravity: ToastGravity.BOTTOM,
                                   timeInSecForIosWeb: 2,
@@ -321,18 +324,20 @@ class _DressDetailsScreenState extends State<DressDetailsScreen> {
                                 );
                               }
                             });
-                            if(!c){
-                              Provider.of<ProductProvider>(context,listen: false).addToCart(
-                                  widget.title,
-                                  widget.price,
-                                  widget.imageUrlList[0],
-                                  quantity,
-                                  widget.deliveryCharges,
-                                  widget.vendorUID,
-                                  FirebaseAuth.instance.currentUser!.uid,
-                                  widget.size
-                              );
-                              Fluttertoast.showToast(msg: '${widget.title} added in cart',
+                            if (!c) {
+                              Provider.of<ProductProvider>(context,
+                                      listen: false)
+                                  .addToCart(
+                                      widget.title,
+                                      widget.price,
+                                      widget.imageUrlList[0],
+                                      quantity,
+                                      widget.deliveryCharges,
+                                      widget.vendorUID,
+                                      FirebaseAuth.instance.currentUser!.uid,
+                                      widget.size);
+                              Fluttertoast.showToast(
+                                msg: '${widget.title} added in cart',
                                 toastLength: Toast.LENGTH_SHORT,
                                 gravity: ToastGravity.BOTTOM,
                                 timeInSecForIosWeb: 1,
@@ -340,11 +345,9 @@ class _DressDetailsScreenState extends State<DressDetailsScreen> {
                                 fontSize: 15,
                               );
                             }
-
-
-                          }
-                          else{
-                            Fluttertoast.showToast(msg: 'Kindly Select Quantity',
+                          } else {
+                            Fluttertoast.showToast(
+                              msg: 'Kindly Select Quantity',
                               toastLength: Toast.LENGTH_SHORT,
                               gravity: ToastGravity.BOTTOM,
                               timeInSecForIosWeb: 1,
@@ -352,14 +355,13 @@ class _DressDetailsScreenState extends State<DressDetailsScreen> {
                               fontSize: 15,
                             );
                           }
-
                         },
                         child: Container(
                           padding: const EdgeInsets.all(18),
                           decoration: BoxDecoration(
                             color: kPink.withOpacity(0.3),
                             borderRadius:
-                            const BorderRadius.all(Radius.circular(15)),
+                                const BorderRadius.all(Radius.circular(15)),
                           ),
                           child: const Text(
                             "   Add to Cart   ",
@@ -376,26 +378,25 @@ class _DressDetailsScreenState extends State<DressDetailsScreen> {
                       padding: const EdgeInsets.only(bottom: 10.0, right: 10),
                       child: InkWell(
                         onTap: () {
-                          if(quantity>0){
-                            Provider.of<ProductProvider>(context,listen: false).addToCart(
-                                widget.title,
-                                widget.price,
-                                widget.imageUrlList[0],
-                                quantity,
-                                widget.deliveryCharges,
-                                widget.vendorUID,
-                                FirebaseAuth.instance.currentUser!.uid,
-                                widget.size
-                            );
+                          if (quantity > 0) {
+                            Provider.of<ProductProvider>(context, listen: false)
+                                .addToCart(
+                                    widget.title,
+                                    widget.price,
+                                    widget.imageUrlList[0],
+                                    quantity,
+                                    widget.deliveryCharges,
+                                    widget.vendorUID,
+                                    FirebaseAuth.instance.currentUser!.uid,
+                                    widget.size);
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => DeliveryDetails()
-                              ),
+                                  builder: (context) => DeliveryDetails()),
                             );
-                          }
-                          else{
-                            Fluttertoast.showToast(msg: 'Kindly Select Quantity',
+                          } else {
+                            Fluttertoast.showToast(
+                              msg: 'Kindly Select Quantity',
                               toastLength: Toast.LENGTH_SHORT,
                               gravity: ToastGravity.BOTTOM,
                               timeInSecForIosWeb: 1,
@@ -409,7 +410,7 @@ class _DressDetailsScreenState extends State<DressDetailsScreen> {
                           decoration: BoxDecoration(
                             color: kPink.withOpacity(0.7),
                             borderRadius:
-                            const BorderRadius.all(Radius.circular(15)),
+                                const BorderRadius.all(Radius.circular(15)),
                           ),
                           child: const Text(
                             "   Place Order   ",
@@ -443,20 +444,117 @@ class _DressDetailsScreenState extends State<DressDetailsScreen> {
   }
 
   Widget buildIndicator() => Positioned(
-    left: 0,
-    right: 0,
-    top: MediaQuery.of(context).size.height * 0.39,
-    child: Align(
-      alignment: AlignmentDirectional.topCenter,
-      child: AnimatedSmoothIndicator(
-        activeIndex: activeIndex,
-        count: widget.imageUrlList.length,
-        effect: JumpingDotEffect(
-            dotHeight: 14,
-            dotWidth: 14,
-            dotColor: Colors.white.withOpacity(0.6),
-            activeDotColor: kPurple),
-      ),
-    ),
-  );
+        left: 0,
+        right: 0,
+        top: MediaQuery.of(context).size.height * 0.39,
+        child: Align(
+          alignment: AlignmentDirectional.topCenter,
+          child: AnimatedSmoothIndicator(
+            activeIndex: activeIndex,
+            count: widget.imageUrlList.length,
+            effect: JumpingDotEffect(
+                dotHeight: 14,
+                dotWidth: 14,
+                dotColor: Colors.white.withOpacity(0.6),
+                activeDotColor: kPurple),
+          ),
+        ),
+      );
+}
+
+late ChatUser me;
+
+class BottomButtons extends StatelessWidget {
+  const BottomButtons(
+      {required this.contact, required this.email, required this.vendorId});
+
+  final String contact;
+  final String email;
+  final String vendorId;
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        GestureDetector(
+          onTap: () async {
+            APIs.addChatUser(email);
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(vendorId)
+                .get()
+                .then((user) async {
+              if (user.exists) {
+                me = ChatUser.fromJson(user.data()!);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => ChatScreen(user: me)));
+              }
+            });
+          },
+          child: Container(
+            width: size.width * 0.3,
+            height: 50,
+            decoration: BoxDecoration(
+              color: darkBlue,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  (Icons.mail_rounded),
+                  color: white,
+                ),
+                Text(
+                  ' Message',
+                  style: TextStyle(
+                    color: white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: _launchTel,
+          child: Container(
+            width: size.width * 0.3,
+            height: 50,
+            decoration: BoxDecoration(
+              color: kPurple,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  (Icons.call_rounded),
+                  color: white,
+                ),
+                Text(
+                  ' Call',
+                  style: TextStyle(
+                    color: white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _launchTel() async {
+    if (!await launchUrl(Uri.parse("tel:$contact"))) {
+      throw Exception('Could not launch $contact');
+    }
+  }
 }

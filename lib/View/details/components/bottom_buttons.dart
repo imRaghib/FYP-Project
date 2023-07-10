@@ -10,16 +10,13 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../ViewModel/customer_authentication.dart';
 import '../../Messenger Screens/chat_screen.dart';
 
- late ChatUser me;
-
 class BottomButtons extends StatelessWidget {
-
-  const BottomButtons({required this.contact,required this.email,required this.vendorId});
+  const BottomButtons({
+    super.key,
+    required this.contact,
+  });
 
   final String contact;
-  final String email;
-  final String vendorId;
-
 
   @override
   Widget build(BuildContext context) {
@@ -29,19 +26,7 @@ class BottomButtons extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         GestureDetector(
-          onTap: ()async{
-            APIs.addChatUser(email);
-      await FirebaseFirestore.instance.collection('users').doc(vendorId).get().then((user) async {
-        if (user.exists) {
-          me = ChatUser.fromJson(user.data()!);
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (_) => ChatScreen(user: me)));
-        }
-      });
-
-        },
+          onTap: _launchSms,
           child: Container(
             width: size.width * 0.3,
             height: 50,

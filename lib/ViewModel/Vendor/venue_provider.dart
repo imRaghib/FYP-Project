@@ -41,7 +41,6 @@ class VenueProvider {
       "menus": menus,
       "isPrivate": false,
       "vendorEmail": FirebaseAuth.instance.currentUser!.email,
-      "bookingCompleted": false
     });
   }
 
@@ -129,7 +128,6 @@ getVendorName() async {
 
 updateBookingStatus({
   required String orderId,
-  required bool updatedStatus,
 }) async {
   // Get a reference to the document you want to update
 
@@ -139,7 +137,7 @@ updateBookingStatus({
       .collection('Venue Orders')
       .doc(orderId)
       .update({
-    'orderStatus': updatedStatus,
+    'orderStatus': true,
   }).then((value) {
     print('Order status updated successfully');
   }).catchError((error) {
