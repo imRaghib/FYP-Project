@@ -145,6 +145,25 @@ updateBookingStatus({
   });
 }
 
+updateAppointmentStatus({
+  required String orderId,
+}) async {
+  // Get a reference to the document you want to update
+
+  FirebaseFirestore.instance
+      .collection('Vendor Orders')
+      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .collection('Salon Orders')
+      .doc(orderId)
+      .update({
+    'orderStatus': true,
+  }).then((value) {
+    print('Order status updated successfully');
+  }).catchError((error) {
+    print('Failed to update order status: $error');
+  });
+}
+
 isBookingCompleted({
   required String orderId,
 }) async {
@@ -157,6 +176,25 @@ isBookingCompleted({
       .doc(orderId)
       .update({
     'bookingCompleted': true,
+  }).then((value) {
+    print('Order status updated successfully');
+  }).catchError((error) {
+    print('Failed to update order status: $error');
+  });
+}
+
+isAppointmentCompleted({
+  required String orderId,
+}) async {
+  // Get a reference to the document you want to update
+
+  FirebaseFirestore.instance
+      .collection('Vendor Orders')
+      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .collection('Salon Orders')
+      .doc(orderId)
+      .update({
+    'appointmentCompleted': true,
   }).then((value) {
     print('Order status updated successfully');
   }).catchError((error) {

@@ -65,39 +65,42 @@ class _VendorVenueBookingPageState extends State<VendorVenueBookingPage> {
                     String customerName = venueOrderData!['customerName'];
                     String bookingDate = venueOrderData['venueBookedOn'];
 
-                    return Material(
-                      elevation: 2,
-                      borderRadius: BorderRadius.circular(10),
-                      child: ListTile(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      VendorBookingDetailPage(
-                                        bookingData: venueOrderData,
-                                        email: venueOrderData['customerEmail'],
-                                        customerId:
-                                            venueOrderData['customerUID'],
-                                      )));
-                        },
-                        tileColor: Colors.white,
-                        leading: AspectRatio(
-                          aspectRatio: 4 / 3,
-                          child: ClipRRect(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                            child: Image.network(
-                              venueOrderData['venueImg'],
-                              fit: BoxFit.cover,
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Material(
+                        elevation: 2,
+                        borderRadius: BorderRadius.circular(10),
+                        child: ListTile(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        VendorBookingDetailPage(
+                                          bookingData: venueOrderData,
+                                          email:
+                                              venueOrderData['customerEmail'],
+                                          customerId:
+                                              venueOrderData['customerUID'],
+                                        )));
+                          },
+                          leading: AspectRatio(
+                            aspectRatio: 4 / 3,
+                            child: ClipRRect(
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                              child: Image.network(
+                                venueOrderData['venueImg'],
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
+                          title: Text("Venue: ${venueOrderData['venueName']}"),
+                          subtitle: Text(
+                              '$customerName has booked this Venue on date: $bookingDate'),
+                          trailing: const Icon(Icons.touch_app),
                         ),
-                        title: Text("Venue: ${venueOrderData['venueName']}"),
-                        subtitle: Text(
-                            '$customerName has booked this Venue on date: $bookingDate'),
-                        trailing: const Icon(Icons.touch_app),
                       ),
                     );
                   },

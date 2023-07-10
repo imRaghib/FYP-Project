@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_shaadi/View/Vendor%20Pages/salon_appointment_detail_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/venue_booking_detail_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -17,14 +18,12 @@ class _VendorSalonAppointmentPageState
   final Stream<QuerySnapshot> usersStream = FirebaseFirestore.instance
       .collection('Vendor Orders')
       .doc(FirebaseAuth.instance.currentUser!.uid)
-      .collection('Salon Appointments')
-      .where('bookingCompleted', isEqualTo: false)
+      .collection('Salon Orders')
+      .where('appointmentCompleted', isEqualTo: false)
       .snapshots();
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Active Appointments"),
@@ -65,41 +64,44 @@ class _VendorSalonAppointmentPageState
                     var venueOrderData = snapshot.data?.docs[index];
 
                     String customerName = venueOrderData!['customerName'];
-                    String bookingDate = venueOrderData['venueBookedOn'];
+                    String bookingDate = venueOrderData['salonBookedOn'];
 
-                    return Material(
-                      elevation: 2,
-                      borderRadius: BorderRadius.circular(10),
-                      child: ListTile(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      VendorBookingDetailPage(
-                                        bookingData: venueOrderData,
-                                        email: venueOrderData['customerEmail'],
-                                        customerId:
-                                            venueOrderData['customerUID'],
-                                      )));
-                        },
-                        tileColor: Colors.white,
-                        leading: AspectRatio(
-                          aspectRatio: 4 / 3,
-                          child: ClipRRect(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                            child: Image.network(
-                              venueOrderData['venueImg'],
-                              fit: BoxFit.cover,
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Material(
+                        elevation: 2,
+                        borderRadius: BorderRadius.circular(10),
+                        child: ListTile(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        VendorSalonDetailPage(
+                                          bookingData: venueOrderData,
+                                          email:
+                                              venueOrderData['customerEmail'],
+                                          customerId:
+                                              venueOrderData['customerUID'],
+                                        )));
+                          },
+                          leading: AspectRatio(
+                            aspectRatio: 4 / 3,
+                            child: ClipRRect(
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                              child: Image.network(
+                                venueOrderData['salonImg'],
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
+                          title: Text("Venue: ${venueOrderData['salonName']}"),
+                          subtitle: Text(
+                              '$customerName has booked an appointment on $bookingDate'),
+                          trailing: const Icon(Icons.touch_app),
                         ),
-                        title: Text("Venue: ${venueOrderData['venueName']}"),
-                        subtitle: Text(
-                            '$customerName has booked this Venue on date: $bookingDate'),
-                        trailing: const Icon(Icons.touch_app),
                       ),
                     );
                   },
