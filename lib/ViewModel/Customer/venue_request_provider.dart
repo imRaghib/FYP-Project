@@ -58,6 +58,7 @@ void bookVenue({
     "venueName": venueName,
     "venueImg": venueImg,
     "bookingCompleted": bookingCompleted,
+    "vendorUID": vendorUID
   });
 }
 

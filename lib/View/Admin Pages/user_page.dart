@@ -1,38 +1,29 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:easy_shaadi/View/Admin%20Pages/admin_drawer.dart';
+import 'package:easy_shaadi/View/Admin%20Pages/user_detail_page.dart';
 import 'package:easy_shaadi/View/Admin%20Pages/vendor_detail_page.dart';
 import 'package:easy_shaadi/stringCasingExtension.dart';
 import 'package:flutter/material.dart';
 import '../../constants.dart';
+import 'admin_drawer.dart';
 
-class VendorRequestPage extends StatefulWidget {
-  const VendorRequestPage({super.key});
+class UserDetailPage extends StatefulWidget {
+  const UserDetailPage({Key? key}) : super(key: key);
 
   @override
-  State<VendorRequestPage> createState() => _VendorRequestPageState();
+  State<UserDetailPage> createState() => _UserDetailPageState();
 }
 
-class _VendorRequestPageState extends State<VendorRequestPage> {
-  final Stream<QuerySnapshot> _pendingStream = FirebaseFirestore.instance
-      .collection('Vendor Requests')
-      .where('RequestStatus', isEqualTo: 'waiting')
-      .snapshots();
-  final Stream<QuerySnapshot> _acceptedStream = FirebaseFirestore.instance
-      .collection('Vendor Requests')
-      .where('RequestStatus', isEqualTo: 'approved')
-      .snapshots();
-  final Stream<QuerySnapshot> _rejectedStream = FirebaseFirestore.instance
-      .collection('Vendor Requests')
-      .where('RequestStatus', isEqualTo: 'rejected')
-      .snapshots();
+class _UserDetailPageState extends State<UserDetailPage> {
+  final Stream<QuerySnapshot> customerStream =
+      FirebaseFirestore.instance.collection('Customers').snapshots();
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return DefaultTabController(
-      length: 3,
+      length: 1,
       child: Scaffold(
-        appBar: AppBar(title: const Text("Manage Vendors")),
+        appBar: AppBar(title: const Text("Manage Customers")),
         drawer: AdminDrawer(),
         backgroundColor: kBackgroundColor,
         body: Column(
@@ -56,20 +47,9 @@ class _VendorRequestPageState extends State<VendorRequestPage> {
                         child: Row(
                           children: [
                             buildRequestTab(
-                              title: "Total Pending Requests",
+                              title: "Total Active Users",
                               usersStream: FirebaseFirestore.instance
-                                  .collection('Vendor Requests')
-                                  .where('RequestStatus', isEqualTo: 'waiting')
-                                  .snapshots(),
-                            ),
-                            const SizedBox(
-                              width: 12,
-                            ),
-                            buildRequestTab(
-                              title: "Total Active Vendors",
-                              usersStream: FirebaseFirestore.instance
-                                  .collection('Vendor Requests')
-                                  .where('RequestStatus', isEqualTo: 'approved')
+                                  .collection('Customers')
                                   .snapshots(),
                             ),
                           ],
@@ -100,13 +80,7 @@ class _VendorRequestPageState extends State<VendorRequestPage> {
               child: const TabBar(
                 tabs: [
                   Tab(
-                    text: "Pending",
-                  ),
-                  Tab(
-                    text: "Accepted",
-                  ),
-                  Tab(
-                    text: "Rejected",
+                    text: "Active Users",
                   ),
                 ],
               ),
@@ -126,9 +100,7 @@ class _VendorRequestPageState extends State<VendorRequestPage> {
                 ),
                 child: TabBarView(
                   children: [
-                    buildRequestStatus(usersStream: _pendingStream),
-                    buildRequestStatus(usersStream: _acceptedStream),
-                    buildRequestStatus(usersStream: _rejectedStream),
+                    buildRequestStatus(usersStream: customerStream),
                   ],
                 ),
               ),
@@ -158,12 +130,14 @@ class _VendorRequestPageState extends State<VendorRequestPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              title,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+            Center(
+              child: Text(
+                title,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             const SizedBox(
@@ -180,7 +154,7 @@ class _VendorRequestPageState extends State<VendorRequestPage> {
                       documentCount.toString(),
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 22,
+                        fontSize: 40,
                         color: Colors.white,
                       ),
                     ),
@@ -259,7 +233,7 @@ class _VendorRequestPageState extends State<VendorRequestPage> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              VendorDetailsPage(userData: data)),
+                              CustomerDetailsPage(userData: data)),
                     );
                   },
                 ),

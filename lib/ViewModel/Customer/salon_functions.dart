@@ -40,6 +40,7 @@ void bookSalon({
     "salonName": salonName,
     "salonImg": salonImg,
     "appointmentCompleted": appointmentCompleted,
+    "vendorUID": vendorUID
   });
 }
 
