@@ -1,24 +1,20 @@
-import 'dart:io';
-import 'package:calendar_date_picker2/calendar_date_picker2.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:easy_shaadi/ViewModel/Vendor/salon_provider.dart';
 import 'package:easy_shaadi/constants.dart';
 import 'package:expandable_text/expandable_text.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_picker/image_picker.dart';
 import '../../Model/bookings.dart';
 
-class AddSalonPage extends StatefulWidget {
-  const AddSalonPage({Key? key}) : super(key: key);
+class EditSalonPage extends StatefulWidget {
+  final salonData;
+  const EditSalonPage({Key? key, this.salonData}) : super(key: key);
 
   @override
-  State<AddSalonPage> createState() => _AddSalonPageState();
+  State<EditSalonPage> createState() => _EditSalonPageState();
 }
 
-class _AddSalonPageState extends State<AddSalonPage> {
+class _EditSalonPageState extends State<EditSalonPage> {
   @override
   void dispose() {
     menuDesController.dispose();
@@ -27,19 +23,11 @@ class _AddSalonPageState extends State<AddSalonPage> {
   }
 
   final menuFormKey = GlobalKey<FormState>();
-  Map<String, int> packagesMap = {};
+  late Map<String, dynamic> packagesMap = widget.salonData["salonPackages"];
   int cost = 0;
   String menu = '';
   TextEditingController menuDesController = TextEditingController();
   TextEditingController menuCostController = TextEditingController();
-  List<String> inActiveDates = [];
-
-  final today = DateUtils.dateOnly(DateTime.now());
-  List<DateTime?> _multiDatePickerValueWithDefaultValue = [];
-
-  List<String> temp = [];
-
-  String imageUrl = "";
 
   List<String> cityList = [
     'Jhelum',
@@ -61,18 +49,13 @@ class _AddSalonPageState extends State<AddSalonPage> {
     'Larkana'
   ];
 
-  String salonLocation = 'Location';
-
+  late String salonLocation = widget.salonData["salonLocation"];
   List<String> categoryList = ['Bridal', 'Groom'];
-  String category = 'Category';
+  late String category = widget.salonData["category"];
 
   Booking salonModel = Booking();
   final formKey = GlobalKey<FormState>();
-
-  List<String> listOfUrls = [];
-  File? image;
-  final imagePicker = ImagePicker();
-  bool isUploading = false;
+  late bool isPrivate = widget.salonData["isPrivate"];
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +66,17 @@ class _AddSalonPageState extends State<AddSalonPage> {
           key: formKey,
           child: Column(
             children: [
-              buildAddPhotos(),
+              SwitchListTile(
+                  title: const Text(
+                    'Make Private',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  value: isPrivate,
+                  onChanged: (value) {
+                    setState(() {
+                      isPrivate = value;
+                    });
+                  }),
               buildDivider(),
               buildLocation(),
               buildDivider(),
@@ -92,8 +85,7 @@ class _AddSalonPageState extends State<AddSalonPage> {
               buildVenueName(),
               buildVenueDes(),
               buildAddress(),
-              buildDates(context),
-              buildPackages(context),
+              buildPackages(),
               buildContactInfo(),
               buildNumber(),
               buildSubmitButton(),
@@ -104,7 +96,7 @@ class _AddSalonPageState extends State<AddSalonPage> {
     );
   }
 
-  Padding buildPackages(BuildContext context) {
+  Padding buildPackages() {
     return Padding(
       padding: const EdgeInsets.only(
           top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
@@ -384,84 +376,6 @@ class _AddSalonPageState extends State<AddSalonPage> {
     );
   }
 
-  Padding buildDates(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(
-          top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          ElevatedButton(
-            onPressed: () {
-              showModalBottomSheet<dynamic>(
-                backgroundColor: Colors.white.withOpacity(0),
-                context: context,
-                builder: (BuildContext context) {
-                  return StatefulBuilder(
-                    builder:
-                        (BuildContext context, StateSetter setModalState) =>
-                            Container(
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10),
-                          topRight: Radius.circular(10),
-                        ),
-                      ),
-                      child: buildDefaultMultiDatePickerWithValue(),
-                    ),
-                  );
-                },
-              );
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: kPurple),
-            child: const Text(
-              "Select Non Active Dates",
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget buildDefaultMultiDatePickerWithValue() {
-    final config = CalendarDatePicker2Config(
-      calendarType: CalendarDatePicker2Type.multi,
-      selectedDayHighlightColor: Colors.indigo,
-      firstDate: DateTime.now(),
-    );
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const SizedBox(height: 10),
-        const Text('Select Dates On Which Your Salon Is Not Available'),
-        CalendarDatePicker2(
-          config: config,
-          value: _multiDatePickerValueWithDefaultValue,
-          onValueChanged: (dates) => setState(
-            () {
-              _multiDatePickerValueWithDefaultValue = dates;
-
-              List<DateTime> filter(List<DateTime?> input) {
-                input.removeWhere((e) => e == null);
-                return List<DateTime>.from(input);
-              }
-
-              List<DateTime> filteredList =
-                  filter(_multiDatePickerValueWithDefaultValue);
-
-              List<String> DateTimeListAsString =
-                  filteredList.map((data) => data.toString()).toList();
-              inActiveDates = DateTimeListAsString;
-            },
-          ),
-        ),
-        const SizedBox(height: 10),
-      ],
-    );
-  }
-
   Padding buildSubmitButton() {
     return Padding(
       padding: const EdgeInsets.only(
@@ -471,16 +385,6 @@ class _AddSalonPageState extends State<AddSalonPage> {
         children: [
           ElevatedButton(
             onPressed: () {
-              if (listOfUrls.isEmpty) {
-                Fluttertoast.showToast(
-                  msg: 'Please add images!',
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM,
-                  timeInSecForIosWeb: 1,
-                  backgroundColor: Colors.grey,
-                  fontSize: 15,
-                );
-              }
               if (salonLocation == 'Location') {
                 Fluttertoast.showToast(
                   msg: 'Please select location!',
@@ -514,23 +418,20 @@ class _AddSalonPageState extends State<AddSalonPage> {
               if (formKey.currentState!.validate() &&
                   salonLocation != 'Location' &&
                   category != 'Category' &&
-                  listOfUrls.isNotEmpty &&
                   packagesMap.isNotEmpty) {
                 formKey.currentState!.save();
                 try {
-                  SalonProvider().addSalonData(
-                    salonImages: listOfUrls,
+                  updateSalonData(
                     salonLocation: salonLocation,
                     salonName: salonModel.venueName,
                     salonDescription: salonModel.venueDescription,
                     salonAddress: salonModel.venueAddress,
-                    salonRating: 0,
-                    salonFeedback: 0,
                     vendorNumber: salonModel.vendorNumber,
-                    inActiveDates: inActiveDates,
                     startingPrice: packagesMap.entries.first.value,
                     packages: packagesMap,
                     category: category,
+                    salonId: widget.salonData['salonId'],
+                    isPrivate: isPrivate,
                   ); // default value change later
                   Navigator.pushNamedAndRemoveUntil(
                       context, 'StreamPage', (route) => false);
@@ -573,6 +474,7 @@ class _AddSalonPageState extends State<AddSalonPage> {
           ),
           Expanded(
             child: TextFormField(
+              initialValue: widget.salonData["vendorNumber"],
               style: TextStyle(color: Colors.black.withOpacity(0.6)),
               decoration: InputDecoration(
                 hintStyle: TextStyle(
@@ -640,6 +542,7 @@ class _AddSalonPageState extends State<AddSalonPage> {
           ),
           Expanded(
             child: TextFormField(
+              initialValue: widget.salonData["salonAddress"],
               decoration: InputDecoration(
                 hintStyle: TextStyle(
                     color: kPurple.withOpacity(0.5),
@@ -689,13 +592,14 @@ class _AddSalonPageState extends State<AddSalonPage> {
           ),
           Expanded(
             child: TextFormField(
+              initialValue: widget.salonData["salonDescription"],
               keyboardType: TextInputType.multiline,
               maxLines: null,
               decoration: InputDecoration(
                 hintStyle: TextStyle(
                     color: kPurple.withOpacity(0.5),
                     fontWeight: FontWeight.w400),
-                hintText: "Tell us about your venue",
+                hintText: "Tell us about your salon",
                 labelText: "Description",
                 enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: kPink),
@@ -740,12 +644,13 @@ class _AddSalonPageState extends State<AddSalonPage> {
           ),
           Expanded(
             child: TextFormField(
+              initialValue: widget.salonData["salonName"],
               decoration: InputDecoration(
                 hintStyle: TextStyle(
                     color: kPurple.withOpacity(0.5),
                     fontWeight: FontWeight.w400),
-                hintText: "Venue Name",
-                labelText: "Venue",
+                hintText: "Salon Name",
+                labelText: "Salon",
                 enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: kPink),
                 ),
@@ -756,7 +661,7 @@ class _AddSalonPageState extends State<AddSalonPage> {
               validator: (value) {
                 if (value!.isEmpty ||
                     !RegExp(r"^[a-zA-Z\s]+$").hasMatch(value)) {
-                  return "Enter Venue Name";
+                  return "Enter Salon Name";
                 } else {
                   return null;
                 }
@@ -919,164 +824,6 @@ class _AddSalonPageState extends State<AddSalonPage> {
           Icons.keyboard_arrow_down_outlined,
         ),
       ),
-    );
-  }
-
-  Future getImage() async {
-    XFile? pickedFile =
-        await imagePicker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      if (pickedFile != null) {
-        image = File(pickedFile.path);
-        setState(() {
-          isUploading = true;
-          uploadFile().then((url) {
-            if (url != null) {
-              setState(() {
-                isUploading = false;
-              });
-            }
-          });
-        });
-      }
-    });
-  }
-
-  Future uploadFile() async {
-    File file = File(image!.path);
-
-    String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
-
-    Reference referenceRoot = FirebaseStorage.instance.ref();
-    Reference referenceDirImages = referenceRoot.child('images');
-    Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
-
-    try {
-      await referenceImageToUpload.putFile(file);
-      imageUrl = await referenceImageToUpload.getDownloadURL();
-
-      if (imageUrl != null) {
-        setState(() {
-          listOfUrls.add(imageUrl);
-        });
-      }
-    } catch (error) {
-      Fluttertoast.showToast(
-        msg: error.toString(),
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.grey,
-        fontSize: 15,
-      );
-    }
-
-    return imageUrl;
-  }
-
-  Padding buildAddPhotos() {
-    Size size = MediaQuery.of(context).size;
-    return Padding(
-      padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
-      child: image == null
-          ? DottedBorder(
-              color: kPurple,
-              strokeWidth: 2,
-              dashPattern: const [8, 4],
-              child: InkWell(
-                  onTap: getImage,
-                  child: Container(
-                      height: 150,
-                      width: double.infinity,
-                      color: kPink.withAlpha(40),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Icon(
-                              size: 35,
-                              color: Colors.grey,
-                              Icons.camera_alt_outlined),
-                          Text('Add Photo',
-                              style: TextStyle(color: Colors.white)),
-                        ],
-                      ))),
-            )
-          : DottedBorder(
-              color: kPurple,
-              strokeWidth: 2,
-              dashPattern: const [8, 4],
-              child: Center(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: size.height * 0.15,
-                      child: ListView.separated(
-                        separatorBuilder: (context, index) => const SizedBox(
-                          width: 5,
-                        ),
-                        physics: const ClampingScrollPhysics(),
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: listOfUrls.length,
-                        itemBuilder: (context, index) => SizedBox(
-                          width: size.width * 0.35,
-                          child: Stack(
-                            children: [
-                              AspectRatio(
-                                  aspectRatio: 1 / 1,
-                                  child: Image.network(
-                                    listOfUrls[index],
-                                    fit: BoxFit.cover,
-                                  )),
-                              IconButton(
-                                  onPressed: () {
-                                    try {
-                                      FirebaseStorage.instance
-                                          .refFromURL(listOfUrls[index])
-                                          .delete();
-                                    } catch (error) {
-                                      Fluttertoast.showToast(
-                                        msg: error.toString(),
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.BOTTOM,
-                                        timeInSecForIosWeb: 1,
-                                        backgroundColor: Colors.grey,
-                                        fontSize: 15,
-                                      );
-                                    }
-                                    setState(() {
-                                      listOfUrls.removeAt(index);
-                                    });
-                                  },
-                                  icon: const Icon(Icons.clear)),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(
-                        onPressed: getImage,
-                        style:
-                            ElevatedButton.styleFrom(backgroundColor: kPurple),
-                        child: const Text(
-                          "Add More Photos",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    if (isUploading)
-                      Center(
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                              Theme.of(context).primaryColor),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ),
     );
   }
 }

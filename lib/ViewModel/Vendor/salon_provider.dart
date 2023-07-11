@@ -43,3 +43,31 @@ class SalonProvider {
     });
   }
 }
+
+void updateSalonData({
+  required String salonId,
+  required String salonLocation,
+  required String salonName,
+  required String salonDescription,
+  required String salonAddress,
+  required String vendorNumber,
+  required int startingPrice,
+  required Map<String, dynamic> packages,
+  required String category,
+  required bool isPrivate,
+}) async {
+  await FirebaseFirestore.instance
+      .collection("Bridal Salon")
+      .doc(salonId)
+      .update({
+    'salonLocation': salonLocation,
+    'salonName': salonName,
+    "startingPrice": startingPrice,
+    'salonDescription': salonDescription,
+    'salonAddress': salonAddress,
+    "category": category,
+    'vendorNumber': vendorNumber,
+    "salonPackages": packages,
+    "isPrivate": isPrivate
+  });
+}

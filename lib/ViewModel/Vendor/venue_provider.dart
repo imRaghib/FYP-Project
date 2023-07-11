@@ -44,19 +44,20 @@ class VenueProvider {
     });
   }
 
-  void addJeweleryData(
-      {required List productImages,
-      required String productLocation,
-      required String productName,
-      required int productPrice,
-      required String productDescription,
-      required int productRating,
-      required int productFeedback,
-      required String productNumber,
-      required int productQuantity,
-      required String productSize,
-      required String productCarrots,
-      required int productDelivery}) async {
+  void addJeweleryData({
+    required List productImages,
+    required String productLocation,
+    required String productName,
+    required int productPrice,
+    required String productDescription,
+    required int productRating,
+    required int productFeedback,
+    required String productNumber,
+    required int productQuantity,
+    required String productSize,
+    required String productCarrots,
+    required int productDelivery,
+  }) async {
     await FirebaseFirestore.instance.collection("Jewelerys").doc().set({
       "productId": Random().nextInt(100000).toString(),
       "productImages": productImages,
@@ -277,6 +278,7 @@ void updateVenueData({
   required double venueParking,
   required String vendorNumber,
   required Map<String, dynamic> menus,
+  required isPrivate,
 }) async {
   await FirebaseFirestore.instance.collection("Venues").doc(venueId).update({
     'venueLocation': venueLocation,
@@ -288,15 +290,6 @@ void updateVenueData({
     'venueParking': venueParking,
     'vendorNumber': vendorNumber,
     'menus': menus,
-  });
-}
-
-updateVenueVisibility({
-  required String venueId,
-  required status,
-}) async {
-  // Get a reference to the document you want to update
-  FirebaseFirestore.instance.collection('Venues').doc(venueId).update({
-    'isPrivate': status,
+    "isPrivate": isPrivate,
   });
 }

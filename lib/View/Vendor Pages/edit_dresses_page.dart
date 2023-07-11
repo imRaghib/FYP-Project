@@ -7,26 +7,24 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../ViewModel/Vendor/dresses_provider.dart';
+import '../../ViewModel/Vendor/jewellwery_provider.dart';
 import '../../ViewModel/Vendor/venue_provider.dart';
 
-class AddJewelleryPage extends StatefulWidget {
-  const AddJewelleryPage({Key? key}) : super(key: key);
+class DressesEditPage extends StatefulWidget {
+  final dressData;
+  const DressesEditPage({Key? key, required this.dressData}) : super(key: key);
 
   @override
-  State<AddJewelleryPage> createState() => _AddJewelleryPageState();
+  State<DressesEditPage> createState() => _DressesEditPageState();
 }
 
-class _AddJewelleryPageState extends State<AddJewelleryPage> {
+class _DressesEditPageState extends State<DressesEditPage> {
   final formKey = GlobalKey<FormState>();
   TextEditingController controller = TextEditingController();
   JewelleryModel jewelleryModel = JewelleryModel();
 
-  List<String> listOfUrls = [];
-  File? image;
-  final imagePicker = ImagePicker();
-  bool isUploading = false;
-  String imageUrl = "";
-
+  late bool isPrivate = widget.dressData["isPrivate"];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +34,17 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
           key: formKey,
           child: Column(
             children: [
-              buildAddPhotos(),
+              SwitchListTile(
+                  title: const Text(
+                    'Make Private',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  value: isPrivate,
+                  onChanged: (value) {
+                    setState(() {
+                      isPrivate = value;
+                    });
+                  }),
               buildDivider(),
               buildProductName(),
               buildProductDes(),
@@ -68,33 +76,22 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
         children: [
           ElevatedButton(
             onPressed: () {
-              if (listOfUrls.isEmpty) {
-                Fluttertoast.showToast(
-                  msg: 'Please add images!',
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM,
-                  timeInSecForIosWeb: 1,
-                  backgroundColor: Colors.grey,
-                  fontSize: 15,
-                );
-              }
-              if (formKey.currentState!.validate() && listOfUrls.isNotEmpty) {
+              if (formKey.currentState!.validate()) {
                 formKey.currentState!.save();
 
                 try {
-                  VenueProvider().addJeweleryData(
-                      productImages: listOfUrls,
-                      productLocation: jewelleryModel.productAddress,
-                      productName: jewelleryModel.productName,
-                      productPrice: jewelleryModel.productPrice,
-                      productDescription: jewelleryModel.productDescription,
-                      productRating: 0,
-                      productFeedback: 0,
-                      productNumber: jewelleryModel.productNumber,
-                      productQuantity: jewelleryModel.availableQuantity,
-                      productSize: jewelleryModel.productSize,
-                      productCarrots: jewelleryModel.productCarrots,
-                      productDelivery: jewelleryModel.productDelivery);
+                  updateDressesData(
+                    productLocation: jewelleryModel.productAddress,
+                    productName: jewelleryModel.productName,
+                    productPrice: jewelleryModel.productPrice,
+                    productDescription: jewelleryModel.productDescription,
+                    productNumber: jewelleryModel.productNumber,
+                    productQuantity: jewelleryModel.availableQuantity,
+                    productSize: jewelleryModel.productSize,
+                    productDelivery: jewelleryModel.productDelivery,
+                    productId: widget.dressData['productId'],
+                    isPrivate: isPrivate,
+                  );
 
                   Navigator.pushNamedAndRemoveUntil(
                       context, 'StreamPage', (route) => false);
@@ -140,6 +137,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
           ),
           Expanded(
             child: TextFormField(
+              initialValue: widget.dressData['sellerNumber'],
               style: TextStyle(color: Colors.black.withOpacity(0.6)),
               decoration: const InputDecoration(
                 labelText: "Mobile Number",
@@ -204,6 +202,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
           ),
           Expanded(
             child: TextFormField(
+              initialValue: widget.dressData['productAddress'],
               decoration: const InputDecoration(
                 hintText: "Shop Address",
                 labelText: "Address",
@@ -228,163 +227,6 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
           ),
         ],
       ),
-    );
-  }
-
-  Future getImage() async {
-    XFile? pickedFile =
-        await imagePicker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      if (pickedFile != null) {
-        image = File(pickedFile.path);
-        setState(() {
-          isUploading = true;
-          uploadFile().then((url) {
-            if (url != null) {
-              setState(() {
-                isUploading = false;
-              });
-            }
-          });
-        });
-      }
-    });
-  }
-
-  Future uploadFile() async {
-    File file = File(image!.path);
-
-    String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
-
-    Reference referenceRoot = FirebaseStorage.instance.ref();
-    Reference referenceDirImages = referenceRoot.child('images');
-    Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
-
-    try {
-      await referenceImageToUpload.putFile(file);
-      imageUrl = await referenceImageToUpload.getDownloadURL();
-
-      if (imageUrl != null) {
-        setState(() {
-          listOfUrls.add(imageUrl);
-        });
-      }
-    } catch (error) {
-      Fluttertoast.showToast(
-        msg: error.toString(),
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.grey,
-        fontSize: 15,
-      );
-    }
-
-    return imageUrl;
-  }
-
-  Padding buildAddPhotos() {
-    Size size = MediaQuery.of(context).size;
-    return Padding(
-      padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
-      child: image == null
-          ? DottedBorder(
-              color: Colors.black,
-              strokeWidth: 2,
-              dashPattern: const [8, 4],
-              child: InkWell(
-                  onTap: getImage,
-                  child: Container(
-                      height: 150,
-                      width: double.infinity,
-                      color: kPink.withAlpha(40),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Icon(
-                              size: 35,
-                              color: Colors.grey,
-                              Icons.camera_alt_outlined),
-                          Text('Add Photo'),
-                        ],
-                      ))),
-            )
-          : DottedBorder(
-              color: Colors.black,
-              strokeWidth: 2,
-              dashPattern: const [8, 4],
-              child: Center(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: size.height * 0.15,
-                      child: ListView.separated(
-                        separatorBuilder: (context, index) => const SizedBox(
-                          width: 5,
-                        ),
-                        physics: const ClampingScrollPhysics(),
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: listOfUrls.length,
-                        itemBuilder: (context, index) => SizedBox(
-                          width: size.width * 0.35,
-                          child: Stack(
-                            children: [
-                              AspectRatio(
-                                  aspectRatio: 1 / 1,
-                                  child: Image.network(
-                                    listOfUrls[index],
-                                    fit: BoxFit.cover,
-                                  )),
-                              IconButton(
-                                  onPressed: () {
-                                    try {
-                                      FirebaseStorage.instance
-                                          .refFromURL(listOfUrls[index])
-                                          .delete();
-                                    } catch (error) {
-                                      Fluttertoast.showToast(
-                                        msg: error.toString(),
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.BOTTOM,
-                                        timeInSecForIosWeb: 1,
-                                        backgroundColor: Colors.grey,
-                                        fontSize: 15,
-                                      );
-                                    }
-                                    setState(() {
-                                      listOfUrls.removeAt(index);
-                                    });
-                                  },
-                                  icon: const Icon(Icons.clear)),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(
-                        onPressed: getImage,
-                        style:
-                            ElevatedButton.styleFrom(backgroundColor: kPurple),
-                        child: const Text(
-                          "Add More Photos",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    if (isUploading)
-                      Center(
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                              Theme.of(context).primaryColor),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ),
     );
   }
 
@@ -414,6 +256,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
           ),
           Expanded(
             child: TextFormField(
+              initialValue: widget.dressData["productName"],
               decoration: InputDecoration(
                 hintStyle: TextStyle(
                     color: kPurple.withOpacity(0.5),
@@ -429,8 +272,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
               ),
               validator: (value) {
                 if (value!.isEmpty ||
-                    !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                        .hasMatch(value)) {
+                    !RegExp(r"^[a-zA-Z\s]+$").hasMatch(value)) {
                   return "Enter Product Name";
                 } else {
                   return null;
@@ -464,6 +306,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
           ),
           Expanded(
             child: TextFormField(
+              initialValue: widget.dressData["productDescription"],
               keyboardType: TextInputType.multiline,
               maxLines: null,
               decoration: InputDecoration(
@@ -480,9 +323,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
                 ),
               ),
               validator: (value) {
-                if (value!.isEmpty ||
-                    !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                        .hasMatch(value)) {
+                if (value!.isEmpty || !RegExp(r"^[\s\S]*$").hasMatch(value)) {
                   return "Enter Description";
                 } else {
                   return null;
@@ -516,6 +357,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
           ),
           Expanded(
             child: TextFormField(
+              initialValue: widget.dressData["productPrice"].toString(),
               decoration: InputDecoration(
                 hintStyle: TextStyle(
                     color: kPurple.withOpacity(0.5),
@@ -564,6 +406,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
           ),
           Expanded(
             child: TextFormField(
+              initialValue: widget.dressData["productSize"],
               decoration: InputDecoration(
                 hintStyle: TextStyle(
                     color: kPurple.withOpacity(0.5),
@@ -578,9 +421,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
                 ),
               ),
               validator: (value) {
-                if (value!.isEmpty ||
-                    !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                        .hasMatch(value)) {
+                if (value!.isEmpty || !RegExp(r"^[\s\S]*$").hasMatch(value)) {
                   return "Enter Product Weight";
                 } else {
                   return null;
@@ -614,6 +455,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
           ),
           Expanded(
             child: TextFormField(
+              initialValue: widget.dressData["productDelivery"].toString(),
               decoration: InputDecoration(
                 hintStyle: TextStyle(
                     color: kPurple.withOpacity(0.5),
@@ -664,36 +506,8 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
               ),
               Expanded(
                 child: TextFormField(
-                  decoration: InputDecoration(
-                    hintStyle: TextStyle(
-                        color: kPurple.withOpacity(0.5),
-                        fontWeight: FontWeight.w400),
-                    hintText: "eg: 24K Carats",
-                    labelText: "Variation",
-                    enabledBorder: const UnderlineInputBorder(
-                      borderSide: BorderSide(color: kPink),
-                    ),
-                    focusedBorder: const UnderlineInputBorder(
-                      borderSide: BorderSide(color: kPurple),
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value!.isEmpty ||
-                        !RegExp(r"^[a-zA-Z\s]+$").hasMatch(value)) {
-                      return "Enter Variation";
-                    } else {
-                      return null;
-                    }
-                  },
-                  onSaved: (value) =>
-                      setState(() => jewelleryModel.productCarrots = value!),
-                ),
-              ),
-              const SizedBox(
-                width: 18,
-              ),
-              Expanded(
-                child: TextFormField(
+                  initialValue:
+                      widget.dressData["availableQuantity"].toString(),
                   // controller: controller,
                   decoration: InputDecoration(
                     hintStyle: TextStyle(
@@ -719,6 +533,9 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
                   onSaved: (value) => setState(() =>
                       jewelleryModel.availableQuantity = int.parse(value!)),
                 ),
+              ),
+              const SizedBox(
+                width: 18,
               ),
             ],
           ),

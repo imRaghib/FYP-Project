@@ -696,7 +696,7 @@ class _AddSalonPageState extends State<AddSalonPage> {
                 hintStyle: TextStyle(
                     color: kPurple.withOpacity(0.5),
                     fontWeight: FontWeight.w400),
-                hintText: "Tell us about your venue",
+                hintText: "Tell us about your salon",
                 labelText: "Description",
                 enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: kPink),
@@ -745,8 +745,8 @@ class _AddSalonPageState extends State<AddSalonPage> {
                 hintStyle: TextStyle(
                     color: kPurple.withOpacity(0.5),
                     fontWeight: FontWeight.w400),
-                hintText: "Venue Name",
-                labelText: "Venue",
+                hintText: "Salon Name",
+                labelText: "Salon",
                 enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: kPink),
                 ),
@@ -757,7 +757,7 @@ class _AddSalonPageState extends State<AddSalonPage> {
               validator: (value) {
                 if (value!.isEmpty ||
                     !RegExp(r"^[a-zA-Z\s]+$").hasMatch(value)) {
-                  return "Enter Venue Name";
+                  return "Enter Salon Name";
                 } else {
                   return null;
                 }

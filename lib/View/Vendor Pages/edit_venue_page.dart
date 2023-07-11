@@ -6,8 +6,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../../constants.dart';
 
 class EditVenuePage extends StatefulWidget {
-  var venueData;
-  EditVenuePage({Key? key, this.venueData}) : super(key: key);
+  final venueData;
+  const EditVenuePage({Key? key, this.venueData}) : super(key: key);
 
   @override
   State<EditVenuePage> createState() => _EditVenuePageState();
@@ -53,8 +53,6 @@ class _EditVenuePageState extends State<EditVenuePage> {
   Booking venueModel = Booking();
   final formKey = GlobalKey<FormState>();
 
-  List<String> listOfUrls = [];
-
   late bool isPrivate = widget.venueData["isPrivate"];
 
   @override
@@ -76,9 +74,6 @@ class _EditVenuePageState extends State<EditVenuePage> {
                     setState(() {
                       isPrivate = value;
                     });
-
-                    updateVenueVisibility(
-                        venueId: widget.venueData["venueId"], status: value);
                   }),
               buildDivider(),
               buildLocation(),
@@ -428,6 +423,7 @@ class _EditVenuePageState extends State<EditVenuePage> {
                     vendorNumber: venueModel.vendorNumber,
                     menus: menuMap,
                     venueId: widget.venueData["venueId"],
+                    isPrivate: isPrivate,
                   ); // default value change later
                   Navigator.pushNamedAndRemoveUntil(
                       context, 'StreamPage', (route) => false);
