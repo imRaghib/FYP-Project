@@ -48,18 +48,20 @@ class _VendorDashboardPageState extends State<VendorDashboardPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  ElevatedButton(
-                      onPressed: () {},
-                      child: const Text("Request Withdrawal")),
-                  ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    const RequestPayments()));
-                      },
-                      child: const Text("Request Payments")),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(kDefaultPadding),
+                      child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        const RequestPayments()));
+                          },
+                          child: const Text("Request Payments")),
+                    ),
+                  ),
                 ],
               )
             ],

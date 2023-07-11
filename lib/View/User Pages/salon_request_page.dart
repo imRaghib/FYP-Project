@@ -1,4 +1,5 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:easy_shaadi/View/customerMainPage.dart';
 import 'package:easy_shaadi/ViewModel/Customer/venue_request_provider.dart';
@@ -12,7 +13,12 @@ import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:pay/pay.dart';
 import 'package:provider/provider.dart';
 
+import '../../Model/Messenger Models/chat_user.dart';
 import '../../ViewModel/Customer/salon_functions.dart';
+import '../../ViewModel/Messenger Class/apis.dart';
+import '../Messenger Screens/chat_screen.dart';
+
+late ChatUser me;
 
 class SalonAppointmentPage extends StatefulWidget {
   final imageUrlList;
@@ -205,7 +211,24 @@ class _SalonAppointmentPageState extends State<SalonAppointmentPage> {
                 const SizedBox(
                   width: 20,
                 ),
-                ElevatedButton(onPressed: () {}, child: const Text('Message'))
+                ElevatedButton(
+                    onPressed: () async {
+                      APIs.addChatUser(widget.email);
+                      await FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(widget.vendorUID)
+                          .get()
+                          .then((user) async {
+                        if (user.exists) {
+                          me = ChatUser.fromJson(user.data()!);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => ChatScreen(user: me)));
+                        }
+                      });
+                    },
+                    child: const Text('Message'))
               ],
             ),
           ],

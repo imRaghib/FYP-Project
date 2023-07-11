@@ -62,7 +62,7 @@ class _VendorBookingDetailPageState extends State<VendorBookingDetailPage> {
                           builder: (BuildContext context) => AlertDialog(
                             title: const Text('Update Booking Status'),
                             content: const Text(
-                                'This will notify the user about their booking status!'),
+                                'This will notify the customer about their booking status!'),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () =>
@@ -75,8 +75,9 @@ class _VendorBookingDetailPageState extends State<VendorBookingDetailPage> {
                                     status = true;
                                   });
                                   updateBookingStatus(
-                                    orderId: widget.bookingData["orderId"],
-                                  );
+                                      orderId: widget.bookingData["orderId"],
+                                      customerUId:
+                                          widget.bookingData["customerUID"]);
                                   Navigator.pop(context);
                                 },
                                 child: const Text('OK'),
@@ -112,8 +113,7 @@ class _VendorBookingDetailPageState extends State<VendorBookingDetailPage> {
                                     bookingStatus = true;
                                   });
                                   isBookingCompleted(
-                                    orderId: widget.bookingData["orderId"],
-                                  );
+                                      orderId: widget.bookingData["orderId"]);
                                   Navigator.pop(context);
                                 },
                                 child: const Text('OK'),

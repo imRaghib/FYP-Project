@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_drawer.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_salon_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/venue_booking_page.dart';
-import 'package:easy_shaadi/View/Vendor%20Pages/wedding_hall_edit_page.dart';
+import 'package:easy_shaadi/View/Vendor%20Pages/venue_edit_page.dart';
 import 'package:easy_shaadi/ViewModel/Vendor/venue_provider.dart';
 import 'package:easy_shaadi/ViewModel/providerclass.dart';
 import 'package:easy_shaadi/constants.dart';
@@ -203,18 +203,8 @@ class _VendorDirectoryPageState extends State<VendorDirectoryPage> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => EditPage(
-                                          imageUrlList: data['venueImages'],
-                                          location: data['venueLocation'],
-                                          title: data['venueName'],
-                                          address: data['venueAddress'],
-                                          description: data['venueDescription'],
-                                          price: data['venuePrice'],
-                                          isFav: false,
-                                          contact: data['vendorNumber'],
-                                          inactiveDates: data['inActiveDates'],
-                                          menuMap: data['menus'],
-                                        ),
+                                        builder: (context) =>
+                                            EditVenuePage(venueData: data),
                                       ),
                                     );
                                   },
@@ -476,23 +466,23 @@ class _VendorDirectoryPageState extends State<VendorDirectoryPage> {
                                   icon: const Icon(Icons.delete)),
                               IconButton(
                                   onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => EditPage(
-                                          imageUrlList: data['venueImages'],
-                                          location: data['venueLocation'],
-                                          title: data['venueName'],
-                                          address: data['venueAddress'],
-                                          description: data['venueDescription'],
-                                          price: data['venuePrice'],
-                                          isFav: false,
-                                          contact: data['vendorNumber'],
-                                          inactiveDates: data['inActiveDates'],
-                                          menuMap: data['menus'],
-                                        ),
-                                      ),
-                                    );
+                                    // Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(
+                                    //     builder: (context) => EditPage(
+                                    //       imageUrlList: data['venueImages'],
+                                    //       location: data['venueLocation'],
+                                    //       title: data['venueName'],
+                                    //       address: data['venueAddress'],
+                                    //       description: data['venueDescription'],
+                                    //       price: data['venuePrice'],
+                                    //       isFav: false,
+                                    //       contact: data['vendorNumber'],
+                                    //       inactiveDates: data['inActiveDates'],
+                                    //       menuMap: data['menus'],
+                                    //     ),
+                                    //   ),
+                                    // );
                                   },
                                   icon: const Icon(Icons.edit)),
                             ],
@@ -613,23 +603,23 @@ class _VendorDirectoryPageState extends State<VendorDirectoryPage> {
                                   icon: const Icon(Icons.delete)),
                               IconButton(
                                   onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => EditPage(
-                                          imageUrlList: data['venueImages'],
-                                          location: data['venueLocation'],
-                                          title: data['venueName'],
-                                          address: data['venueAddress'],
-                                          description: data['venueDescription'],
-                                          price: data['venuePrice'],
-                                          isFav: false,
-                                          contact: data['vendorNumber'],
-                                          inactiveDates: data['inActiveDates'],
-                                          menuMap: data['menus'],
-                                        ),
-                                      ),
-                                    );
+                                    // Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(
+                                    //     builder: (context) => EditPage(
+                                    //       imageUrlList: data['venueImages'],
+                                    //       location: data['venueLocation'],
+                                    //       title: data['venueName'],
+                                    //       address: data['venueAddress'],
+                                    //       description: data['venueDescription'],
+                                    //       price: data['venuePrice'],
+                                    //       isFav: false,
+                                    //       contact: data['vendorNumber'],
+                                    //       inactiveDates: data['inActiveDates'],
+                                    //       menuMap: data['menus'],
+                                    //     ),
+                                    //   ),
+                                    // );
                                   },
                                   icon: const Icon(Icons.edit)),
                             ],

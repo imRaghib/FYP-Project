@@ -74,8 +74,9 @@ class _VendorSalonDetailPageState extends State<VendorSalonDetailPage> {
                                     status = true;
                                   });
                                   updateAppointmentStatus(
-                                    orderId: widget.bookingData["orderId"],
-                                  );
+                                      orderId: widget.bookingData["orderId"],
+                                      customerUId:
+                                          widget.bookingData["customerUID"]);
                                   Navigator.pop(context);
                                 },
                                 child: const Text('OK'),
@@ -111,8 +112,7 @@ class _VendorSalonDetailPageState extends State<VendorSalonDetailPage> {
                                     appointmentStatus = true;
                                   });
                                   isAppointmentCompleted(
-                                    orderId: widget.bookingData["orderId"],
-                                  );
+                                      orderId: widget.bookingData["orderId"]);
                                   Navigator.pop(context);
                                 },
                                 child: const Text('OK'),

@@ -128,9 +128,9 @@ getVendorName() async {
 
 updateBookingStatus({
   required String orderId,
+  required String customerUId,
 }) async {
   // Get a reference to the document you want to update
-
   FirebaseFirestore.instance
       .collection('Vendor Orders')
       .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -138,15 +138,20 @@ updateBookingStatus({
       .doc(orderId)
       .update({
     'orderStatus': true,
-  }).then((value) {
-    print('Order status updated successfully');
-  }).catchError((error) {
-    print('Failed to update order status: $error');
+  });
+  FirebaseFirestore.instance
+      .collection('User Orders')
+      .doc(customerUId)
+      .collection('Venue Orders')
+      .doc(orderId)
+      .update({
+    'orderStatus': true,
   });
 }
 
 updateAppointmentStatus({
   required String orderId,
+  required String customerUId,
 }) async {
   // Get a reference to the document you want to update
 
@@ -154,6 +159,14 @@ updateAppointmentStatus({
       .collection('Vendor Orders')
       .doc(FirebaseAuth.instance.currentUser!.uid)
       .collection('Salon Orders')
+      .doc(orderId)
+      .update({
+    'orderStatus': true,
+  });
+  FirebaseFirestore.instance
+      .collection('User Orders')
+      .doc(customerUId)
+      .collection('Salon Appointments')
       .doc(orderId)
       .update({
     'orderStatus': true,
@@ -176,10 +189,6 @@ isBookingCompleted({
       .doc(orderId)
       .update({
     'bookingCompleted': true,
-  }).then((value) {
-    print('Order status updated successfully');
-  }).catchError((error) {
-    print('Failed to update order status: $error');
   });
 }
 
@@ -197,8 +206,6 @@ isAppointmentCompleted({
     'appointmentCompleted': true,
   }).then((value) {
     print('Order status updated successfully');
-  }).catchError((error) {
-    print('Failed to update order status: $error');
   });
 }
 
@@ -257,4 +264,39 @@ deleteSalon(String salonId) async {
         (doc) => print("Document deleted"),
         onError: (e) => print("Error updating document $e"),
       );
+}
+
+void updateVenueData({
+  required venueId,
+  required String venueLocation,
+  required String venueName,
+  required int venuePrice,
+  required String venueDescription,
+  required String venueAddress,
+  required double venueCapacity,
+  required double venueParking,
+  required String vendorNumber,
+  required Map<String, dynamic> menus,
+}) async {
+  await FirebaseFirestore.instance.collection("Venues").doc(venueId).update({
+    'venueLocation': venueLocation,
+    'venueName': venueName,
+    'venuePrice': venuePrice,
+    'venueDescription': venueDescription,
+    'venueAddress': venueAddress,
+    'venueCapacity': venueCapacity,
+    'venueParking': venueParking,
+    'vendorNumber': vendorNumber,
+    'menus': menus,
+  });
+}
+
+updateVenueVisibility({
+  required String venueId,
+  required status,
+}) async {
+  // Get a reference to the document you want to update
+  FirebaseFirestore.instance.collection('Venues').doc(venueId).update({
+    'isPrivate': status,
+  });
 }

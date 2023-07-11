@@ -9,8 +9,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../../Model/Messenger Models/dialogs.dart';
-
 class DetailsScreen extends StatefulWidget {
   final imageUrlList;
   final title;
