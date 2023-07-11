@@ -1,15 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_drawer.dart';
-import 'package:easy_shaadi/View/Vendor%20Pages/vendor_salon_page.dart';
-import 'package:easy_shaadi/View/Vendor%20Pages/venue_booking_page.dart';
-import 'package:easy_shaadi/View/Vendor%20Pages/venue_edit_page.dart';
+import 'package:easy_shaadi/View/Vendor%20Pages/edit_venue_page.dart';
 import 'package:easy_shaadi/ViewModel/Vendor/venue_provider.dart';
-import 'package:easy_shaadi/ViewModel/providerclass.dart';
 import 'package:easy_shaadi/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:intl/intl.dart';
 
 class VendorDirectoryPage extends StatefulWidget {
   const VendorDirectoryPage({Key? key}) : super(key: key);

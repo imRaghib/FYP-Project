@@ -1,24 +1,24 @@
 import 'dart:io';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:dotted_border/dotted_border.dart';
-import 'package:easy_shaadi/Model/bookings.dart';
-import 'package:easy_shaadi/ViewModel/Vendor/venue_provider.dart';
+import 'package:easy_shaadi/ViewModel/Vendor/salon_provider.dart';
+import 'package:easy_shaadi/constants.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../constants.dart';
+import '../../Model/bookings.dart';
 
-class EditVenuePage extends StatefulWidget {
-  var venueData;
-  EditVenuePage({Key? key, this.venueData}) : super(key: key);
+class AddSalonPage extends StatefulWidget {
+  const AddSalonPage({Key? key}) : super(key: key);
 
   @override
-  State<EditVenuePage> createState() => _EditVenuePageState();
+  State<AddSalonPage> createState() => _AddSalonPageState();
 }
 
-class _EditVenuePageState extends State<EditVenuePage> {
+class _AddSalonPageState extends State<AddSalonPage> {
   @override
   void dispose() {
     menuDesController.dispose();
@@ -27,14 +27,20 @@ class _EditVenuePageState extends State<EditVenuePage> {
   }
 
   final menuFormKey = GlobalKey<FormState>();
-  late Map<String, dynamic> menuMap = widget.venueData["menus"];
+  Map<String, int> packagesMap = {};
   int cost = 0;
   String menu = '';
   TextEditingController menuDesController = TextEditingController();
   TextEditingController menuCostController = TextEditingController();
+  List<String> inActiveDates = [];
 
-  late double capacity = widget.venueData["venueCapacity"];
-  late double parking = widget.venueData["venueParking"];
+  final today = DateUtils.dateOnly(DateTime.now());
+  List<DateTime?> _multiDatePickerValueWithDefaultValue = [];
+
+  List<String> temp = [];
+
+  String imageUrl = "";
+
   List<String> cityList = [
     'Jhelum',
     'Sheikhupura',
@@ -54,13 +60,19 @@ class _EditVenuePageState extends State<EditVenuePage> {
     'Sukkur',
     'Larkana'
   ];
-  late String venueLocation = widget.venueData["venueLocation"];
-  Booking venueModel = Booking();
+
+  String salonLocation = 'Location';
+
+  List<String> categoryList = ['Bridal', 'Groom'];
+  String category = 'Category';
+
+  Booking salonModel = Booking();
   final formKey = GlobalKey<FormState>();
 
   List<String> listOfUrls = [];
-
-  late bool isPrivate = widget.venueData["isPrivate"];
+  File? image;
+  final imagePicker = ImagePicker();
+  bool isUploading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -71,29 +83,17 @@ class _EditVenuePageState extends State<EditVenuePage> {
           key: formKey,
           child: Column(
             children: [
-              SwitchListTile(
-                  title: const Text(
-                    'Make Private',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  value: isPrivate,
-                  onChanged: (value) {
-                    setState(() {
-                      isPrivate = value;
-                    });
-
-                    updateVenueVisibility(
-                        venueId: widget.venueData["venueId"], status: value);
-                  }),
+              buildAddPhotos(),
               buildDivider(),
               buildLocation(),
+              buildDivider(),
+              buildCategory(),
               buildDivider(),
               buildVenueName(),
               buildVenueDes(),
               buildAddress(),
-              buildCapacitySlider(),
-              buildParkingSlider(),
-              buildMenus(),
+              buildDates(context),
+              buildPackages(context),
               buildContactInfo(),
               buildNumber(),
               buildSubmitButton(),
@@ -104,7 +104,7 @@ class _EditVenuePageState extends State<EditVenuePage> {
     );
   }
 
-  Padding buildMenus() {
+  Padding buildPackages(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(
           top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
@@ -163,8 +163,8 @@ class _EditVenuePageState extends State<EditVenuePage> {
                                           hintStyle: TextStyle(
                                               color: kPurple.withOpacity(0.5),
                                               fontWeight: FontWeight.w400),
-                                          hintText: "Tell us about your menu",
-                                          labelText: "Menu Description",
+                                          hintText: "Add your package details",
+                                          labelText: "Package Description",
                                           enabledBorder:
                                               const UnderlineInputBorder(
                                             borderSide:
@@ -217,8 +217,8 @@ class _EditVenuePageState extends State<EditVenuePage> {
                                               color: kPurple.withOpacity(0.5),
                                               fontWeight: FontWeight.w400),
                                           hintText:
-                                              "Cost of this menu per person",
-                                          labelText: "Cost For Each",
+                                              "Cost of this package per person",
+                                          labelText: "Cost",
                                           enabledBorder:
                                               const UnderlineInputBorder(
                                             borderSide:
@@ -258,12 +258,13 @@ class _EditVenuePageState extends State<EditVenuePage> {
                                   children: [
                                     ElevatedButton(
                                       onPressed: () {
+                                        print('pressed');
                                         if (menuFormKey.currentState!
                                             .validate()) {
                                           menuFormKey.currentState!.save();
 
                                           setModalState(() {
-                                            menuMap[menu] = cost;
+                                            packagesMap[menu] = cost;
                                           });
                                           menuDesController.clear();
                                           menuCostController.clear();
@@ -282,13 +283,14 @@ class _EditVenuePageState extends State<EditVenuePage> {
                               ListView.separated(
                                 physics: const PageScrollPhysics(),
                                 shrinkWrap: true,
-                                itemCount: menuMap.length,
+                                itemCount: packagesMap.length,
                                 separatorBuilder:
                                     (BuildContext context, int index) =>
                                         const Divider(),
                                 itemBuilder: (BuildContext context, int index) {
-                                  String key = menuMap.keys.elementAt(index);
-                                  int? value = menuMap[key];
+                                  String key =
+                                      packagesMap.keys.elementAt(index);
+                                  int? value = packagesMap[key];
                                   return Container(
                                     decoration: BoxDecoration(
                                       color: kPink.withAlpha(50),
@@ -309,7 +311,7 @@ class _EditVenuePageState extends State<EditVenuePage> {
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               const Text(
-                                                'Menu',
+                                                'Packages',
                                                 style: TextStyle(
                                                   fontSize: 20,
                                                   fontWeight: FontWeight.w500,
@@ -318,7 +320,7 @@ class _EditVenuePageState extends State<EditVenuePage> {
                                               IconButton(
                                                 onPressed: () {
                                                   setModalState(() {
-                                                    menuMap.remove(key);
+                                                    packagesMap.remove(key);
                                                   });
                                                 },
                                                 icon: const Icon(
@@ -374,13 +376,89 @@ class _EditVenuePageState extends State<EditVenuePage> {
               );
             },
             style: ElevatedButton.styleFrom(backgroundColor: kPurple),
+            child: const Text("Add Packages",
+                style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Padding buildDates(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(
+          top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              showModalBottomSheet<dynamic>(
+                backgroundColor: Colors.white.withOpacity(0),
+                context: context,
+                builder: (BuildContext context) {
+                  return StatefulBuilder(
+                    builder:
+                        (BuildContext context, StateSetter setModalState) =>
+                            Container(
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(10),
+                          topRight: Radius.circular(10),
+                        ),
+                      ),
+                      child: buildDefaultMultiDatePickerWithValue(),
+                    ),
+                  );
+                },
+              );
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: kPurple),
             child: const Text(
-              "Add Menus",
+              "Select Non Active Dates",
               style: TextStyle(color: Colors.white),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget buildDefaultMultiDatePickerWithValue() {
+    final config = CalendarDatePicker2Config(
+      calendarType: CalendarDatePicker2Type.multi,
+      selectedDayHighlightColor: Colors.indigo,
+      firstDate: DateTime.now(),
+    );
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const SizedBox(height: 10),
+        const Text('Select Dates On Which Your Salon Is Not Available'),
+        CalendarDatePicker2(
+          config: config,
+          value: _multiDatePickerValueWithDefaultValue,
+          onValueChanged: (dates) => setState(
+            () {
+              _multiDatePickerValueWithDefaultValue = dates;
+
+              List<DateTime> filter(List<DateTime?> input) {
+                input.removeWhere((e) => e == null);
+                return List<DateTime>.from(input);
+              }
+
+              List<DateTime> filteredList =
+                  filter(_multiDatePickerValueWithDefaultValue);
+
+              List<String> DateTimeListAsString =
+                  filteredList.map((data) => data.toString()).toList();
+              inActiveDates = DateTimeListAsString;
+            },
+          ),
+        ),
+        const SizedBox(height: 10),
+      ],
     );
   }
 
@@ -393,7 +471,17 @@ class _EditVenuePageState extends State<EditVenuePage> {
         children: [
           ElevatedButton(
             onPressed: () {
-              if (venueLocation == 'Location') {
+              if (listOfUrls.isEmpty) {
+                Fluttertoast.showToast(
+                  msg: 'Please add images!',
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.grey,
+                  fontSize: 15,
+                );
+              }
+              if (salonLocation == 'Location') {
                 Fluttertoast.showToast(
                   msg: 'Please select location!',
                   toastLength: Toast.LENGTH_SHORT,
@@ -403,9 +491,19 @@ class _EditVenuePageState extends State<EditVenuePage> {
                   fontSize: 15,
                 );
               }
-              if (menuMap.isEmpty) {
+              if (category == 'Category') {
                 Fluttertoast.showToast(
-                  msg: 'Please add Menus!',
+                  msg: 'Please select a category!',
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.grey,
+                  fontSize: 15,
+                );
+              }
+              if (packagesMap.isEmpty) {
+                Fluttertoast.showToast(
+                  msg: 'Please add Packages!',
                   toastLength: Toast.LENGTH_SHORT,
                   gravity: ToastGravity.BOTTOM,
                   timeInSecForIosWeb: 1,
@@ -414,25 +512,25 @@ class _EditVenuePageState extends State<EditVenuePage> {
                 );
               }
               if (formKey.currentState!.validate() &&
-                  venueLocation != 'Location' &&
-                  menuMap.isNotEmpty) {
+                  salonLocation != 'Location' &&
+                  category != 'Category' &&
+                  listOfUrls.isNotEmpty &&
+                  packagesMap.isNotEmpty) {
                 formKey.currentState!.save();
-
-                venueModel.venueCapacity = capacity;
-                venueModel.venueParking = parking;
-
                 try {
-                  updateVenueData(
-                    venueLocation: venueLocation,
-                    venueName: venueModel.venueName,
-                    venuePrice: menuMap.entries.first.value,
-                    venueDescription: venueModel.venueDescription,
-                    venueAddress: venueModel.venueAddress,
-                    venueCapacity: venueModel.venueCapacity,
-                    venueParking: venueModel.venueParking,
-                    vendorNumber: venueModel.vendorNumber,
-                    menus: menuMap,
-                    venueId: widget.venueData["venueId"],
+                  SalonProvider().addSalonData(
+                    salonImages: listOfUrls,
+                    salonLocation: salonLocation,
+                    salonName: salonModel.venueName,
+                    salonDescription: salonModel.venueDescription,
+                    salonAddress: salonModel.venueAddress,
+                    salonRating: 0,
+                    salonFeedback: 0,
+                    vendorNumber: salonModel.vendorNumber,
+                    inActiveDates: inActiveDates,
+                    startingPrice: packagesMap.entries.first.value,
+                    packages: packagesMap,
+                    category: category,
                   ); // default value change later
                   Navigator.pushNamedAndRemoveUntil(
                       context, 'StreamPage', (route) => false);
@@ -449,10 +547,7 @@ class _EditVenuePageState extends State<EditVenuePage> {
               }
             },
             style: ElevatedButton.styleFrom(backgroundColor: kPurple),
-            child: const Text(
-              "Submit",
-              style: TextStyle(color: Colors.white),
-            ),
+            child: const Text("Submit", style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -478,7 +573,6 @@ class _EditVenuePageState extends State<EditVenuePage> {
           ),
           Expanded(
             child: TextFormField(
-              initialValue: widget.venueData["vendorNumber"].toString(),
               style: TextStyle(color: Colors.black.withOpacity(0.6)),
               decoration: InputDecoration(
                 hintStyle: TextStyle(
@@ -498,7 +592,7 @@ class _EditVenuePageState extends State<EditVenuePage> {
                 }
               },
               onSaved: (value) =>
-                  setState(() => venueModel.vendorNumber = value!),
+                  setState(() => salonModel.vendorNumber = value!),
             ),
           ),
         ],
@@ -511,8 +605,8 @@ class _EditVenuePageState extends State<EditVenuePage> {
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: const [
-          Padding(
+        children: [
+          const Padding(
             padding: EdgeInsets.symmetric(vertical: 10),
             child: Text(
               'Contact Information',
@@ -520,136 +614,6 @@ class _EditVenuePageState extends State<EditVenuePage> {
                 fontSize: 20,
                 fontWeight: FontWeight.w500,
               ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Padding buildParkingSlider() {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: kPink.withAlpha(40),
-                radius: 20,
-                child: const Icon(
-                  size: 25,
-                  color: kPurple,
-                  Icons.local_parking,
-                ),
-              ),
-              const SizedBox(
-                width: 18,
-              ),
-              const Text(
-                "Venue Parking",
-                style: TextStyle(fontSize: 16),
-              ),
-              const Spacer(),
-              Padding(
-                padding: const EdgeInsets.only(right: 25),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: kPink.withAlpha(100),
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(10),
-                    ),
-                  ),
-                  height: 30,
-                  width: 80,
-                  child: Center(
-                    child: Text(
-                      parking.round().toString(),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 40),
-            child: Slider(
-              activeColor: kPurple,
-              inactiveColor: kPink,
-              value: parking,
-              max: 200,
-              divisions: 10,
-              label: parking.round().toString(),
-              onChanged: (newParking) {
-                setState(() {
-                  parking = newParking;
-                });
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Padding buildCapacitySlider() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10, left: 15, right: 15),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: kPink.withAlpha(40),
-                radius: 20,
-                child: const Icon(
-                  size: 25,
-                  color: kPurple,
-                  Icons.people,
-                ),
-              ),
-              const SizedBox(
-                width: 18,
-              ),
-              const Text(
-                "Venue Capacity",
-                style: TextStyle(fontSize: 16),
-              ),
-              const Spacer(),
-              Padding(
-                padding: const EdgeInsets.only(right: 25),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: kPink.withAlpha(100),
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(10),
-                    ),
-                  ),
-                  height: 30,
-                  width: 80,
-                  child: Center(
-                    child: Text(
-                      capacity.round().toString(),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 40),
-            child: Slider(
-              activeColor: kPurple,
-              inactiveColor: kPink,
-              value: capacity,
-              max: 1000,
-              divisions: 10,
-              label: capacity.round().toString(),
-              onChanged: (newCapacity) {
-                setState(() {
-                  capacity = newCapacity;
-                });
-              },
             ),
           ),
         ],
@@ -676,7 +640,6 @@ class _EditVenuePageState extends State<EditVenuePage> {
           ),
           Expanded(
             child: TextFormField(
-              initialValue: widget.venueData["venueAddress"],
               decoration: InputDecoration(
                 hintStyle: TextStyle(
                     color: kPurple.withOpacity(0.5),
@@ -699,7 +662,7 @@ class _EditVenuePageState extends State<EditVenuePage> {
                 }
               },
               onSaved: (value) =>
-                  setState(() => venueModel.venueAddress = value!),
+                  setState(() => salonModel.venueAddress = value!),
             ),
           ),
         ],
@@ -726,7 +689,6 @@ class _EditVenuePageState extends State<EditVenuePage> {
           ),
           Expanded(
             child: TextFormField(
-              initialValue: widget.venueData["venueDescription"],
               keyboardType: TextInputType.multiline,
               maxLines: null,
               decoration: InputDecoration(
@@ -751,7 +713,7 @@ class _EditVenuePageState extends State<EditVenuePage> {
                 }
               },
               onSaved: (value) =>
-                  setState(() => venueModel.venueDescription = value!),
+                  setState(() => salonModel.venueDescription = value!),
             ),
           ),
         ],
@@ -778,7 +740,6 @@ class _EditVenuePageState extends State<EditVenuePage> {
           ),
           Expanded(
             child: TextFormField(
-              initialValue: widget.venueData["venueName"],
               decoration: InputDecoration(
                 hintStyle: TextStyle(
                     color: kPurple.withOpacity(0.5),
@@ -800,7 +761,7 @@ class _EditVenuePageState extends State<EditVenuePage> {
                   return null;
                 }
               },
-              onSaved: (value) => setState(() => venueModel.venueName = value!),
+              onSaved: (value) => setState(() => salonModel.venueName = value!),
             ),
           ),
         ],
@@ -840,7 +801,7 @@ class _EditVenuePageState extends State<EditVenuePage> {
                     return GestureDetector(
                       onTap: () {
                         setState(() {
-                          venueLocation = cityList[index];
+                          salonLocation = cityList[index];
                         });
                         Navigator.pop(context);
                       },
@@ -876,7 +837,7 @@ class _EditVenuePageState extends State<EditVenuePage> {
           ),
         ),
         title: Text(
-          venueLocation,
+          salonLocation,
           style: const TextStyle(fontWeight: FontWeight.w400),
         ),
         trailing: const Icon(
@@ -885,6 +846,237 @@ class _EditVenuePageState extends State<EditVenuePage> {
           Icons.keyboard_arrow_down_outlined,
         ),
       ),
+    );
+  }
+
+  GestureDetector buildCategory() {
+    return GestureDetector(
+      onTap: () {
+        showModalBottomSheet(
+          backgroundColor: Colors.white.withOpacity(0),
+          context: context,
+          builder: (BuildContext context) {
+            return Container(
+              height: double.infinity,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(15),
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  itemCount: categoryList.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          category = categoryList[index];
+                        });
+                        Navigator.pop(context);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Text(
+                          categoryList[index],
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                      ),
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return Divider(
+                      thickness: 1,
+                      color: kPurple.withOpacity(0.2),
+                    );
+                  },
+                ),
+              ),
+            );
+          },
+        );
+      },
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundColor: kPink.withAlpha(40),
+          radius: 20,
+          child: const Icon(
+            size: 25,
+            color: kPurple,
+            Icons.category,
+          ),
+        ),
+        title: Text(
+          category,
+          style: const TextStyle(fontWeight: FontWeight.w400),
+        ),
+        trailing: const Icon(
+          size: 25,
+          color: kPurple,
+          Icons.keyboard_arrow_down_outlined,
+        ),
+      ),
+    );
+  }
+
+  Future getImage() async {
+    XFile? pickedFile =
+        await imagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      if (pickedFile != null) {
+        image = File(pickedFile.path);
+        setState(() {
+          isUploading = true;
+          uploadFile().then((url) {
+            if (url != null) {
+              setState(() {
+                isUploading = false;
+              });
+            }
+          });
+        });
+      }
+    });
+  }
+
+  Future uploadFile() async {
+    File file = File(image!.path);
+
+    String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
+
+    Reference referenceRoot = FirebaseStorage.instance.ref();
+    Reference referenceDirImages = referenceRoot.child('images');
+    Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
+
+    try {
+      await referenceImageToUpload.putFile(file);
+      imageUrl = await referenceImageToUpload.getDownloadURL();
+
+      if (imageUrl != null) {
+        setState(() {
+          listOfUrls.add(imageUrl);
+        });
+      }
+    } catch (error) {
+      Fluttertoast.showToast(
+        msg: error.toString(),
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.grey,
+        fontSize: 15,
+      );
+    }
+
+    return imageUrl;
+  }
+
+  Padding buildAddPhotos() {
+    Size size = MediaQuery.of(context).size;
+    return Padding(
+      padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
+      child: image == null
+          ? DottedBorder(
+              color: kPurple,
+              strokeWidth: 2,
+              dashPattern: const [8, 4],
+              child: InkWell(
+                  onTap: getImage,
+                  child: Container(
+                      height: 150,
+                      width: double.infinity,
+                      color: kPink.withAlpha(40),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Icon(
+                              size: 35,
+                              color: Colors.grey,
+                              Icons.camera_alt_outlined),
+                          Text('Add Photo',
+                              style: TextStyle(color: Colors.white)),
+                        ],
+                      ))),
+            )
+          : DottedBorder(
+              color: kPurple,
+              strokeWidth: 2,
+              dashPattern: const [8, 4],
+              child: Center(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: size.height * 0.15,
+                      child: ListView.separated(
+                        separatorBuilder: (context, index) => const SizedBox(
+                          width: 5,
+                        ),
+                        physics: const ClampingScrollPhysics(),
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: listOfUrls.length,
+                        itemBuilder: (context, index) => SizedBox(
+                          width: size.width * 0.35,
+                          child: Stack(
+                            children: [
+                              AspectRatio(
+                                  aspectRatio: 1 / 1,
+                                  child: Image.network(
+                                    listOfUrls[index],
+                                    fit: BoxFit.cover,
+                                  )),
+                              IconButton(
+                                  onPressed: () {
+                                    try {
+                                      FirebaseStorage.instance
+                                          .refFromURL(listOfUrls[index])
+                                          .delete();
+                                    } catch (error) {
+                                      Fluttertoast.showToast(
+                                        msg: error.toString(),
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 1,
+                                        backgroundColor: Colors.grey,
+                                        fontSize: 15,
+                                      );
+                                    }
+                                    setState(() {
+                                      listOfUrls.removeAt(index);
+                                    });
+                                  },
+                                  icon: const Icon(Icons.clear)),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+                        onPressed: getImage,
+                        style:
+                            ElevatedButton.styleFrom(backgroundColor: kPurple),
+                        child: const Text(
+                          "Add More Photos",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    if (isUploading)
+                      Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                              Theme.of(context).primaryColor),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
     );
   }
 }
