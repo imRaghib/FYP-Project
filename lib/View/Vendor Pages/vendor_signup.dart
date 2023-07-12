@@ -209,8 +209,12 @@ class _VendorSignupPageState extends State<VendorSignupPage> {
                     cnic: obj.cnic,
                     number: obj.number,
                     address: obj.address);
+
+                showDialog(context: context, builder: (context){
+                  return Center(child: CircularProgressIndicator(),);
+                });
                 Navigator.pushNamedAndRemoveUntil(
-                    context, 'StreamPage', (route) => false);
+                    context, 'mainScreen', (route) => false);
               }
             },
             style: ElevatedButton.styleFrom(

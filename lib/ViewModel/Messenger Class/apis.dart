@@ -33,13 +33,13 @@ class APIs {
 
   // for checking if user exists or not?
   static Future<bool> userExists() async {
-    return (await firestore.collection('users').doc(user.uid).get()).exists;
+    return (await firestore.collection('Accounts').doc(user.uid).get()).exists;
   }
 
   // for adding an chat user for our conversation
   static Future<bool> addChatUser(String email) async {
     final data = await firestore
-        .collection('users')
+        .collection('Accounts')
         .where('email', isEqualTo: email)
         .get();
 
@@ -47,7 +47,7 @@ class APIs {
     if (data.docs.isNotEmpty && data.docs.first.id != user.uid) {
       //user exists
       firestore
-          .collection('users')
+          .collection('Accounts')
           .doc(user.uid)
           .collection('my_users')
           .doc(data.docs.first.id)
@@ -63,7 +63,7 @@ class APIs {
 
   // for getting current user info
   static Future<void> getSelfInfo() async {
-    await firestore.collection('users').doc(user.uid).get().then((user) async {
+    await firestore.collection('Accounts').doc(user.uid).get().then((user) async {
       if (user.exists) {
         me = ChatUser.fromJson(user.data()!);
 
@@ -87,11 +87,11 @@ class APIs {
         image: user.photoURL.toString(),
         createdAt: time,
         isOnline: false,
-        lastActive: time,
-        pushToken: '');
+        lastActive: time
+    );
 
     return await firestore
-        .collection('users')
+        .collection('Accounts')
         .doc(user.uid)
         .set(chatUser.toJson());
   }
@@ -99,7 +99,7 @@ class APIs {
   // for getting id's of known users from firestore database
   static Stream<QuerySnapshot<Map<String, dynamic>>> getMyUsersId() {
     return firestore
-        .collection('users')
+        .collection('Accounts')
         .doc(user.uid)
         .collection('my_users')
         .snapshots();
@@ -109,7 +109,7 @@ class APIs {
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers(
       List<String> userIds) {
     return firestore
-        .collection('users')
+        .collection('Accounts')
         .where('id',
             whereIn: userIds.isEmpty
                 ? ['']
@@ -122,7 +122,7 @@ class APIs {
   static Future<void> sendFirstMessage(
       ChatUser chatUser, String msg, Type type) async {
     await firestore
-        .collection('users')
+        .collection('Accounts')
         .doc(chatUser.id)
         .collection('my_users')
         .doc(user.uid)
@@ -131,7 +131,7 @@ class APIs {
 
   // for updating user information
   static Future<void> updateUserInfo() async {
-    await firestore.collection('users').doc(user.uid).update({
+    await firestore.collection('Accounts').doc(user.uid).update({
       'name': me.name,
       'about': me.about,
     });
@@ -154,7 +154,7 @@ class APIs {
     //updating image in firestore database
     me.image = await ref.getDownloadURL();
     await firestore
-        .collection('users')
+        .collection('Accounts')
         .doc(user.uid)
         .update({'image': me.image});
   }
@@ -163,17 +163,16 @@ class APIs {
   static Stream<QuerySnapshot<Map<String, dynamic>>> getUserInfo(
       ChatUser chatUser) {
     return firestore
-        .collection('users')
+        .collection('Accounts')
         .where('id', isEqualTo: chatUser.id)
         .snapshots();
   }
 
   // update online or last active status of user
   static Future<void> updateActiveStatus(bool isOnline) async {
-    firestore.collection('users').doc(user.uid).update({
+    firestore.collection('Accounts').doc(user.uid).update({
       'is_online': isOnline,
       'last_active': DateTime.now().millisecondsSinceEpoch.toString(),
-      'push_token': me.pushToken,
     });
   }
 

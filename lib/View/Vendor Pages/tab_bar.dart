@@ -12,7 +12,7 @@ class OrderTabs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 4,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Bookings and Orders'),
@@ -40,12 +40,7 @@ class OrderTabs extends StatelessWidget {
                     color: kPurple,
                   ),
                 ),
-                Tab(
-                  icon: Icon(
-                    Icons.history,
-                    color: kPurple,
-                  ),
-                ),
+
               ],
             ),
             Expanded(
@@ -54,7 +49,7 @@ class OrderTabs extends StatelessWidget {
                   VendorVenueBookingPage(),
                   VendorSalonAppointmentPage(),
                   InProgressVendorOrders(),
-                  CompletedVendorOrders()
+
                 ],
               ),
             )

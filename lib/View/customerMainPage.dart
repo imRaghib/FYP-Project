@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_shaadi/View/User%20Pages/dress_details.dart';
 import 'package:easy_shaadi/View/User%20Pages/salon_details_screen.dart';
+import 'package:easy_shaadi/View/User%20Pages/venue_view_all.dart';
 import 'package:easy_shaadi/View/details/details_screen.dart';
 import 'package:easy_shaadi/View/viewAll.dart';
 import 'package:easy_shaadi/ViewModel/Drawer/custom_drawer.dart';
+import 'package:easy_shaadi/bottom_nav_bar.dart';
 import 'package:easy_shaadi/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -41,26 +43,10 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
         .where('isPrivate', isEqualTo: false)
         .snapshots();
 
-    int totalRating = 10;
-    int totalFeedbacks = 1;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home Page'),
-
-        // toolbarHeight: 80,
-        // shape: RoundedRectangleBorder(
-        //   borderRadius: BorderRadius.only(
-        //     bottomLeft: Radius.circular(15),
-        //     bottomRight: Radius.circular(15),
-        //   ),
-        // ),
-        //
         centerTitle: true,
-        // // backgroundColor: Theme.of(context).primaryColor
-        // backgroundColor: Colors.deepPurpleAccent,
-
-        // leading: Icon(Icons.search),
       ),
       drawer: MyDrawer(),
       body: Padding(
@@ -93,7 +79,14 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                     icon: Icons.checklist,
                     title: "CheckList",
                     color: kPurple,
-                    press: () {},
+                    press: () {
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) {
+                            return BottomNavBar(
+                              val: 4,
+                            );
+                          }));
+                    },
                   ),
                   const SizedBox(
                     width: 20,
@@ -102,7 +95,14 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                     icon: Icons.assignment_ind,
                     title: "GuestList",
                     color: kPurple,
-                    press: () {},
+                    press: () {
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) {
+                            return BottomNavBar(
+                              val: 5,
+                            );
+                          }));
+                    },
                   ),
                   const SizedBox(
                     width: 20,
@@ -232,6 +232,8 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                                 venueId: data['venueId'],
                                 menuMap: data['menus'],
                                 email: data['vendorEmail'],
+                                parking: data['venueParking'],
+                                capacity: data['venueCapacity'],
                               ),
                             ),
                           );
@@ -257,7 +259,14 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>VenueViewAll()
+                        ),
+                      );
+                    },
                     child: const Text(
                       'View All',
                       style: TextStyle(

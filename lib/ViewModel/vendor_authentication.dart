@@ -32,6 +32,7 @@ Future vendorSignup({
     'Role': 'Vendor',
     'readyPayments': readyPayments,
     'onHoldPayments': onHoldPayments,
+    'vendorUID':vendorUID
   });
   var record1 =
       FirebaseFirestore.instance.collection('Accounts').doc(vendorUID);
@@ -68,15 +69,15 @@ Future<void> createUser(String username) async {
       id: user.uid,
       name: username,
       email: user.email.toString(),
-      about: "Hey, I'm using We Chat!",
+      about: "Hey, I'm using Easy Shaadi!",
       image: user.photoURL.toString(),
       createdAt: time,
       isOnline: false,
       lastActive: time,
-      pushToken: '');
+      );
 
   return await FirebaseFirestore.instance
-      .collection('users')
+      .collection('Accounts')
       .doc(user.uid)
-      .set(chatUser.toJson());
+      .update(chatUser.toJson());
 }

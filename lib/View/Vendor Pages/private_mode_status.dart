@@ -24,8 +24,38 @@ class pmode{
   }
   for(int i=0;i<ids.length;i++){
   await  FirebaseFirestore.instance.collection('Venues').doc(ids[i]).update({
-  'private':value
+  'isPrivate':value
   });
+  }
+
+   data= await  FirebaseFirestore.instance.collection('Jewelerys').where('sellerUID',isEqualTo: FirebaseAuth.instance.currentUser!.uid).get();
+  for(int i=0;i<data.size;i++){
+    ids.add(data.docs[i].id);
+  }
+  for(int i=0;i<ids.length;i++){
+    await  FirebaseFirestore.instance.collection('Jewelerys').doc(ids[i]).update({
+      'isPrivate':value
+    });
+  }
+
+   data= await  FirebaseFirestore.instance.collection('Dresses').where('sellerUID',isEqualTo: FirebaseAuth.instance.currentUser!.uid).get();
+  for(int i=0;i<data.size;i++){
+    ids.add(data.docs[i].id);
+  }
+  for(int i=0;i<ids.length;i++){
+    await  FirebaseFirestore.instance.collection('Dresses').doc(ids[i]).update({
+      'isPrivate':value
+    });
+  }
+
+   data= await  FirebaseFirestore.instance.collection('Bridal Salon').where('vendorUID',isEqualTo: FirebaseAuth.instance.currentUser!.uid).get();
+  for(int i=0;i<data.size;i++){
+    ids.add(data.docs[i].id);
+  }
+  for(int i=0;i<ids.length;i++){
+    await  FirebaseFirestore.instance.collection('Bridal Salon').doc(ids[i]).update({
+      'isPrivate':value
+    });
   }
 
   }

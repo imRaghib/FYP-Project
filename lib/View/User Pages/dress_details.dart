@@ -483,7 +483,7 @@ class BottomButtons extends StatelessWidget {
           onTap: () async {
             APIs.addChatUser(email);
             await FirebaseFirestore.instance
-                .collection('users')
+                .collection('Accounts')
                 .doc(vendorId)
                 .get()
                 .then((user) async {

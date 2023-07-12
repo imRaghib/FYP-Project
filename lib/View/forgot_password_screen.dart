@@ -18,8 +18,13 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Forgot Password'),
+        centerTitle: true,
+        backgroundColor: kPink,
+      ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        //mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Form(
             key: formKey,
@@ -27,7 +32,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
               child: Column(
                 children: [
-                  Image.asset('assets/prof.jpeg'),
+                  SizedBox(
+                    height: 300,
+                      child: Image.asset('assets/prof.jpeg')),
                   buildShowAlert(),
                   Text('Reset Password',
                       style:

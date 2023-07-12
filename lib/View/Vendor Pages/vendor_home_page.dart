@@ -6,6 +6,7 @@ import 'package:easy_shaadi/View/Vendor%20Pages/tab_bar.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_dashboard_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_directory_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/add_venue_page.dart';
+import 'package:easy_shaadi/View/Vendor%20Pages/vendor_inProgress_orders.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/venue_booking_history.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/venue_booking_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_orders_screen.dart';
@@ -207,6 +208,7 @@ class _VendorHomePageState extends State<VendorHomePage> {
               icon: Icon(Icons.library_add),
               label: 'Directory',
             ),
+
             BottomNavigationBarItem(
               icon: Icon(Icons.shopping_cart_rounded),
               label: 'Order',

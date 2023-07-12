@@ -19,7 +19,6 @@ class CustomerOrderTabs extends StatelessWidget {
           title: const Text('Orders'),
           centerTitle: true,
         ),
-        drawer: const VendorDrawer(),
         body: Column(
           children: const [
             TabBar(

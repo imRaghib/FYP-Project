@@ -106,7 +106,7 @@ class _SignupPageState extends State<SignupPage> {
                             horizontal: 40, vertical: 10),
                         child: Column(
                           children: [
-                            buildSignUpButton(),
+                            buildSignUpButton(context),
                             buildGoogleButton(),
                           ],
                         ),
@@ -193,7 +193,7 @@ class _SignupPageState extends State<SignupPage> {
         onSaved: (value) => setState(() => nameController.text = value!),
       );
 
-  Column buildSignUpButton() {
+  Column buildSignUpButton(BuildContext contex) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -202,12 +202,17 @@ class _SignupPageState extends State<SignupPage> {
             if (formKey.currentState!.validate()) {
               formKey.currentState!.save();
               try {
+                showDialog(context: context, builder: (context){
+                  return Center(child: CircularProgressIndicator(),);
+                });
                 await customer_signup(
                     name: nameController.text.toTitleCase(),
                     email: emailController.text,
                     password: passController.text);
+
                 Navigator.pushNamedAndRemoveUntil(
-                    context, 'StreamPage', (route) => false);
+                    context, 'mainScreen', (route) => false);
+
               } catch (e) {
                 setState(() {
                   error = e.toString();

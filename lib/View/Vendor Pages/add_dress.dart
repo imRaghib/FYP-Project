@@ -428,7 +428,7 @@ class _AddDressPageState extends State<AddDressPage> {
               ),
               validator: (value) {
                 if (value!.isEmpty ||
-                    !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                    !RegExp(r"^[a-zA-Z0-9\s.,#\-]+$")
                         .hasMatch(value)) {
                   return "Enter Product Name";
                 } else {
@@ -480,7 +480,7 @@ class _AddDressPageState extends State<AddDressPage> {
               ),
               validator: (value) {
                 if (value!.isEmpty ||
-                    !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                    !RegExp(r"^[a-zA-Z0-9\s.,#\-]+$")
                         .hasMatch(value)) {
                   return "Enter Description";
                 } else {
@@ -578,7 +578,7 @@ class _AddDressPageState extends State<AddDressPage> {
               ),
               validator: (value) {
                 if (value!.isEmpty ||
-                    !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                    !RegExp(r"^[a-zA-Z0-9\s.,#\-]+$")
                         .hasMatch(value)) {
                   return "Enter Product Weight";
                 } else {

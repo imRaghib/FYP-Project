@@ -10,6 +10,7 @@ import 'package:intl/intl.dart' as intl;
 import 'package:intl/date_time_patterns.dart';
 import 'package:pay/pay.dart';
 import 'package:provider/provider.dart';
+import 'package:quickalert/quickalert.dart';
 
 import '../../Model/Order.dart';
 import '../../ViewModel/Customer/venue_request_provider.dart';
@@ -17,7 +18,7 @@ import '../../constants.dart';
 import '../../payment_config.dart';
 import '../customerMainPage.dart';
 
-class OrderReview extends StatelessWidget {
+class OrderReview extends StatefulWidget {
 
   final paddress;
   final pcity;
@@ -28,7 +29,23 @@ class OrderReview extends StatelessWidget {
    OrderReview({Key? key,this.paddress,this.pcity,this.pphone,this.ppostalcode,this.pstate}) : super(key: key);
 
   @override
+  State<OrderReview> createState() => _OrderReviewState();
+}
+
+class _OrderReviewState extends State<OrderReview> {
+
+  @override
   Widget build(BuildContext context) {
+    void showAlert(){
+      QuickAlert.show(
+          context: context,
+          type: QuickAlertType.success,
+          title: 'Order Placed',
+          text: 'Order Placed Successfully',
+        showCancelBtn: false,
+
+      );
+    }
     var prov=Provider.of<ProductProvider>(context);
     return Scaffold(
       appBar: AppBar(
@@ -39,7 +56,7 @@ class OrderReview extends StatelessWidget {
       body: ListView(
         children: [
           ListView.builder(
-            // physics: NeverScrollableScrollPhysics(),
+              physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: prov.cartList.length,
               itemBuilder: (context,index) {
@@ -63,11 +80,11 @@ class OrderReview extends StatelessWidget {
                   children: [
                     Text('Shipping Address',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15)),
                     Text(FirebaseAuth.instance.currentUser!.email.toString()),
-                    Text(paddress),
-                    Text(pcity),
-                    Text(pstate),
-                    Text(pphone),
-                    Text(ppostalcode),
+                    Text(widget.paddress),
+                    Text(widget.pcity),
+                    Text(widget.pstate),
+                    Text(widget.pphone),
+                    Text(widget.ppostalcode),
                   ],
                 ),
               ],
@@ -87,19 +104,23 @@ class OrderReview extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25,vertical: 4),
-            child: ElevatedButton(onPressed: (){
+            child: ElevatedButton(onPressed: ()async{
               Provider.of<ProductProvider>(context, listen: false)
                   .getProductDetails();
               Provider.of<ProductProvider>(context, listen: false)
                   .placeOrder(
-                  address: paddress,
-                  city: pcity,
-                  state: pstate,
-                  postalcode: ppostalcode,
-                  phone: pphone);
+                  address: widget.paddress,
+                  city: widget.pcity,
+                  state: widget.pstate,
+                  postalcode: widget.ppostalcode,
+                  phone: widget.pphone);
               Provider
                   .of<ProductProvider>(context, listen: false)
                   .cartList = [];
+
+              showAlert();
+              await Future.delayed(Duration(milliseconds: 2000));
+              Navigator.pop(context);
               Navigator.pop(context);
               Navigator.pushReplacement(
                 context,
@@ -129,11 +150,11 @@ class OrderReview extends StatelessWidget {
                       .getProductDetails();
                   Provider.of<ProductProvider>(context, listen: false)
                       .placeOrder(
-                      address: paddress,
-                      city: pcity,
-                      state: pstate,
-                      postalcode: ppostalcode,
-                      phone: pphone);
+                      address: widget.paddress,
+                      city: widget.pcity,
+                      state: widget.pstate,
+                      postalcode: widget.ppostalcode,
+                      phone: widget.pphone);
                   Provider
                       .of<ProductProvider>(context, listen: false)
                       .cartList = [];
@@ -159,5 +180,6 @@ class OrderReview extends StatelessWidget {
         ],
       ),
     );
+
   }
 }

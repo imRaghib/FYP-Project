@@ -429,7 +429,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
               ),
               validator: (value) {
                 if (value!.isEmpty ||
-                    !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                    !RegExp(r"^[a-zA-Z0-9\s.,#\-]+$")
                         .hasMatch(value)) {
                   return "Enter Product Name";
                 } else {
@@ -481,7 +481,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
               ),
               validator: (value) {
                 if (value!.isEmpty ||
-                    !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                    !RegExp(r"^[a-zA-Z0-9\s.,#\-]+$")
                         .hasMatch(value)) {
                   return "Enter Description";
                 } else {
@@ -579,7 +579,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
               ),
               validator: (value) {
                 if (value!.isEmpty ||
-                    !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                    !RegExp(r"^[a-zA-Z0-9\s.,#\-]+$")
                         .hasMatch(value)) {
                   return "Enter Product Weight";
                 } else {
@@ -679,7 +679,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
                   ),
                   validator: (value) {
                     if (value!.isEmpty ||
-                        !RegExp(r"^[a-zA-Z\s]+$").hasMatch(value)) {
+                        !RegExp(r"^[a-zA-Z0-9\s.,#\-]+$").hasMatch(value)) {
                       return "Enter Variation";
                     } else {
                       return null;
@@ -710,7 +710,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
                   ),
                   validator: (value) {
                     if (value!.isEmpty ||
-                        !RegExp(r"^[0-9]+$").hasMatch(value)) {
+                        !RegExp(r'^[0-9]+$').hasMatch(value)) {
                       return "Enter Quantity";
                     } else {
                       return null;

@@ -1,30 +1,35 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/private_mode_status.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_home_page.dart';
+import 'package:easy_shaadi/View/Vendor%20Pages/vendor_orders_screen.dart';
 import 'package:easy_shaadi/View/customerMainPage.dart';
 import 'package:easy_shaadi/bottom_nav_bar.dart';
 import 'package:easy_shaadi/checklist/pages/home_page.dart';
+import 'package:easy_shaadi/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../Model/Messenger Models/chat_user.dart';
+import '../../ViewModel/Messenger Class/apis.dart';
 import '../../ViewModel/providerclass.dart';
+import '../Messenger Screens/chat_screen.dart';
 
 Widget listTile({IconData? icon, String title = ""}) {
   return ListTile(
     leading: Icon(
       icon,
       size: 32,
-      color: Colors.tealAccent.shade700,
+      color: kPurple,
     ),
     title: Text(
       title,
-      style: TextStyle(color: Colors.black45),
+      style: TextStyle(color: Colors.black),
     ),
   );
 }
 
-// Future SignOut()async{
-//   await FirebaseAuth.instance.signOut();
-// }
+late ChatUser me;
+
 class VendorDrawer extends StatefulWidget {
   const VendorDrawer({Key? key}) : super(key: key);
 
@@ -43,7 +48,7 @@ class _VendorDrawerState extends State<VendorDrawer> {
         child: ListView(
           children: [
             DrawerHeader(
-                decoration: const BoxDecoration(color: Colors.orange),
+                decoration: const BoxDecoration(color: kPink),
                 child: Center(
                   child: Column(
                     children: [
@@ -104,6 +109,16 @@ class _VendorDrawerState extends State<VendorDrawer> {
                     title: "Booking History")),
             InkWell(
                 onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>CompletedVendorOrders()
+                    ),
+                  );
+                },
+                child: listTile(icon: Icons.history, title: "Orders History")),
+            InkWell(
+                onTap: () {
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) {
                         return VendorHomePage(
@@ -112,27 +127,35 @@ class _VendorDrawerState extends State<VendorDrawer> {
                       }));
                 },
                 child: listTile(icon: Icons.library_add, title: "Directory")),
+
             InkWell(
-                onTap: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) {
-                        return VendorHomePage(
-                          val: 4,
-                        );
-                      }));
+                onTap: () async {
+                  APIs.addChatUser("admin@gmail.com");
+                  await FirebaseFirestore.instance
+                      .collection('Accounts')
+                      .doc('LAoaR0zKlehD4c25N8zZxsdckQs2')
+                      .get()
+                      .then((user) async {
+                    if (user.exists) {
+                      me = ChatUser.fromJson(user.data()!);
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => ChatScreen(user: me)));
+                    }
+                  });
                 },
-                child: listTile(icon: Icons.history, title: "Orders")),
+                child: listTile(icon: Icons.person, title: "Contact Admin")),
+
             InkWell(
                 onTap: () {
                   auth.signOut().whenComplete(() =>
-                  {Navigator.pushReplacementNamed(context, 'mainScreen')});
+                  Navigator.pushReplacementNamed(context, 'mainScreen'));
 
                   // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>MyApp()), (route) => route.isFirst);
                 },
                 child:
                 listTile(icon: Icons.logout_outlined, title: "Sign out")),
             const SizedBox(
-              height: 10,
+              height: 2,
             ),
             SizedBox(
               height: 220,
@@ -149,7 +172,8 @@ class _VendorDrawerState extends State<VendorDrawer> {
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                         )),
                     Center(child: Text("Contact: 042 111 111 111")),
-                    Center(child: Text("Email: EasyShaadi@gmail.com"))
+                    Center(child: Text("Email: EasyShaadi@gmail.com")),
+                    SizedBox(height: 20,)
                   ],
                 ),
               ),

@@ -215,7 +215,7 @@ class _SalonAppointmentPageState extends State<SalonAppointmentPage> {
                     onPressed: () async {
                       APIs.addChatUser(widget.email);
                       await FirebaseFirestore.instance
-                          .collection('users')
+                          .collection('Accounts')
                           .doc(widget.vendorUID)
                           .get()
                           .then((user) async {

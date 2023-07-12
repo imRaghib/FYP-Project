@@ -41,14 +41,14 @@ Future<void> createUser() async {
       id: user.uid,
       name: user.displayName.toString(),
       email: user.email.toString(),
-      about: "Hey, I'm using We Chat!",
+      about: "Hey, I'm using Easy Shaadi",
       image: user.photoURL.toString(),
       createdAt: time,
       isOnline: false,
       lastActive: time,
-      pushToken: '');
+      );
   return await FirebaseFirestore.instance
-      .collection('users')
+      .collection('Accounts')
       .doc(user.uid)
-      .set(chatUser.toJson());
+      .update(chatUser.toJson());
 }

@@ -156,7 +156,7 @@ class _BookingPageState extends State<BookingPage> {
                     onPressed: () async {
                       APIs.addChatUser(widget.email);
                       await FirebaseFirestore.instance
-                          .collection('users')
+                          .collection('Accounts')
                           .doc(widget.vendorUID)
                           .get()
                           .then((user) async {

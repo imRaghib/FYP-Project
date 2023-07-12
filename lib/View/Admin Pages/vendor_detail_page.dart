@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_shaadi/stringCasingExtension.dart';
 import 'package:flutter/material.dart';
+import '../../Model/Messenger Models/chat_user.dart';
 import '../../ViewModel/Admin/admin_functions.dart';
-
+import '../../ViewModel/Messenger Class/apis.dart';
+import '../Messenger Screens/chat_screen.dart';
+late ChatUser me;
 class VendorDetailsPage extends StatelessWidget {
   final QueryDocumentSnapshot userData;
   const VendorDetailsPage({super.key, required this.userData});
@@ -79,6 +82,27 @@ class VendorDetailsPage extends StatelessWidget {
             Text(
               userData['RequestStatus'].toString().toTitleCase(),
               style: const TextStyle(fontSize: 16.0),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            userData['RequestStatus'] == "waiting" ||
+                userData['RequestStatus'] == "rejected"? Container():Center(
+              child: ElevatedButton(onPressed: () async {
+                print('hjvjhvjvkjhvk : '+userData['Id']);
+                APIs.addChatUser(userData['Email']);
+                await FirebaseFirestore.instance
+                    .collection('Accounts')
+                    .doc(userData['Id'])
+                    .get()
+                    .then((user) async {
+                  if (user.exists) {
+                    me = ChatUser.fromJson(user.data()!);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => ChatScreen(user: me)));
+                  }
+                });
+              }, child: Text('Send Message')),
             ),
             const Spacer(),
             Row(

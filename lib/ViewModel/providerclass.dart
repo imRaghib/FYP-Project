@@ -273,6 +273,7 @@ class ProductProvider with ChangeNotifier {
   }
 
   Future signOut() async {
+    APIs.getSelfInfo();
     APIs.updateActiveStatus(false);
     if (await googleSignin.isSignedIn()) {
       await googleSignin.disconnect();

@@ -1,11 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_shaadi/View/User%20Pages/salon_appointment_history.dart';
-import 'package:easy_shaadi/View/customerMainPage.dart';
 import 'package:easy_shaadi/bottom_nav_bar.dart';
-import 'package:easy_shaadi/checklist/pages/home_page.dart';
+import 'package:easy_shaadi/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import '../../Model/Messenger Models/chat_user.dart';
+import '../../View/Messenger Screens/chat_screen.dart';
 import '../../View/User Pages/booking_history.dart';
+import '../Messenger Class/apis.dart';
 import '../providerclass.dart';
 
 Widget listTile({IconData? icon, String title = ""}) {
@@ -13,11 +15,11 @@ Widget listTile({IconData? icon, String title = ""}) {
     leading: Icon(
       icon,
       size: 32,
-      color: Colors.tealAccent.shade700,
+      color: kPurple,
     ),
     title: Text(
       title,
-      style: TextStyle(color: Colors.black45),
+      style: const TextStyle(color: Colors.black),
     ),
   );
 }
@@ -25,6 +27,8 @@ Widget listTile({IconData? icon, String title = ""}) {
 // Future SignOut()async{
 //   await FirebaseAuth.instance.signOut();
 // }
+late ChatUser me;
+
 class MyDrawer extends StatefulWidget {
   const MyDrawer({Key? key}) : super(key: key);
 
@@ -43,7 +47,7 @@ class _MyDrawerState extends State<MyDrawer> {
         child: ListView(
           children: [
             DrawerHeader(
-                decoration: const BoxDecoration(color: Colors.orange),
+                decoration: const BoxDecoration(color: kPink),
                 child: Center(
                   child: Column(
                     children: [
@@ -120,25 +124,42 @@ class _MyDrawerState extends State<MyDrawer> {
                 child:
                     listTile(icon: Icons.person_add_alt, title: "Guest List")),
             InkWell(
+                onTap: () async {
+                  APIs.addChatUser("admin@gmail.com");
+                  await FirebaseFirestore.instance
+                      .collection('Accounts')
+                      .doc('LAoaR0zKlehD4c25N8zZxsdckQs2')
+                      .get()
+                      .then((user) async {
+                    if (user.exists) {
+                      me = ChatUser.fromJson(user.data()!);
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => ChatScreen(user: me)));
+                    }
+                  });
+                },
+                child: listTile(icon: Icons.person, title: "Contact Admin")),
+            InkWell(
                 onTap: () {
                   auth.signOut().whenComplete(() =>
-                      {Navigator.pushReplacementNamed(context, 'mainScreen')});
+                      Navigator.pushReplacementNamed(context, 'mainScreen')
+                      );
 
                   // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>MyApp()), (route) => route.isFirst);
                 },
                 child:
                     listTile(icon: Icons.logout_outlined, title: "Sign out")),
             const SizedBox(
-              height: 10,
+              height: 2,
             ),
-            Container(
-              height: 220,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
+            const SizedBox(
+               height: 220,
+              child:  Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Center(
                         child: Text(
                       "Support",
@@ -146,7 +167,10 @@ class _MyDrawerState extends State<MyDrawer> {
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                     )),
                     Center(child: Text("Contact: 042 111 111 111")),
-                    Center(child: Text("Email: EasyShaadi@gmail.com"))
+                    Center(child: Text("Email: EasyShaadi@gmail.com")),
+                    SizedBox(
+                      height: 60,
+                    )
                   ],
                 ),
               ),

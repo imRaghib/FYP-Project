@@ -31,15 +31,13 @@ final chatUser = ChatUser(
     id: user.uid,
     name: username,
     email: user.email.toString(),
-    about: "Hey, I'm using We Chat!",
+    about: "Hey, I'm using Easy Shaadi",
     image: user.photoURL.toString(),
     createdAt: time,
     isOnline: false,
     lastActive: time,
-    pushToken: '');
+    );
 
-return await FirebaseFirestore.instance
-    .collection('users')
-.doc(user.uid)
-    .set(chatUser.toJson());
+ return await FirebaseFirestore.instance.collection('Accounts').doc(user.uid)
+    .update(chatUser.toJson());
 }
