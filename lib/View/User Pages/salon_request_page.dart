@@ -253,8 +253,72 @@ class _SalonAppointmentPageState extends State<SalonAppointmentPage> {
                 fontWeight: FontWeight.w700,
               ),
             ),
-            ElevatedButton(
-                onPressed: () {
+            // ElevatedButton(
+            //     onPressed: () {
+            //       // without formatting, dateTime comes with time and time will never match
+            //       DateFormat('yyyy-MM-dd').format(selectedDate) ==
+            //               DateFormat('yyyy-MM-dd').format(
+            //                   DateTime.now().add(const Duration(days: 150)))
+            //           ? Fluttertoast.showToast(
+            //               msg: 'Please select a valid date!',
+            //               toastLength: Toast.LENGTH_SHORT,
+            //               gravity: ToastGravity.BOTTOM,
+            //               timeInSecForIosWeb: 1,
+            //               backgroundColor: Colors.grey,
+            //               fontSize: 15,
+            //             )
+            //           : {
+            //               bookSalon(
+            //                 payment: returnVendorTotal(),
+            //                 salonId: widget.salonId,
+            //                 vendorUID: widget.vendorUID,
+            //                 customerName: customerDetails.customer.Name,
+            //                 customerEmail: customerDetails.customer.Email,
+            //                 salonBookedOn: DateFormat('dd/MM/yyyy')
+            //                     .format(selectedDate)
+            //                     .toString(),
+            //                 selectedPackage: widget.selectedPackage,
+            //                 salonName: widget.title,
+            //                 salonImg: widget.imageUrlList,
+            //               ),
+            //               updatePayments(
+            //                 vendorUID: widget.vendorUID,
+            //                 payment: returnVendorTotal(),
+            //               ),
+            //               updateSalonDate(
+            //                   salonId: widget.salonId,
+            //                   bookingDate: selectedDate.toString()),
+            //               appointmentHistory(
+            //                 payment: totalPayment,
+            //                 salonId: widget.salonId,
+            //                 vendorUID: widget.vendorUID,
+            //                 salonBookedOn: DateFormat('dd/MM/yyyy')
+            //                     .format(selectedDate)
+            //                     .toString(),
+            //                 vendorNumber: widget.contact,
+            //                 vendorEmail: widget.email,
+            //                 selectedPackage: widget.selectedPackage,
+            //                 salonName: widget.title,
+            //                 salonImg: widget.imageUrlList,
+            //               ),
+            //               Navigator.pushNamedAndRemoveUntil(
+            //                   context, 'StreamPage', (route) => false)
+            //             };
+            //     },
+            //     child: Text("test button")),
+            GooglePayButton(
+              paymentConfiguration:
+                  PaymentConfiguration.fromJsonString(defaultGooglePay),
+              paymentItems: [
+                PaymentItem(
+                    label: widget.title,
+                    amount: returnTotal().toString(),
+                    status: PaymentItemStatus.final_price),
+              ],
+              type: GooglePayButtonType.buy,
+              margin: const EdgeInsets.only(top: 15.0),
+              onPaymentResult: (result) {
+                try {
                   // without formatting, dateTime comes with time and time will never match
                   DateFormat('yyyy-MM-dd').format(selectedDate) ==
                           DateFormat('yyyy-MM-dd').format(
@@ -304,55 +368,6 @@ class _SalonAppointmentPageState extends State<SalonAppointmentPage> {
                           Navigator.pushNamedAndRemoveUntil(
                               context, 'StreamPage', (route) => false)
                         };
-                },
-                child: Text("test button")),
-            GooglePayButton(
-              paymentConfiguration:
-                  PaymentConfiguration.fromJsonString(defaultGooglePay),
-              paymentItems: [
-                PaymentItem(
-                    label: widget.title,
-                    amount: returnTotal().toString(),
-                    status: PaymentItemStatus.final_price),
-              ],
-              type: GooglePayButtonType.buy,
-              margin: const EdgeInsets.only(top: 15.0),
-              onPaymentResult: (result) {
-                try {
-                  // // bookVenue(
-                  // //   customerName: customerDetails.customer.Name,
-                  // //   bookingDate: selectedDate.toString(),
-                  // //   vendorUID: widget.vendorUID,
-                  // //   venueId: widget.venueId,
-                  // //   customerUID: FirebaseAuth.instance.currentUser!.uid,
-                  // // );
-                  //
-                  // bookVenue(
-                  //   payment: total,
-                  //   venueId: widget.salonId,
-                  //   vendorUID: widget.vendorUID,
-                  //   customerName: customerDetails.customer.Name,
-                  //   customerEmail: customerDetails.customer.Email,
-                  //   venueBookedOn: DateFormat('dd/MM/yyyy')
-                  //       .format(selectedDate)
-                  //       .toString(),
-                  //   selectedMenu: {},
-                  //   expectedGuests: guests,
-                  //   venueName: widget.title,
-                  //   venueImg: widget.imageUrlList,
-                  // );
-                  //
-                  // updatePayments(vendorUID: widget.vendorUID, payment: total);
-                  //
-                  // updateVenueDate(
-                  //     venueId: widget.salonId,
-                  //     bookingDate: selectedDate.toString());
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => const CustomerMainPage(),
-                  //   ),
-                  // );
                 } catch (error) {
                   debugPrint("Payment request Error: ${error.toString()}");
                 }

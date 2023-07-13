@@ -19,34 +19,39 @@ import '../../payment_config.dart';
 import '../customerMainPage.dart';
 
 class OrderReview extends StatefulWidget {
-
   final paddress;
   final pcity;
   final pstate;
   final pphone;
   final ppostalcode;
 
-   OrderReview({Key? key,this.paddress,this.pcity,this.pphone,this.ppostalcode,this.pstate}) : super(key: key);
+  OrderReview(
+      {Key? key,
+      this.paddress,
+      this.pcity,
+      this.pphone,
+      this.ppostalcode,
+      this.pstate})
+      : super(key: key);
 
   @override
   State<OrderReview> createState() => _OrderReviewState();
 }
 
 class _OrderReviewState extends State<OrderReview> {
-
   @override
   Widget build(BuildContext context) {
-    void showAlert(){
+    void showAlert() {
       QuickAlert.show(
-          context: context,
-          type: QuickAlertType.success,
-          title: 'Order Placed',
-          text: 'Order Placed Successfully',
+        context: context,
+        type: QuickAlertType.success,
+        title: 'Order Placed',
+        text: 'Order Placed Successfully',
         showCancelBtn: false,
-
       );
     }
-    var prov=Provider.of<ProductProvider>(context);
+
+    var prov = Provider.of<ProductProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Order Review'),
@@ -59,26 +64,30 @@ class _OrderReviewState extends State<OrderReview> {
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: prov.cartList.length,
-              itemBuilder: (context,index) {
+              itemBuilder: (context, index) {
                 return ListTile(
-                  leading: Image(image: NetworkImage(prov.cartList[index].ProductImages)),
+                  leading: Image(
+                      image: NetworkImage(prov.cartList[index].ProductImages)),
                   title: Text(prov.cartList[index].ProductName),
-                  subtitle: Text('Quantity : '+ '${prov.cartList[index].ProductQuantity}'),
-                  trailing: Text('${prov.cartList[index].ProductPrice}' +' Rs'),
+                  subtitle: Text('Quantity : ' +
+                      '${prov.cartList[index].ProductQuantity}'),
+                  trailing:
+                      Text('${prov.cartList[index].ProductPrice}' + ' Rs'),
                 );
-              }
-          ),
+              }),
 
           Divider(),
           //
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Row(
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Shipping Address',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15)),
+                    Text('Shipping Address',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 15)),
                     Text(FirebaseAuth.instance.currentUser!.email.toString()),
                     Text(widget.paddress),
                     Text(widget.pcity),
@@ -92,53 +101,56 @@ class _OrderReviewState extends State<OrderReview> {
           ),
 
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text('Total Amount',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15)),
-                Text('${prov.getTotalAmount()+prov.getTotalDelivery()}'' Rs')
+                Text('Total Amount',
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                Text('${prov.getTotalAmount() + prov.getTotalDelivery()}' ' Rs')
               ],
             ),
           ),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(horizontal: 25,vertical: 4),
+          //   child: ElevatedButton(onPressed: ()async{
+          //     Provider.of<ProductProvider>(context, listen: false)
+          //         .getProductDetails();
+          //     Provider.of<ProductProvider>(context, listen: false)
+          //         .placeOrder(
+          //         address: widget.paddress,
+          //         city: widget.pcity,
+          //         state: widget.pstate,
+          //         postalcode: widget.ppostalcode,
+          //         phone: widget.pphone);
+          //     Provider
+          //         .of<ProductProvider>(context, listen: false)
+          //         .cartList = [];
+          //
+          //     showAlert();
+          //     await Future.delayed(Duration(milliseconds: 2000));
+          //     Navigator.pop(context);
+          //     Navigator.pop(context);
+          //     Navigator.pushReplacement(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (context) =>  BottomNavBar(val: 0,),
+          //       ),
+          //     );
+          //   }, child: Text('Test Order')),
+          // ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25,vertical: 4),
-            child: ElevatedButton(onPressed: ()async{
-              Provider.of<ProductProvider>(context, listen: false)
-                  .getProductDetails();
-              Provider.of<ProductProvider>(context, listen: false)
-                  .placeOrder(
-                  address: widget.paddress,
-                  city: widget.pcity,
-                  state: widget.pstate,
-                  postalcode: widget.ppostalcode,
-                  phone: widget.pphone);
-              Provider
-                  .of<ProductProvider>(context, listen: false)
-                  .cartList = [];
-
-              showAlert();
-              await Future.delayed(Duration(milliseconds: 2000));
-              Navigator.pop(context);
-              Navigator.pop(context);
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>  BottomNavBar(val: 0,),
-                ),
-              );
-            }, child: Text('Test Order')),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25,vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 4),
             child: GooglePayButton(
               paymentConfiguration:
-              PaymentConfiguration.fromJsonString(defaultGooglePay),
+                  PaymentConfiguration.fromJsonString(defaultGooglePay),
               paymentItems: [
                 PaymentItem(
                     label: 'Hammad',
-                    amount: (prov.getTotalAmount()+prov.getTotalDelivery()).toString(),
+                    amount: (prov.getTotalAmount() + prov.getTotalDelivery())
+                        .toString(),
                     status: PaymentItemStatus.final_price),
               ],
               type: GooglePayButtonType.buy,
@@ -150,13 +162,12 @@ class _OrderReviewState extends State<OrderReview> {
                       .getProductDetails();
                   Provider.of<ProductProvider>(context, listen: false)
                       .placeOrder(
-                      address: widget.paddress,
-                      city: widget.pcity,
-                      state: widget.pstate,
-                      postalcode: widget.ppostalcode,
-                      phone: widget.pphone);
-                  Provider
-                      .of<ProductProvider>(context, listen: false)
+                          address: widget.paddress,
+                          city: widget.pcity,
+                          state: widget.pstate,
+                          postalcode: widget.ppostalcode,
+                          phone: widget.pphone);
+                  Provider.of<ProductProvider>(context, listen: false)
                       .cartList = [];
 
                   Navigator.push(
@@ -180,6 +191,5 @@ class _OrderReviewState extends State<OrderReview> {
         ],
       ),
     );
-
   }
 }

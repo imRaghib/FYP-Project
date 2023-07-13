@@ -194,8 +194,75 @@ class _BookingPageState extends State<BookingPage> {
                 fontWeight: FontWeight.w700,
               ),
             ),
-            ElevatedButton(
-                onPressed: () {
+            // ElevatedButton(
+            //     onPressed: () {
+            //       // without formatting, dateTime comes with time and time will never match
+            //       DateFormat('yyyy-MM-dd').format(selectedDate) ==
+            //               DateFormat('yyyy-MM-dd').format(
+            //                   DateTime.now().add(const Duration(days: 150)))
+            //           ? Fluttertoast.showToast(
+            //               msg: 'Please select a valid date!',
+            //               toastLength: Toast.LENGTH_SHORT,
+            //               gravity: ToastGravity.BOTTOM,
+            //               timeInSecForIosWeb: 1,
+            //               backgroundColor: Colors.grey,
+            //               fontSize: 15,
+            //             )
+            //           : {
+            //               bookVenue(
+            //                 payment: returnVendorTotal(),
+            //                 venueId: widget.venueId,
+            //                 vendorUID: widget.vendorUID,
+            //                 customerName: customerDetails.customer.Name,
+            //                 customerEmail: customerDetails.customer.Email,
+            //                 venueBookedOn: DateFormat('dd/MM/yyyy')
+            //                     .format(selectedDate)
+            //                     .toString(),
+            //                 selectedMenu: widget.selectedMenu,
+            //                 expectedGuests: guests,
+            //                 venueName: widget.title,
+            //                 venueImg: widget.imageUrlList,
+            //               ),
+            //               updatePayments(
+            //                 vendorUID: widget.vendorUID,
+            //                 payment: returnVendorTotal(),
+            //               ),
+            //               updateVenueDate(
+            //                   venueId: widget.venueId,
+            //                   bookingDate: selectedDate.toString()),
+            //               bookingHistory(
+            //                 payment: totalPayment,
+            //                 venueId: widget.venueId,
+            //                 vendorUID: widget.vendorUID,
+            //                 venueBookedOn: DateFormat('dd/MM/yyyy')
+            //                     .format(selectedDate)
+            //                     .toString(),
+            //                 vendorNumber: widget.contact,
+            //                 vendorEmail: widget.email,
+            //                 selectedMenu: widget.selectedMenu,
+            //                 expectedGuests: guests,
+            //                 venueName: widget.title,
+            //                 venueImg: widget.imageUrlList,
+            //               ),
+            //               Navigator.pushNamedAndRemoveUntil(
+            //                   context, 'StreamPage', (route) => false)
+            //             };
+            //     },
+            //     child: Text("test button")),
+            GooglePayButton(
+              paymentConfiguration:
+                  PaymentConfiguration.fromJsonString(defaultGooglePay),
+              paymentItems: [
+                PaymentItem(
+                    label: widget.title,
+                    amount: returnTotal().toString(),
+                    status: PaymentItemStatus.final_price),
+              ],
+              type: GooglePayButtonType.buy,
+              margin: const EdgeInsets.only(top: 15.0),
+              onPaymentResult: (result) {
+                debugPrint("Results: ${result.toString()}");
+                try {
                   // without formatting, dateTime comes with time and time will never match
                   DateFormat('yyyy-MM-dd').format(selectedDate) ==
                           DateFormat('yyyy-MM-dd').format(
@@ -247,61 +314,6 @@ class _BookingPageState extends State<BookingPage> {
                           Navigator.pushNamedAndRemoveUntil(
                               context, 'StreamPage', (route) => false)
                         };
-                },
-                child: Text("test button")),
-            GooglePayButton(
-              paymentConfiguration:
-                  PaymentConfiguration.fromJsonString(defaultGooglePay),
-              paymentItems: [
-                PaymentItem(
-                    label: widget.title,
-                    amount: returnTotal().toString(),
-                    status: PaymentItemStatus.final_price),
-              ],
-              type: GooglePayButtonType.buy,
-              margin: const EdgeInsets.only(top: 15.0),
-              onPaymentResult: (result) {
-                debugPrint("Results: ${result.toString()}");
-                try {
-                  // bookVenue(
-                  //   customerName: customerDetails.customer.Name,
-                  //   bookingDate: selectedDate.toString(),
-                  //   vendorUID: widget.vendorUID,
-                  //   venueId: widget.venueId,
-                  //   customerUID: FirebaseAuth.instance.currentUser!.uid,
-                  // );
-
-                  bookVenue(
-                    payment:
-                        returnVendorTotal(), //Vendor does not get platform fee
-                    venueId: widget.venueId,
-                    vendorUID: widget.vendorUID,
-                    customerName: customerDetails.customer.Name,
-                    customerEmail: customerDetails.customer.Email,
-                    venueBookedOn: DateFormat('dd/MM/yyyy')
-                        .format(selectedDate)
-                        .toString(),
-                    selectedMenu: widget.selectedMenu,
-                    expectedGuests: guests,
-                    venueName: widget.title,
-                    venueImg: widget.imageUrlList,
-                  );
-
-                  updatePayments(
-                    vendorUID: widget.vendorUID,
-                    payment: returnVendorTotal(),
-                  );
-
-                  updateVenueDate(
-                      venueId: widget.venueId,
-                      bookingDate: selectedDate.toString());
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const CustomerMainPage(),
-                    ),
-                  );
                 } catch (error) {
                   debugPrint("Payment request Error: ${error.toString()}");
                 }

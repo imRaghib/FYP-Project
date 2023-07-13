@@ -3,11 +3,9 @@ import 'package:easy_shaadi/Model/Messenger%20Models/dialogs.dart';
 import 'package:easy_shaadi/ViewModel/Messenger%20Class/apis.dart';
 import 'package:easy_shaadi/constants.dart';
 import 'package:expandable_text/expandable_text.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../Model/Messenger Models/chat_user.dart';
-import '../../ViewModel/Vendor/venue_provider.dart';
 import '../Messenger Screens/chat_screen.dart';
 
 late ChatUser me;
