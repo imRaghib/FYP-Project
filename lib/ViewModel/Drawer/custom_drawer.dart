@@ -133,8 +133,10 @@ class _MyDrawerState extends State<MyDrawer> {
                       .then((user) async {
                     if (user.exists) {
                       me = ChatUser.fromJson(user.data()!);
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => ChatScreen(user: me)));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => ChatScreen(user: me)));
                     }
                   });
                 },
@@ -142,8 +144,7 @@ class _MyDrawerState extends State<MyDrawer> {
             InkWell(
                 onTap: () {
                   auth.signOut().whenComplete(() =>
-                      Navigator.pushReplacementNamed(context, 'mainScreen')
-                      );
+                      Navigator.pushReplacementNamed(context, 'mainScreen'));
 
                   // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>MyApp()), (route) => route.isFirst);
                 },
@@ -152,14 +153,14 @@ class _MyDrawerState extends State<MyDrawer> {
             const SizedBox(
               height: 2,
             ),
-            const SizedBox(
-               height: 220,
-              child:  Padding(
+            SizedBox(
+              height: 220,
+              child: Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  children: const [
                     Center(
                         child: Text(
                       "Support",

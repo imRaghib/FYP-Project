@@ -184,9 +184,13 @@ class _LoginPageState extends State<LoginPage> {
             if (formKey.currentState!.validate()) {
               formKey.currentState!.save();
               try {
-                showDialog(context: context, builder: (context){
-                  return Center(child: CircularProgressIndicator(),);
-                });
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    });
                 await LoginScreenModel().signInWithEmailAndPassword(
                     email: emailController.text, password: passController.text);
               } catch (e) {

@@ -14,6 +14,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../Model/Messenger Models/chat_user.dart';
 import '../../ViewModel/Messenger Class/apis.dart';
 import '../Messenger Screens/chat_screen.dart';
+import '../User Pages/vendor_profile.dart';
 
 class DetailsScreen extends StatefulWidget {
   final imageUrlList;
@@ -146,14 +147,29 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             ],
                           ),
                         ),
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.only(bottom: kDefaultPadding),
-                          child: Text(
-                            'Venue information',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Venue information',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ProfilePage(
+                                              vendorUID: widget.vendorUID)),
+                                    );
+                                  },
+                                  child: const Text("View Profile")),
+                            ],
                           ),
                         ),
                         Padding(
@@ -417,9 +433,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           ),
                         ),
                         BottomButtons(
-                            contact: widget.contact,
-                            email:widget.email ,
-                            vendorId: widget.vendorUID,
+                          contact: widget.contact,
+                          email: widget.email,
+                          vendorId: widget.vendorUID,
                         ),
                         const SizedBox(
                           height: 110,
@@ -646,4 +662,3 @@ class BottomButtons extends StatelessWidget {
     }
   }
 }
-

@@ -195,7 +195,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
             radius: 20,
             child: const Icon(
               size: 25,
-              color: Colors.black,
+              color: kPurple,
               Icons.add_location_alt,
             ),
           ),
@@ -429,8 +429,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
               ),
               validator: (value) {
                 if (value!.isEmpty ||
-                    !RegExp(r"^[a-zA-Z0-9\s.,#\-]+$")
-                        .hasMatch(value)) {
+                    !RegExp(r"^[a-zA-Z0-9\s.,#\-]+$").hasMatch(value)) {
                   return "Enter Product Name";
                 } else {
                   return null;
@@ -481,8 +480,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
               ),
               validator: (value) {
                 if (value!.isEmpty ||
-                    !RegExp(r"^[a-zA-Z0-9\s.,#\-]+$")
-                        .hasMatch(value)) {
+                    !RegExp(r"^[a-zA-Z0-9\s.,#\-]+$").hasMatch(value)) {
                   return "Enter Description";
                 } else {
                   return null;
@@ -579,8 +577,7 @@ class _AddJewelleryPageState extends State<AddJewelleryPage> {
               ),
               validator: (value) {
                 if (value!.isEmpty ||
-                    !RegExp(r"^[a-zA-Z0-9\s.,#\-]+$")
-                        .hasMatch(value)) {
+                    !RegExp(r"^[a-zA-Z0-9\s.,#\-]+$").hasMatch(value)) {
                   return "Enter Product Weight";
                 } else {
                   return null;

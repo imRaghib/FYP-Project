@@ -30,96 +30,92 @@ class _SignupPageState extends State<SignupPage> {
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          SizedBox(
-            height: size.height,
+          Expanded(
             child: Stack(
               alignment: AlignmentDirectional.topCenter,
               children: [
-                Image.asset(
-                  "assets/loginPage.png",
-                ),
+                Image.asset("assets/loginPage.png"),
                 Padding(
                   padding: EdgeInsets.all(size.height * 0.010),
                   child: SizedBox(
                     height: size.height * 0.4,
                     width: size.width * 1,
-                    child: Image.asset(
-                      "assets/signupPage.png",
-                    ),
+                    child: Image.asset("assets/signupPage.png"),
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.only(top: size.height * 0.32),
-                  padding: EdgeInsets.only(top: size.height * 0.02),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(40),
-                      topRight: Radius.circular(40),
+                SingleChildScrollView(
+                  // Add SingleChildScrollView here
+                  child: Container(
+                    margin: EdgeInsets.only(top: size.height * 0.32),
+                    padding: EdgeInsets.only(top: size.height * 0.02),
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(40),
+                        topRight: Radius.circular(40),
+                      ),
                     ),
-                  ),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 10),
-                        child: Text(
-                          "Welcome!",
-                          style: TextStyle(
-                            fontFamily: 'SourceSansPro-SemiBold',
-                            fontSize: size.width * 0.10,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 10),
+                          child: Text(
+                            "Welcome!",
+                            style: TextStyle(
+                              fontFamily: 'SourceSansPro-SemiBold',
+                              fontSize: size.width * 0.10,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 05),
-                        child: Text(
-                          "Please enter your details.",
-                          style: TextStyle(
-                            fontFamily: 'SourceSansPro-Regular',
-                            fontSize: size.width * 0.04,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 05),
+                          child: Text(
+                            "Please enter your details.",
+                            style: TextStyle(
+                              fontFamily: 'SourceSansPro-Regular',
+                              fontSize: size.width * 0.04,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
                         ),
-                      ),
-                      Form(
-                        key: formKey,
-                        child: Padding(
+                        Form(
+                          key: formKey,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 40, vertical: 10),
+                            child: Column(
+                              children: [
+                                buildShowAlert(),
+                                buildFullName(),
+                                const SizedBox(height: 20),
+                                buildEmail(),
+                                const SizedBox(height: 20),
+                                buildPassword(),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 40, vertical: 10),
                           child: Column(
                             children: [
-                              buildShowAlert(),
-                              buildFullName(),
-                              const SizedBox(height: 20),
-                              buildEmail(),
-                              const SizedBox(height: 20),
-                              buildPassword(),
+                              buildSignUpButton(),
+                              buildGoogleButton(),
                             ],
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 40, vertical: 10),
-                        child: Column(
-                          children: [
-                            buildSignUpButton(context),
-                            buildGoogleButton(),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: Column(
+                        Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             buildBottomText(context),
                           ],
                         ),
-                      )
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -193,7 +189,7 @@ class _SignupPageState extends State<SignupPage> {
         onSaved: (value) => setState(() => nameController.text = value!),
       );
 
-  Column buildSignUpButton(BuildContext contex) {
+  Column buildSignUpButton() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -202,9 +198,13 @@ class _SignupPageState extends State<SignupPage> {
             if (formKey.currentState!.validate()) {
               formKey.currentState!.save();
               try {
-                showDialog(context: context, builder: (context){
-                  return Center(child: CircularProgressIndicator(),);
-                });
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    });
                 await customer_signup(
                     name: nameController.text.toTitleCase(),
                     email: emailController.text,
@@ -212,7 +212,6 @@ class _SignupPageState extends State<SignupPage> {
 
                 Navigator.pushNamedAndRemoveUntil(
                     context, 'mainScreen', (route) => false);
-
               } catch (e) {
                 setState(() {
                   error = e.toString();
@@ -241,7 +240,7 @@ class _SignupPageState extends State<SignupPage> {
             hintText: "Enter your Email", labelText: "Email"),
         validator: (value) {
           if (value!.isEmpty ||
-              !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+              !RegExp(r"^[a-zA-Z][a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]*@[a-zA-Z0-9]+\.[a-zA-Z]+")
                   .hasMatch(value)) {
             return "Enter Correct Email";
           } else {
@@ -258,8 +257,15 @@ class _SignupPageState extends State<SignupPage> {
       decoration: kTextFieldDecoration.copyWith(
           hintText: "Enter your Password", labelText: "Password"),
       validator: (value) {
-        if (value!.isEmpty) {
-          return "Enter Correct Password";
+        if (value!.isEmpty ||
+            !RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#&*~]).{8,}$')
+                .hasMatch(value)) {
+          return "Password must have "
+              "\nleast one upper case "
+              "\nleast one lower case"
+              "\nleast one digit"
+              "\nleast one Special character"
+              "\nleast one Special character";
         } else {
           return null;
         }

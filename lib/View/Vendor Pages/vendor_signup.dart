@@ -19,7 +19,7 @@ class _VendorSignupPageState extends State<VendorSignupPage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: kBackgroundColor,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -104,7 +104,8 @@ class _VendorSignupPageState extends State<VendorSignupPage> {
         decoration: kTextFieldDecoration.copyWith(
             hintText: "Enter your CNIC Number", labelText: "CNIC"),
         validator: (value) {
-          if (value!.isEmpty || !RegExp(r'^[0-9]+$').hasMatch(value)) {
+          if (value!.isEmpty ||
+              !RegExp(r'^\d{5}-\d{7}-\d{1}$|^\d{13}$').hasMatch(value)) {
             return "Please Enter Correct CNIC";
           } else {
             return null;
@@ -118,7 +119,7 @@ class _VendorSignupPageState extends State<VendorSignupPage> {
         decoration: kTextFieldDecoration.copyWith(
             hintText: "Enter your Phone Number", labelText: "Number"),
         validator: (value) {
-          if (value!.isEmpty || !RegExp(r'^[0-9]+$').hasMatch(value)) {
+          if (value!.isEmpty || !RegExp(r'^\d{11}$').hasMatch(value)) {
             return "Please Enter Correct Phone Number";
           } else {
             return null;
@@ -133,7 +134,7 @@ class _VendorSignupPageState extends State<VendorSignupPage> {
             hintText: "Enter your Email", labelText: "Email"),
         validator: (value) {
           if (value!.isEmpty ||
-              !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+              !RegExp(r"^[a-zA-Z][a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]*@[a-zA-Z0-9]+\.[a-zA-Z]+")
                   .hasMatch(value)) {
             return "Please Enter Correct Email";
           } else {
@@ -148,7 +149,8 @@ class _VendorSignupPageState extends State<VendorSignupPage> {
         decoration: kTextFieldDecoration.copyWith(
             hintText: "Enter your Business Name", labelText: "Business Name"),
         validator: (value) {
-          if (value!.isEmpty || !RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
+          if (value!.isEmpty ||
+              !RegExp(r'^[a-zA-Z0-9\s]{1,100}$').hasMatch(value)) {
             return "Please Enter Correct Business Name";
           } else {
             return null;
@@ -185,7 +187,7 @@ class _VendorSignupPageState extends State<VendorSignupPage> {
             hintText: "Enter your Address", labelText: "Address"),
         validator: (value) {
           if (value!.isEmpty ||
-              !RegExp(r'^[#.0-9a-zA-Z\s,-]+$').hasMatch(value)) {
+              !RegExp(r"^[a-zA-Z0-9\s\-\.,#]+$").hasMatch(value)) {
             return "Please Enter Correct Address";
           } else {
             return null;
@@ -210,9 +212,13 @@ class _VendorSignupPageState extends State<VendorSignupPage> {
                     number: obj.number,
                     address: obj.address);
 
-                showDialog(context: context, builder: (context){
-                  return Center(child: CircularProgressIndicator(),);
-                });
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    });
                 Navigator.pushNamedAndRemoveUntil(
                     context, 'mainScreen', (route) => false);
               }

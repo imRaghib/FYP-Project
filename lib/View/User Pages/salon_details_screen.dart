@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_shaadi/View/User%20Pages/booking_request_page.dart';
 import 'package:easy_shaadi/View/User%20Pages/salon_request_page.dart';
+import 'package:easy_shaadi/View/User%20Pages/vendor_profile.dart';
 import 'package:easy_shaadi/View/details/components/bottom_buttons.dart';
 import 'package:easy_shaadi/View/details/components/custom_app_bar.dart';
 import 'package:easy_shaadi/constants.dart';
@@ -134,12 +135,27 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                         Padding(
                           padding:
                               const EdgeInsets.only(bottom: kDefaultPadding),
-                          child: Text(
-                            'Salon information',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Salon information',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ProfilePage(
+                                              vendorUID: widget.vendorUID)),
+                                    );
+                                  },
+                                  child: const Text("View Profile")),
+                            ],
                           ),
                         ),
                         Padding(
@@ -447,6 +463,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
         ),
       );
 }
+
 late ChatUser me;
 
 class BottomButtons extends StatelessWidget {

@@ -61,8 +61,6 @@ class ProductProvider with ChangeNotifier {
     print(vendors);
   }
 
-
-
   void searchUpdate(
       {required collection, required name, required quantity}) async {
     var ids = [];
@@ -176,7 +174,7 @@ class ProductProvider with ChangeNotifier {
       'order_cancelled': false,
       'total_amount': total_amount,
       'orderlist': FieldValue.arrayUnion(products),
-      'vendors':vendors
+      'vendors': vendors
     });
   }
 
@@ -194,6 +192,7 @@ class ProductProvider with ChangeNotifier {
         .where('order_delivered', isEqualTo: false)
         .snapshots();
   }
+
   InProgressVendorOrders() {
     return FirebaseFirestore.instance
         .collection('orders')
