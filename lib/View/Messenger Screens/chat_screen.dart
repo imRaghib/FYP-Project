@@ -213,23 +213,24 @@ class _ChatScreenState extends State<ChatScreen> {
                   borderRadius: BorderRadius.circular(15)),
               child: Row(
                 children: [
+                  SizedBox(width: 10,),
                   //emoji button
-                  IconButton(
-                      onPressed: () {
-                        FocusScope.of(context).unfocus();
-                        setState(() => _showEmoji = !_showEmoji);
-                      },
-                      icon: const Icon(Icons.emoji_emotions,
-                          color: Colors.blueAccent, size: 25)),
+                  // IconButton(
+                  //     onPressed: () {
+                  //       FocusScope.of(context).unfocus();
+                  //       setState(() => _showEmoji = !_showEmoji);
+                  //     },
+                  //     icon: const Icon(Icons.emoji_emotions,
+                  //         color: Colors.blueAccent, size: 25)),
 
                   Expanded(
                       child: TextField(
                         controller: _textController,
                         keyboardType: TextInputType.multiline,
                         maxLines: null,
-                        onTap: () {
-                          if (_showEmoji) setState(() => _showEmoji = !_showEmoji);
-                        },
+                        // onTap: () {
+                        //   if (_showEmoji) setState(() => _showEmoji = !_showEmoji);
+                        // },
                         decoration: const InputDecoration(
                             hintText: 'Type Something...',
                             hintStyle: TextStyle(color: Colors.blueAccent),

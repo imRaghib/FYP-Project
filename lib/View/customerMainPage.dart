@@ -1,5 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_shaadi/View/User%20Pages/bridal_saloon_view_all.dart';
 import 'package:easy_shaadi/View/User%20Pages/dress_details.dart';
+import 'package:easy_shaadi/View/User%20Pages/dresses_view_all.dart';
+import 'package:easy_shaadi/View/User%20Pages/groom_salon_view_all.dart';
+import 'package:easy_shaadi/View/User%20Pages/jewelery_view_all.dart';
 import 'package:easy_shaadi/View/User%20Pages/salon_details_screen.dart';
 import 'package:easy_shaadi/View/User%20Pages/venue_view_all.dart';
 import 'package:easy_shaadi/View/details/details_screen.dart';
@@ -156,19 +160,19 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                       fontSize: 20,
                     ),
                   ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => ViewAll()));
-                    },
-                    child: const Text(
-                      'View All',
-                      style: TextStyle(
-                        fontFamily: 'SourceSansPro-SemiBold',
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
+                //   TextButton(
+                //     onPressed: () {
+                //       Navigator.push(context,
+                //           MaterialPageRoute(builder: (context) => ViewAll()));
+                //     },
+                //     child: const Text(
+                //       'View All',
+                //       style: TextStyle(
+                //         fontFamily: 'SourceSansPro-SemiBold',
+                //         fontSize: 15,
+                //       ),
+                //     ),
+                //   ),
                 ],
               ),
             ),
@@ -357,7 +361,14 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>JewleryViewAll()
+                        ),
+                      );
+                    },
                     child: const Text(
                       'View All',
                       style: TextStyle(
@@ -449,7 +460,14 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>BridalViewAll()
+                        ),
+                      );
+                    },
                     child: const Text(
                       'View All',
                       style: TextStyle(
@@ -542,7 +560,14 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => GroomViewAll()
+                        ),
+                      );
+                    },
                     child: const Text(
                       'View All',
                       style: TextStyle(
@@ -557,7 +582,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
             StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('Bridal Salon')
-                  .where('category', isEqualTo: 'Bridal')
+                  .where('category', isEqualTo: 'Groom')
                   .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -634,7 +659,14 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>DressesViewAll()
+                        ),
+                      );
+                    },
                     child: Text(
                       'View All',
                       style: TextStyle(

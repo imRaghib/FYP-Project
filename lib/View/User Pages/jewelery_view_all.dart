@@ -5,21 +5,22 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 
 import '../details/details_screen.dart';
-class VenueViewAll extends StatelessWidget {
-  const VenueViewAll({Key? key}) : super(key: key);
+import 'jewlery_details.dart';
+class JewleryViewAll extends StatelessWidget {
+  const JewleryViewAll({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final money = NumberFormat("#,##0", "en_US");
     final Stream<QuerySnapshot> usersStream = FirebaseFirestore.instance
-        .collection('Venues')
+        .collection('Jewelerys')
         .where('isPrivate', isEqualTo: false)
         .snapshots();
     double rating;
-    
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Venues'),
+        title: Text('Jewelery'),
         centerTitle: true,
         backgroundColor: kPink,
       ),
@@ -58,21 +59,20 @@ class VenueViewAll extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => DetailsScreen(
-                            imageUrlList: data['venueImages'],
-                            title: data['venueName'],
-                            address: data['venueAddress'],
-                            description: data['venueDescription'],
-                            price: data['venuePrice'],
-                            isFav: false,
-                            contact: data['vendorNumber'],
-                            inactiveDates: data['inActiveDates'],
-                            vendorUID: data['vendorUID'],
-                            venueId: data['venueId'],
-                            menuMap: data['menus'],
-                            email: data['vendorEmail'],
-                            parking: data['venueParking'],
-                            capacity: data['venueCapacity'],
+                          builder: (context) => JeweleryDetailsScreen(
+                            imageUrlList: data['productImages'],
+                            title: data['productName'],
+                            address: data['productAddress'],
+                            description: data['productDescription'],
+                            price: data['productPrice'],
+                            contact: data['sellerNumber'],
+                            vendorUID: data['sellerUID'],
+                            venueId: data['productId'],
+                            email: data['sellerEmail'],
+                            Carrots: data['productCarrots'],
+                            tola: data['productSize'],
+                            deliveryCharges: data['productDelivery'],
+                            availableQuantity: data['availableQuantity'],
                           ),
                         ),
                       );
@@ -85,16 +85,16 @@ class VenueViewAll extends StatelessWidget {
                             Radius.circular(10),
                           ),
                           child: Image.network(
-                            data!['venueImages'][0],
+                            data!['productImages'][0],
                             fit: BoxFit.cover,
                           ),
                         ),
-                        title: Text(data['venueName']),
+                        title: Text(data['productName']),
                         subtitle:  RichText(
                           text: TextSpan(
                             children: [
                               TextSpan(
-                                text: "Per Person Rs.${money.format(data['venuePrice'])}",
+                                text: " Rs.${money.format(data['productPrice'])}",
                                 style: TextStyle(
                                   color: kPurple,
                                 ),
@@ -111,12 +111,12 @@ class VenueViewAll extends StatelessWidget {
                             color: Colors.amber,
                           ),
                           itemCount: 5,
-                          initialRating: data['venueFeedback']==0? 0 :(data['venueRating'] / (5 * data['venueFeedback'])) * 5,
+                          initialRating: data['productFeedback']==0? 0 :(data['producRating'] / (5 * data['productFeedback'])) * 5,
                           unratedColor: Colors.grey,
                           maxRating: 5,
                           allowHalfRating: true,
                           onRatingUpdate: (value) {
-                            rating = (data['venueRating'] / (5 * data['venueFeedback'])) * 5;
+                            rating = (data['productRating'] / (5 * data['productFeedback'])) * 5;
                           },
                         ),
                       ),
@@ -128,7 +128,7 @@ class VenueViewAll extends StatelessWidget {
           );
         },
       ),
-        
+
     );
   }
 }

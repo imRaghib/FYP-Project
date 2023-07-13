@@ -27,9 +27,9 @@ class _MessageCardState extends State<MessageCard> {
   Widget build(BuildContext context) {
     bool isMe = APIs.user.uid == widget.message.fromId;
     return InkWell(
-        onLongPress: () {
-          _showBottomSheet(isMe);
-        },
+        // onLongPress: () {
+        //   _showBottomSheet(isMe);
+        // },
         child: isMe ? _greenMessage() : _blueMessage());
   }
 
@@ -133,12 +133,13 @@ class _MessageCardState extends State<MessageCard> {
                 horizontal: mq.width * .04, vertical: mq.height * .01),
             decoration: BoxDecoration(
                 color: const Color.fromARGB(255, 218, 255, 176),
-                border: Border.all(color: Colors.lightGreen),
+                border: Border.all(color: Colors.green),
                 //making borders curved
                 borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(30),
                     topRight: Radius.circular(30),
-                    bottomLeft: Radius.circular(30))),
+                    bottomLeft: Radius.circular(30))
+            ),
             child: widget.message.type == Type.text
                 ?
                 //show text
