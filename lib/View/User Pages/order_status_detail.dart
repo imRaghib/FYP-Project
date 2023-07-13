@@ -4,8 +4,9 @@ import 'package:easy_shaadi/View/User%20Pages/order_status.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:intl/date_time_patterns.dart';
-
 import '../../constants.dart';
+
+var cancelled=false;
 
 class OrderDetails extends StatefulWidget {
   final dynamic data;
@@ -17,11 +18,17 @@ class OrderDetails extends StatefulWidget {
 
 class _OrderDetailsState extends State<OrderDetails> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    cancelled= widget.data['order_cancelled'];
+  }
+  @override
   Widget build(BuildContext context) {
     var dt= widget.data['order_date'] as Timestamp;
     var lis=widget.data['orderlist'] as List;
-    var dt1= widget.data as DocumentSnapshot;
-    var cancelled=false;
+    var data= widget.data as DocumentSnapshot;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Order Details'),
@@ -62,10 +69,10 @@ class _OrderDetailsState extends State<OrderDetails> {
               ),
             ],
           ),
-          widget.data['order_confirmed'] == true || widget.data['order_cancelled'] == true || cancelled == true ? Container() : Padding(
+          cancelled == true || widget.data['order_confirmed'] == true || widget.data['order_cancelled'] == true  ? Container() : Padding(
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(onPressed: ()async{
-              await FirebaseFirestore.instance.collection('orders').doc(dt1.id).update({
+              await FirebaseFirestore.instance.collection('orders').doc(data.id).update({
                 'order_cancelled':true,
               });
               setState(() {

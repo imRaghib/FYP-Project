@@ -3,7 +3,7 @@ import 'package:easy_shaadi/View/User%20Pages/orders_inprogress.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_drawer.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_salon_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/venue_booking_page.dart';
-import 'package:easy_shaadi/View/Vendor%20Pages/vendor_orders_screen.dart';
+import 'package:easy_shaadi/View/Vendor%20Pages/vendor_completed_orders_screen.dart';
 import 'package:easy_shaadi/constants.dart';
 import 'package:flutter/material.dart';
 

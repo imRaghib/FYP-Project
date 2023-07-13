@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/private_mode_status.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_home_page.dart';
-import 'package:easy_shaadi/View/Vendor%20Pages/vendor_orders_screen.dart';
+import 'package:easy_shaadi/View/Vendor%20Pages/vendor_completed_orders_screen.dart';
 import 'package:easy_shaadi/View/customerMainPage.dart';
 import 'package:easy_shaadi/bottom_nav_bar.dart';
 import 'package:easy_shaadi/checklist/pages/home_page.dart';

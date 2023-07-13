@@ -56,16 +56,12 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
             Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: kDefaultPadding / 2),
-              child: Row(
-                children: const [
-                  Text(
-                    'Wedding Planning tools',
-                    style: TextStyle(
-                      fontFamily: 'SourceSansPro-SemiBold',
-                      fontSize: 20,
-                    ),
-                  ),
-                ],
+              child: Text(
+                'Wedding Planning tools',
+                style: TextStyle(
+                  fontFamily: 'SourceSansPro-SemiBold',
+                  fontSize: 20,
+                ),
               ),
             ),
             SizedBox(
@@ -561,7 +557,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
             StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('Bridal Salon')
-                  .where('category', isEqualTo: 'Groom')
+                  .where('category', isEqualTo: 'Bridal')
                   .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -590,7 +586,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
                       var data = snapshot.data?.docs[index];
-                      return ItemCard(
+                      return ProductCard(
                         context: context,
                         image: data!['salonImages'][0],
                         title: data['salonName'],
@@ -613,6 +609,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
                                 vendorUID: data['vendorUID'],
                                 venueId: data['salonId'],
                                 menuMap: data['salonPackages'],
+                                email: data['vendorEmail'],
                               ),
                             ),
                           );
@@ -788,142 +785,3 @@ class ToolCard extends StatelessWidget {
   }
 }
 
-// ListView(
-//   shrinkWrap: true,
-//   physics: ScrollPhysics(),
-//   children: [
-//     Row(
-//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//       children: const [
-//         Text(
-//           'Wedding Planning Tools',
-//           style: TextStyle(
-//             fontFamily: 'SourceSansPro-SemiBold',
-//             fontSize: 20,
-//           ),
-//         ),
-//       ],
-//     ),
-//     // ListView.builder(
-//     //   scrollDirection: Axis.horizontal,
-//     //   itemCount: prov.hallsList.length,
-//     //   itemBuilder: (context, index) => Card(
-//     //     image: prov.hallsList[index].image,
-//     //     title: prov.hallsList[index].name,
-//     //     country: "Russia",
-//     //     price: 440,
-//     //     press: () {},
-//     //   ),
-//     // ),
-//
-//     // Container(
-//     //   height: 200,
-//     //   child: ListView.builder(
-//     //       scrollDirection: Axis.horizontal,
-//     //       itemCount: prov.hallsList.length,
-//     //       itemBuilder: (context, index) {
-//     //         return MyItems(
-//     //           name: prov.hallsList[index].name,
-//     //           image: prov.hallsList[index].image,
-//     //           price: prov.hallsList[index].price,
-//     //           description: prov.hallsList[index].description,
-//     //         );
-//     //       }),
-//     // ),
-//     // Row(
-//     //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//     //   children: [
-//     //     Text(
-//     //       'Wedding Halls',
-//     //       style: TextStyle(
-//     //         fontFamily: 'SourceSansPro-SemiBold',
-//     //         fontSize: 20,
-//     //       ),
-//     //     ),
-//     //     TextButton(
-//     //         onPressed: () {
-//     //           Navigator.push(
-//     //             context,
-//     //             MaterialPageRoute(
-//     //               builder: (context) => ViewAll(
-//     //                 items: prov.hallsList,
-//     //               ),
-//     //             ),
-//     //           );
-//     //         },
-//     //         child: Text(
-//     //           'View All',
-//     //           style: TextStyle(
-//     //             fontFamily: 'SourceSansPro-SemiBold',
-//     //             fontSize: 15,
-//     //           ),
-//     //         ))
-//     //   ],
-//     // ),
-//     // Container(
-//     //   height: 200,
-//     //   child: ListView.builder(
-//     //       scrollDirection: Axis.horizontal,
-//     //       itemCount: prov.hallsList.length,
-//     //       itemBuilder: (context, index) {
-//     //         return MyItems(
-//     //           name: prov.hallsList[index].name,
-//     //           image: prov.hallsList[index].image,
-//     //           price: prov.hallsList[index].price,
-//     //           description: prov.hallsList[index].description,
-//     //         );
-//     //       }),
-//     // ),
-//     // Row(
-//     //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//     //   children: [
-//     //     Text(
-//     //       'Jewelery for you',
-//     //       style: TextStyle(
-//     //         fontFamily: 'SourceSansPro-SemiBold',
-//     //         fontSize: 20,
-//     //       ),
-//     //     ),
-//     //     TextButton(
-//     //         onPressed: () {
-//     //           Navigator.push(
-//     //             context,
-//     //             MaterialPageRoute(
-//     //               builder: (context) => ViewAll(
-//     //                 items: prov.hallsList,
-//     //               ),
-//     //             ),
-//     //           );
-//     //         },
-//     //         child: Text(
-//     //           'View All',
-//     //           style: TextStyle(
-//     //             fontFamily: 'SourceSansPro-SemiBold',
-//     //             fontSize: 15,
-//     //           ),
-//     //         ))
-//     //   ],
-//     // ),
-//     // Container(
-//     //   height: 200,
-//     //   child: ListView.builder(
-//     //       scrollDirection: Axis.horizontal,
-//     //       itemCount: prov.hallsList.length,
-//     //       itemBuilder: (context, index) {
-//     //         return MyItems(
-//     //           name: prov.hallsList[index].name,
-//     //           image: prov.hallsList[index].image,
-//     //           price: prov.hallsList[index].price,
-//     //           description: prov.hallsList[index].description,
-//     //         );
-//     //       }),
-//     // ),
-//     ElevatedButton(
-//         onPressed: () {
-//           signout();
-//           Navigator.pushNamedAndRemoveUntil(
-//               context, 'StreamPage', (route) => false);
-//         },
-//         child: Text('Signout'))
-//   ],
-// ),

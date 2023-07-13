@@ -21,6 +21,7 @@ class ProductProvider with ChangeNotifier {
   List<ProductOrder> cartHistoryList = [];
   late ProductOrder cartHistory;
   var products = [];
+  var vendors = [];
   var orders = [];
 
   void addToCart(String pname, int pprice, String pimage, int pquantity,
@@ -49,13 +50,18 @@ class ProductProvider with ChangeNotifier {
         'deliveryCharges': cartList[i].deliveryCharges,
         'totalAmount': cartList[i].totalPrice(),
       });
+
+      vendors.add(cartList[i].sellerId.replaceAll('{', '').replaceAll('}', ''));
       payVendor(
           vendorUID: cartList[i].sellerId, payment: cartList[i].totalPrice());
       updateVendorStock(
           productName: cartList[i].ProductName,
           quantity: cartList[i].ProductQuantity);
     }
+    print(vendors);
   }
+
+
 
   void searchUpdate(
       {required collection, required name, required quantity}) async {
@@ -169,7 +175,8 @@ class ProductProvider with ChangeNotifier {
       'order_delivered': false,
       'order_cancelled': false,
       'total_amount': total_amount,
-      'orderlist': FieldValue.arrayUnion(products)
+      'orderlist': FieldValue.arrayUnion(products),
+      'vendors':vendors
     });
   }
 
@@ -185,6 +192,21 @@ class ProductProvider with ChangeNotifier {
         .collection('orders')
         .where('buyer_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .where('order_delivered', isEqualTo: false)
+        .snapshots();
+  }
+  InProgressVendorOrders() {
+    return FirebaseFirestore.instance
+        .collection('orders')
+        .where('vendors', arrayContains: FirebaseAuth.instance.currentUser!.uid)
+        .where('order_delivered', isEqualTo: false)
+        .snapshots();
+  }
+
+  VendorCompletedOrders() {
+    return FirebaseFirestore.instance
+        .collection('orders')
+        .where('vendors', arrayContains: FirebaseAuth.instance.currentUser!.uid)
+        .where('order_delivered', isEqualTo: true)
         .snapshots();
   }
 

@@ -10,6 +10,11 @@ import 'package:provider/provider.dart';
 
 import '../../constants.dart';
 
+var orderConfirmed = false;
+var orderOnDel = false;
+var orderDelivered = false;
+var cancelled= false;
+
 class VendorOrderDetails extends StatefulWidget {
   final dynamic data;
   const VendorOrderDetails({Key? key, this.data}) : super(key: key);
@@ -25,12 +30,16 @@ class _VendorOrderDetailsState extends State<VendorOrderDetails> {
     super.initState();
     Provider.of<ProductProvider>(context,listen: false).getSameVendorOrders(widget.data);
     status.getStatus(widget.data);
+    orderConfirmed = widget.data['order_confirmed'];
+    orderOnDel = widget.data['order_on_delivery'];
+    orderDelivered = widget.data['order_delivered'];
+    cancelled = widget.data['order_cancelled'];
   }
   @override
   Widget build(BuildContext context) {
     var dt= widget.data['order_date'] as Timestamp;
     var lis=widget.data['orderlist'] as List;
-    var dt1= widget.data as DocumentSnapshot;
+    var data= widget.data as DocumentSnapshot;
     return Scaffold(
       appBar: AppBar(
         title: Text('Order Details'),
@@ -40,55 +49,89 @@ class _VendorOrderDetailsState extends State<VendorOrderDetails> {
       body: ListView(
 
         children: [
-          SwitchListTile(
-              title: Text('Order Placed',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
-              value: true,
-              onChanged: (val){
+          widget.data['order_cancelled'] == true || cancelled == true? Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(child: Text('Order Cancelled',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.red),)),
+          ):   Column(
+            children: [
 
-              }
-          ),
-          SwitchListTile(
-              title: Text('Order Confirmed',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
-              value: status.confirmed,
-              onChanged: (val){
-                status.confirmed=val;
-                status.changeStatus(
-                    title: 'order_confirmed',
-                    status: val,
-                    docId: dt1.id
-                );
-                setState(() {
-                });
-              }
-          ),
-          SwitchListTile(
-              title: Text('On Delivery',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
-              value: status.onDelivery,
-              onChanged: (val){
-                status.onDelivery=val;
-                status.changeStatus(
-                    title: 'order_on_delivery',
-                    status: val,
-                    docId: dt1.id
-                );
-                setState(() {
-                });
-              }
-          ),
-          SwitchListTile(
-              title: Text('Order Delivered',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
-              value: status.delivered,
-              onChanged: (val){
 
-                status.delivered=val;
-                status.changeStatus(
-                    title: 'order_delivered',
-                    status: val,
-                    docId: dt1.id
-                );
-                setState(() {
-                });
-              }
+           SwitchListTile(
+                  title: Text('Order Placed',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                  value: true,
+                  onChanged: (val){
+                  }
+              ),
+              SwitchListTile(
+                  title: Text('Order Confirmed',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                  value: status.confirmed,
+                  onChanged: (val){
+
+                    if(widget.data['order_confirmed']== false && orderConfirmed == false){
+                      status.confirmed=val;
+                      status.changeStatus(
+                          title: 'order_confirmed',
+                          status: val,
+                          docId: data.id
+                      );
+                      setState(() {
+                        orderConfirmed = true;
+                      });
+                    }
+                    }
+
+              ),
+              SwitchListTile(
+                  title: Text('On Delivery',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                  value: status.onDelivery,
+                  onChanged: (val){
+
+                    if(orderConfirmed== true  && widget.data['order_on_delivery'] == false && orderOnDel == false){
+                      status.onDelivery=val;
+                      status.changeStatus(
+                          title: 'order_on_delivery',
+                          status: val,
+                          docId: data.id
+                      );
+                      setState(() {
+                        orderOnDel = true;
+                      });
+                    }
+
+                  }
+              ),
+              SwitchListTile(
+                  title: Text('Order Delivered',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                  value: status.delivered,
+                  onChanged: (val){
+
+                    if(orderConfirmed== true  && orderOnDel == true && widget.data['order_delivered'] == false && orderDelivered == false ){
+                      status.delivered=val;
+                      status.changeStatus(
+                          title: 'order_delivered',
+                          status: val,
+                          docId: data.id
+                      );
+                      setState(() {
+                        orderDelivered = true;
+                      });
+                    }
+
+
+                  }
+              ),
+            ],
+          ),
+          cancelled == true || widget.data['order_confirmed'] == true || widget.data['order_cancelled'] == true || orderConfirmed == true ? Container() : Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(onPressed: ()async{
+              await FirebaseFirestore.instance.collection('orders').doc(data.id).update({
+                'order_cancelled':true,
+              });
+              setState(() {
+                cancelled=true;
+              });
+            }, child: Text('Cancel order')),
           ),
 
           Divider(),
@@ -167,3 +210,4 @@ class _VendorOrderDetailsState extends State<VendorOrderDetails> {
     );
   }
 }
+

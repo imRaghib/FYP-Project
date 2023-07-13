@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:easy_shaadi/View/User%20Pages/order_history_detail.dart';
+import 'package:easy_shaadi/View/User%20Pages/order_status_detail.dart';
 import 'package:easy_shaadi/ViewModel/providerclass.dart';
 import 'package:easy_shaadi/constants.dart';
 import 'package:flutter/material.dart';

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart' as intl;
 
-import '../User Pages/order_history_detail.dart';
+import '../User Pages/order_status_detail.dart';
 class CompletedVendorOrders extends StatefulWidget {
   const CompletedVendorOrders({Key? key}) : super(key: key);
 
@@ -24,7 +24,7 @@ class _CompletedVendorOrdersState extends State<CompletedVendorOrders> {
 
       ),
       body: StreamBuilder(
-          stream: Provider.of<ProductProvider>(context).getComletedOrders(),
+          stream: Provider.of<ProductProvider>(context).VendorCompletedOrders(),
           builder: (context,AsyncSnapshot<QuerySnapshot> snapshot){
             if(!snapshot.hasData){
               return Center(child: CircularProgressIndicator());

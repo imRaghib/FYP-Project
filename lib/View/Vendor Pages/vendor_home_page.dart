@@ -9,7 +9,7 @@ import 'package:easy_shaadi/View/Vendor%20Pages/add_venue_page.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/vendor_inProgress_orders.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/venue_booking_history.dart';
 import 'package:easy_shaadi/View/Vendor%20Pages/venue_booking_page.dart';
-import 'package:easy_shaadi/View/Vendor%20Pages/vendor_orders_screen.dart';
+import 'package:easy_shaadi/View/Vendor%20Pages/vendor_completed_orders_screen.dart';
 import 'package:easy_shaadi/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

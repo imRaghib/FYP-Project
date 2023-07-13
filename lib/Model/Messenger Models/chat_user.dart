@@ -20,7 +20,7 @@ class ChatUser {
 
 
   ChatUser.fromJson(Map<String, dynamic> json) {
-    image = json['image'] ?? '';
+    image = json['image'] ?? '' ;
     about = json['about'] ?? '';
     name = json['name'] ?? '';
     createdAt = json['created_at'] ?? '';
