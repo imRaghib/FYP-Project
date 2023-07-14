@@ -13,7 +13,7 @@ Future googleLogin()async{
 
   final googleAuth= await googleUser.authentication;
   final credential = GoogleAuthProvider.credential(
-    accessToken: googleAuth.accessToken,
+    accessToken: googleAuth.accessToken, 
     idToken: googleAuth.idToken
   );
   await FirebaseAuth.instance.signInWithCredential(credential);

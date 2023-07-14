@@ -28,6 +28,8 @@ class pmode{
   });
   }
 
+  ids.clear();
+
    data= await  FirebaseFirestore.instance.collection('Jewelerys').where('sellerUID',isEqualTo: FirebaseAuth.instance.currentUser!.uid).get();
   for(int i=0;i<data.size;i++){
     ids.add(data.docs[i].id);
@@ -37,6 +39,7 @@ class pmode{
       'isPrivate':value
     });
   }
+  ids.clear();
 
    data= await  FirebaseFirestore.instance.collection('Dresses').where('sellerUID',isEqualTo: FirebaseAuth.instance.currentUser!.uid).get();
   for(int i=0;i<data.size;i++){
@@ -48,6 +51,8 @@ class pmode{
     });
   }
 
+  ids.clear();
+
    data= await  FirebaseFirestore.instance.collection('Bridal Salon').where('vendorUID',isEqualTo: FirebaseAuth.instance.currentUser!.uid).get();
   for(int i=0;i<data.size;i++){
     ids.add(data.docs[i].id);
@@ -57,6 +62,7 @@ class pmode{
       'isPrivate':value
     });
   }
+  ids.clear();
 
   }
 

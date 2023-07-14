@@ -141,6 +141,7 @@ class _OrderReviewState extends State<OrderReview> {
           //     );
           //   }, child: Text('Test Order')),
           // ),
+
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 4),
             child: GooglePayButton(
@@ -148,32 +149,38 @@ class _OrderReviewState extends State<OrderReview> {
                   PaymentConfiguration.fromJsonString(defaultGooglePay),
               paymentItems: [
                 PaymentItem(
-                    label: 'Hammad',
+                    label: 'Order',
                     amount: (prov.getTotalAmount() + prov.getTotalDelivery())
                         .toString(),
                     status: PaymentItemStatus.final_price),
               ],
               type: GooglePayButtonType.buy,
               margin: const EdgeInsets.only(top: 15.0),
-              onPaymentResult: (result) {
+              onPaymentResult: (result) async{
                 debugPrint("Results: ${result.toString()}");
                 try {
+
                   Provider.of<ProductProvider>(context, listen: false)
                       .getProductDetails();
                   Provider.of<ProductProvider>(context, listen: false)
                       .placeOrder(
-                          address: widget.paddress,
-                          city: widget.pcity,
-                          state: widget.pstate,
-                          postalcode: widget.ppostalcode,
-                          phone: widget.pphone);
-                  Provider.of<ProductProvider>(context, listen: false)
+                      address: widget.paddress,
+                      city: widget.pcity,
+                      state: widget.pstate,
+                      postalcode: widget.ppostalcode,
+                      phone: widget.pphone);
+                  Provider
+                      .of<ProductProvider>(context, listen: false)
                       .cartList = [];
 
-                  Navigator.push(
+                  showAlert();
+                  await Future.delayed(Duration(milliseconds: 2000));
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => BottomNavBar(val: 0),
+                      builder: (context) =>  BottomNavBar(val: 0,),
                     ),
                   );
                 } catch (error) {

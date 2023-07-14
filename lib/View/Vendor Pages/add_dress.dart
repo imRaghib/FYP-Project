@@ -664,7 +664,7 @@ class _AddDressPageState extends State<AddDressPage> {
                     hintStyle: TextStyle(
                         color: kPurple.withOpacity(0.5),
                         fontWeight: FontWeight.w400),
-                    hintText: "eg: 24K Carats",
+                    hintText: "eg: Size",
                     labelText: "Variation",
                     enabledBorder: const UnderlineInputBorder(
                       borderSide: BorderSide(color: kPink),

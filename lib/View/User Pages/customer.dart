@@ -1,19 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../ViewModel/customer_authentication.dart';
+import '../../ViewModel/customer_authentication.dart';
 
 class Customer {
-  String Name;
-  String Email;
-  String Password;
-  String customerUID;
+  String name;
+  String email;
+  String password;
+
 
   Customer({
-    this.Email = '',
-    this.Name = '',
-    this.Password = '',
-    this.customerUID = '',
+    this.email = '',
+    this.name = '',
+    this.password = '',
   });
   Future customer_signup(
       {String email = '', String password = '', String name = ''}) async {
@@ -32,13 +31,6 @@ class Customer {
     await createUser(name);
 
   }
-  Future<void> signInWithEmailAndPassword({
-    required String email,
-    required String password,
-  }) async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-  }
+
+
 }

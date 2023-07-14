@@ -29,104 +29,78 @@ class _ChatScreenState extends State<ChatScreen> {
   //for handling message text changes
   final _textController = TextEditingController();
 
-  //showEmoji -- for storing value of showing or hiding emoji
   //isUploading -- for checking if image is uploading or not?
-  bool _showEmoji = false, _isUploading = false;
+  bool  _isUploading = false;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: SafeArea(
-        child: WillPopScope(
-          //if emojis are shown & back button is pressed then hide emojis
-          //or else simple close current screen on back button click
-          onWillPop: () {
-            if (_showEmoji) {
-              setState(() => _showEmoji = !_showEmoji);
-              return Future.value(false);
-            } else {
-              return Future.value(true);
-            }
-          },
-          child: Scaffold(
+        child: Scaffold(
 
-            appBar: AppBar(
-              automaticallyImplyLeading: false,
-              flexibleSpace: _appBar(),
-            ),
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            flexibleSpace: _appBar(),
+          ),
 
-            backgroundColor: const Color.fromARGB(255, 234, 248, 255),
+          backgroundColor: const Color.fromARGB(255, 234, 248, 255),
 
-            //body
-            body: Column(
-              children: [
-                Expanded(
-                  child: StreamBuilder(
-                    stream: APIs.getAllMessages(widget.user),
-                    builder: (context, snapshot) {
-                      switch (snapshot.connectionState) {
-                      //if data is loading
-                        case ConnectionState.waiting:
-                        case ConnectionState.none:
-                          return const SizedBox();
+          //body
+          body: Column(
+            children: [
+              Expanded(
+                child: StreamBuilder(
+                  stream: APIs.getAllMessages(widget.user),
+                  builder: (context, snapshot) {
+                    switch (snapshot.connectionState) {
+                    //if data is loading
+                      case ConnectionState.waiting:
+                      case ConnectionState.none:
+                        return const SizedBox();
 
-                      //if some or all data is loaded then show it
-                        case ConnectionState.active:
-                        case ConnectionState.done:
-                          final data = snapshot.data?.docs;
-                          _list = data
-                              ?.map((e) => Message.fromJson(e.data()))
-                              .toList() ??
-                              [];
+                    //if some or all data is loaded then show it
+                      case ConnectionState.active:
+                      case ConnectionState.done:
+                        final data = snapshot.data?.docs;
+                        _list = data
+                            ?.map((e) => Message.fromJson(e.data()))
+                            .toList() ??
+                            [];
 
-                          if (_list.isNotEmpty) {
-                            return ListView.builder(
-                                reverse: true,
-                                itemCount: _list.length,
-                                padding: EdgeInsets.only(top: mq.height * .01),
-                                physics: const BouncingScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  return MessageCard(message: _list[index]);
-                                });
-                          } else {
-                            return const Center(
-                              child: Text('Say Hii! 👋',
-                                  style: TextStyle(fontSize: 20)),
-                            );
-                          }
-                      }
-                    },
-                  ),
+                        if (_list.isNotEmpty) {
+                          return ListView.builder(
+                              reverse: true,
+                              itemCount: _list.length,
+                              padding: EdgeInsets.only(top: mq.height * .01),
+                              physics: const BouncingScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return MessageCard(message: _list[index]);
+                              });
+                        } else {
+                          return const Center(
+                            child: Text('Say Hii! 👋',
+                                style: TextStyle(fontSize: 20)),
+                          );
+                        }
+                    }
+                  },
                 ),
+              ),
 
-                //progress indicator for showing uploading
-                if (_isUploading)
-                  const Align(
-                      alignment: Alignment.centerRight,
-                      child: Padding(
-                          padding:
-                          EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-                          child: CircularProgressIndicator(strokeWidth: 2))),
+              //progress indicator for showing uploading
+              if (_isUploading)
+                const Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                        padding:
+                        EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                        child: CircularProgressIndicator(strokeWidth: 2))),
 
-                //chat input filed
-                _chatInput(),
+              //chat input filed
+              _chatInput(),
 
-                //show emojis on keyboard emoji button click & vice versa
-                if (_showEmoji)
-                  SizedBox(
-                    height: mq.height * .35,
-                    child: EmojiPicker(
-                      textEditingController: _textController,
-                      config: Config(
-                        bgColor: const Color.fromARGB(255, 234, 248, 255),
-                        columns: 8,
-                        emojiSizeMax: 32 * (Platform.isIOS ? 1.30 : 1.0),
-                      ),
-                    ),
-                  )
-              ],
-            ),
+            ],
           ),
         ),
       ),

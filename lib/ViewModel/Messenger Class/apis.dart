@@ -83,7 +83,7 @@ class APIs {
         id: user.uid,
         name: user.email.toString(),
         email: user.email.toString(),
-        about: "Hey, I'm using We Chat!",
+        about: "Hey, I'm using Easy Shaadi",
         image: user.photoURL.toString(),
         createdAt: time,
         isOnline: false,
@@ -137,27 +137,6 @@ class APIs {
     });
   }
 
-  // update profile picture of user
-  static Future<void> updateProfilePicture(File file) async {
-    //getting image file extension
-    final ext = file.path.split('.').last;
-
-    //storage file ref with path
-    final ref = storage.ref().child('profile_pictures/${user.uid}.$ext');
-
-    //uploading image
-    await ref
-        .putFile(file, SettableMetadata(contentType: 'image/$ext'))
-        .then((p0) {
-    });
-
-    //updating image in firestore database
-    me.image = await ref.getDownloadURL();
-    await firestore
-        .collection('Accounts')
-        .doc(user.uid)
-        .update({'image': me.image});
-  }
 
   // for getting specific user info
   static Stream<QuerySnapshot<Map<String, dynamic>>> getUserInfo(

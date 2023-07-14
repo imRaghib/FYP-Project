@@ -75,12 +75,12 @@ class _JeweleryDetailsScreenState extends State<JeweleryDetailsScreen> {
                 children: [
                   CarouselSlider.builder(
                     itemCount: widget.imageUrlList.length,
-                    itemBuilder:
-                        (BuildContext context, index, int pageViewIndex) {
+                    itemBuilder: (BuildContext context, index, int pageViewIndex) {
                       final imageUrl = widget.imageUrlList[index];
                       return buildImage(imageUrl, index);
                     },
                     options: CarouselOptions(
+
                         height: size.height * 0.45,
                         viewportFraction: 1,
                         onPageChanged: (index, reason) =>

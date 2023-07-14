@@ -204,8 +204,8 @@ class _DeliveryDetailsState extends State<DeliveryDetails> {
                 hintStyle: TextStyle(
                     color: kPurple.withOpacity(0.5),
                     fontWeight: FontWeight.w400),
-                hintText: "Adress",
-                labelText: "Adress",
+                hintText: "Address",
+                labelText: "Address",
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: kPink),
                 ),
@@ -406,7 +406,7 @@ class _DeliveryDetailsState extends State<DeliveryDetails> {
                 ),
               ),
               validator: (value) {
-                if (value!.isEmpty || !RegExp(r'^[0-9]+$').hasMatch(value)) {
+                if (value!.isEmpty || !RegExp(r"^\d{11}$").hasMatch(value)) {
                   return "Enter your Phone Number";
                 } else {
                   return null;

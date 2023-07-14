@@ -1,7 +1,7 @@
 import 'package:easy_shaadi/guest_list_content/add_guest.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import '../View/guest_list_tile.dart';
+import 'guest_list_tile.dart';
 import '../checklist/data/database.dart';
 
 
